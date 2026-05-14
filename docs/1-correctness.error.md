@@ -2,20 +2,9 @@
 
 ## [eslint/no-dupe-keys](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-dupe-keys)
 
-### 설명
+같은 객체 키가 중복되어 앞 값이 뒤 값으로 덮인다. 키를 하나만 남기거나 서로 다른 이름을 사용한다.
 
-- 같은 객체 키가 중복되어 앞 값이 뒤 값으로 덮인다.
-- 키를 하나만 남기거나 서로 다른 이름을 사용한다.
-
-### 근거
-
-- **베스트 프랙티스.** 키 중복은 의도된 사용이 거의 없는 명백한 버그라 false positive 없이 잡을 수 있다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** 키 중복은 의도된 사용이 거의 없는 명백한 버그라 false positive 없이 잡을 수 있다.
 
 **❌ incorrect**
 
@@ -36,18 +25,11 @@ const settings = {
 
 ## [eslint/no-unused-vars](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-unused-vars)
 
-### 설명
+선언한 값을 읽지 않아 죽은 코드가 된다. 값을 사용하거나 선언을 삭제한다.
 
-- 선언한 값을 읽지 않아 죽은 코드가 된다.
-- 값을 사용하거나 선언을 삭제한다.
+**베스트 프랙티스.** 죽은 코드는 가독성과 번들 크기를 동시에 악화시키므로 즉시 제거하는 편이 낫고, `ignoreRestSiblings: true`로 한 프로퍼티를 의도적으로 제거하는 rest destructuring(`const { password, ...safeUser } = user`)은 풀어 둔다.
 
-### 근거
-
-- **베스트 프랙티스.** 죽은 코드는 가독성과 번들 크기를 동시에 악화시키므로 즉시 제거하는 편이 낫다.
-- `ignoreRestSiblings: true`로 `const { password, ...safeUser } = user`처럼 한 프로퍼티를 의도적으로 제거하는 rest destructuring은 풀어 둔다.
-- 사용하지 않는 키에 `_` 접두사를 붙이는 우회가 더 어색해서 옵션으로 처리하는 편이 자연스럽다.
-
-### 설정
+**Configuration**
 
 - `vars` (`"all" | "local"`, default: `"all"`): 변수 검사 범위 (전체 vs 로컬)
 - `varsIgnorePattern` (regex string, default: `"^_"`): 무시할 변수명 패턴
@@ -63,7 +45,7 @@ const settings = {
 - `reportVarsOnlyUsedAsTypes` (bool, default: `false`): 타입으로만 사용된 변수 보고
 - `fix` (object, default: `{ imports: "suggestion", variables: "suggestion" }`): auto-fix 세분화 제어
 
-### 예시
+**⚙️ 설정**
 
 ```json
 {
@@ -96,21 +78,9 @@ return safeUser
 
 ## [jest/require-to-throw-message](https://oxc.rs/docs/guide/usage/linter/rules/jest/require-to-throw-message) + [vitest/require-to-throw-message](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-to-throw-message)
 
-### 설명
+`.toThrow()` 또는 `.toThrowError()`를 인자 없이 호출하면 던지기만 하면 어떤 에러든 통과한다. 기대 메시지나 에러 클래스를 인자로 명시해 무엇을 던지는지까지 검증한다.
 
-- `.toThrow()` 또는 `.toThrowError()`를 인자 없이 호출하면 던지기만 하면 어떤 에러든 통과한다.
-- 기대 메시지나 에러 클래스를 인자로 명시해 무엇을 던지는지까지 검증한다.
-
-### 근거
-
-- **베스트 프랙티스.** 인자가 없으면 회귀로 다른 원인의 에러가 던져져도 테스트가 그대로 통과해 결함을 감춘다.
-- 두 플러그인이 같은 룰을 각자 제공하므로 같은 이유로 둘 다 켠다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** 인자가 없으면 회귀로 다른 원인의 에러가 던져져도 테스트가 그대로 통과해 결함을 감추고, 두 플러그인이 같은 규칙을 각자 제공하므로 둘 다 켠다.
 
 **❌ incorrect**
 
@@ -128,23 +98,16 @@ await expect(load()).rejects.toThrow("not found")
 
 ## [jsx-a11y/alt-text](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/alt-text)
 
-### 설명
+이미지에 `alt`가 없어 보조 기술이 내용을 알 수 없다. 의미 있는 `alt`를 쓰거나 장식 이미지에는 `alt=""`를 사용한다.
 
-- 이미지에 `alt`가 없어 보조 기술이 내용을 알 수 없다.
-- 의미 있는 `alt`를 쓰거나 장식 이미지에는 `alt=""`를 사용한다.
+**베스트 프랙티스.** 접근성 기본 요건이고, 이미지가 의미인지 장식(`alt=""`)인지 의도 표명을 강제한다.
 
-### 근거
-
-- **베스트 프랙티스.** 접근성 기본 요건이고, 이미지가 의미인지 장식(`alt=""`)인지 의도 표명을 강제한다.
-
-### 설정
+**Configuration**
 
 - `img` (string[], default: `[]`): `img`로 취급할 커스텀 컴포넌트 이름
 - `object` (string[], default: `[]`): `object`로 취급할 커스텀 컴포넌트 이름
 - `area` (string[], default: `[]`): `area`로 취급할 커스텀 컴포넌트 이름
 - `input[type="image"]` (string[], default: `[]`): `input[type="image"]`로 취급할 커스텀 컴포넌트 이름
-
-### 예시
 
 **❌ incorrect**
 
@@ -160,20 +123,13 @@ await expect(load()).rejects.toThrow("not found")
 
 ## [jsx-a11y/anchor-is-valid](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/anchor-is-valid)
 
-### 설명
+`href` 없는 anchor는 키보드와 보조 기술에서 링크 의미가 깨진다. 이동이면 `href`를 넣고, 동작이면 `button`을 사용한다.
 
-- `href` 없는 anchor는 키보드와 보조 기술에서 링크 의미가 깨진다.
-- 이동이면 `href`를 넣고, 동작이면 `button`을 사용한다.
+**베스트 프랙티스.** anchor와 button 혼용은 키보드, 스크린리더 사용자에게 즉시 영향을 주는 흔한 실수다.
 
-### 근거
-
-- **베스트 프랙티스.** anchor와 button 혼용은 키보드, 스크린리더 사용자에게 즉시 영향을 주는 흔한 실수다.
-
-### 설정
+**Configuration**
 
 - `validHrefs` (string[], default: `[]`): 유효한 href 값으로 추가 허용할 문자열 목록
-
-### 예시
 
 **❌ incorrect**
 
@@ -191,20 +147,9 @@ await expect(load()).rejects.toThrow("not found")
 
 ## [jsx-a11y/click-events-have-key-events](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/click-events-have-key-events)
 
-### 설명
+클릭 가능한 비대화형 요소에 키보드 이벤트가 없어 키보드 조작이 막힌다. `button`을 사용하거나 `role`, `tabIndex`, key handler를 함께 제공한다.
 
-- 클릭 가능한 비대화형 요소에 키보드 이벤트가 없어 키보드 조작이 막힌다.
-- `button`을 사용하거나 `role`, `tabIndex`, key handler를 함께 제공한다.
-
-### 근거
-
-- **베스트 프랙티스.** 키보드 사용자 차단은 자주 놓치는 결함이라 정적으로 잡을 가치가 크다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** 키보드 사용자 차단은 자주 놓치는 결함이라 정적으로 잡을 가치가 크다.
 
 **❌ incorrect**
 
@@ -222,24 +167,17 @@ await expect(load()).rejects.toThrow("not found")
 
 ## [jsx-a11y/label-has-associated-control](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/label-has-associated-control)
 
-### 설명
+`<label>`이 폼 컨트롤과 연결되지 않으면 스크린리더가 라벨과 입력의 짝을 알 수 없고 라벨 클릭으로 컨트롤에 포커스할 수도 없다. `htmlFor`로 컨트롤 `id`를 가리키거나 컨트롤을 라벨 안에 중첩한다.
 
-- `<label>`이 폼 컨트롤과 연결되지 않으면 스크린리더가 라벨과 입력의 짝을 알 수 없고, 시각 사용자도 라벨 클릭으로 컨트롤에 포커스할 수 없다.
-- `htmlFor`로 컨트롤 `id`를 가리키거나 컨트롤을 라벨 안에 중첩한다.
+**베스트 프랙티스.** 폼 접근성의 기본 요건이고, 라벨과 컨트롤 연결 누락은 정적으로 거의 확실히 잡힌다.
 
-### 근거
-
-- **베스트 프랙티스.** 폼 접근성의 기본 요건이고, 라벨 ↔ 컨트롤 연결 누락은 정적으로 거의 확실히 잡힌다.
-
-### 설정
+**Configuration**
 
 - `assert` (`"htmlFor" | "nesting" | "both" | "either"`, default: `"either"`): 허용할 연결 방식
 - `controlComponents` (string[], default: `[]`): 폼 컨트롤로 취급할 커스텀 컴포넌트
 - `depth` (number, default: `2`): 중첩 컨트롤 탐색 깊이
 - `labelAttributes` (string[], default: `["alt", "aria-label", "aria-labelledby"]`): 라벨 텍스트로 인정할 속성
 - `labelComponents` (string[], default: `["label"]`): 라벨로 취급할 커스텀 컴포넌트
-
-### 예시
 
 **❌ incorrect**
 
@@ -270,22 +208,15 @@ await expect(load()).rejects.toThrow("not found")
 
 ## [jsx-a11y/no-noninteractive-tabindex](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-noninteractive-tabindex)
 
-### 설명
+비대화형 요소가 `tabIndex`로 포커스 대상이 되어 탐색 흐름이 어색해진다. 포커스가 필요한 동작은 `button`, `a` 같은 네이티브 요소로 표현한다.
 
-- 비대화형 요소가 `tabIndex`로 포커스 대상이 되어 탐색 흐름이 어색해진다.
-- 포커스가 필요한 동작은 `button`, `a` 같은 네이티브 요소로 표현한다.
+**베스트 프랙티스.** 잘못된 접근성 시도가 오히려 탐색 흐름을 망가뜨리는 패턴을 차단한다.
 
-### 근거
-
-- **베스트 프랙티스.** 잘못된 접근성 시도가 오히려 탐색 흐름을 망가뜨리는 패턴을 차단한다.
-
-### 설정
+**Configuration**
 
 - `allowExpressionValues` (bool, default: `true`): `tabIndex` 값이 표현식(변수, 삼항)일 때 허용
 - `roles` (string[], default: `["tabpanel"]`): 인터랙티브로 허용할 ARIA role 목록
 - `tags` (string[], default: `[]`): 인터랙티브로 허용할 커스텀 HTML 요소 목록
-
-### 예시
 
 **❌ incorrect**
 
@@ -305,22 +236,14 @@ await expect(load()).rejects.toThrow("not found")
 
 ## [jsx-a11y/no-static-element-interactions](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-static-element-interactions)
 
-### 설명
+`<div>`이나 `<span>` 같은 정적 요소에 클릭, 키 핸들러가 붙으면 보조 기술이 그 요소를 인터랙티브로 인식하지 못한다. 시맨틱 요소(`<button>`, `<a>`)로 바꾸거나 적절한 `role`을 지정한다.
 
-- `<div>`이나 `<span>` 같은 정적 요소에 클릭, 키 핸들러가 붙으면 보조 기술이 그 요소를 인터랙티브로 인식하지 못한다.
-- 시맨틱 요소(`<button>`, `<a>`)로 바꾸거나 적절한 `role`을 지정한다.
+**베스트 프랙티스.** `click-events-have-key-events`가 키보드 이벤트 누락을 잡는 반면 이 규칙은 시맨틱(role) 누락을 잡아, 둘이 함께 켜져야 `<div onClick>` 패턴의 양면을 모두 차단한다.
 
-### 근거
-
-- **베스트 프랙티스.** `click-events-have-key-events`가 키보드 이벤트 누락을 잡는다면, 이 룰은 시맨틱(role) 누락을 잡는다.
-- 둘이 함께 켜져야 `<div onClick>` 패턴의 양면을 모두 차단할 수 있다.
-
-### 설정
+**Configuration**
 
 - `allowExpressionValues` (bool, default: `false`): `role` 값이 표현식일 때 허용
-- `handlers` (string[], default: `null`): 룰 발동 대상 핸들러 이름 목록
-
-### 예시
+- `handlers` (string[], default: `null`): 규칙 발동 대상 핸들러 이름 목록
 
 **❌ incorrect**
 
@@ -350,20 +273,13 @@ await expect(load()).rejects.toThrow("not found")
 
 ## [react/exhaustive-deps](https://oxc.rs/docs/guide/usage/linter/rules/react/exhaustive-deps)
 
-### 설명
+effect 안에서 읽는 값이 dependency array에 없어 오래된 값을 참조할 수 있다. dependency array에 effect가 읽는 모든 값을 포함한다.
 
-- effect 안에서 읽는 값이 dependency array에 없어 오래된 값을 참조할 수 있다.
-- dependency array에 effect가 읽는 모든 값을 포함한다.
+**베스트 프랙티스.** stale closure는 React에서 가장 흔한 버그 원천이고 자동 수정도 신뢰할 만하다.
 
-### 근거
-
-- **베스트 프랙티스.** stale closure는 React에서 가장 흔한 버그 원천이고 자동 수정도 신뢰할 만하다.
-
-### 설정
+**Configuration**
 
 - `additionalHooks` (regex string, default: `null`): 의존성 검사를 확장 적용할 추가 커스텀 훅 패턴
-
-### 예시
 
 **❌ incorrect**
 
@@ -383,24 +299,17 @@ useEffect(() => {
 
 ## [typescript/no-floating-promises](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-floating-promises)
 
-### 설명
+처리되지 않은 Promise는 reject 시 `unhandledrejection`으로 빠져 디버깅이 어려워진다. `await`을 붙이거나 `.catch()`를 연결하거나 `void` 연산자로 의도를 명시한다.
 
-- 처리되지 않은 Promise는 reject 시 `unhandledrejection`으로 빠져 디버깅이 어려워진다.
-- `await`을 붙이거나 `.catch()`를 연결하거나 `void` 연산자로 의도를 명시한다.
+**베스트 프랙티스.** 미처리 reject는 환경마다 동작이 달라 추적이 어려우므로 강제로 처리시키는 편이 안전하다.
 
-### 근거
-
-- **베스트 프랙티스.** 미처리 reject는 환경마다 동작이 달라 추적이 어려우므로 강제로 처리시키는 편이 안전하다.
-
-### 설정
+**Configuration**
 
 - `ignoreVoid` (bool, default: `true`): `void` 연산자로 처리된 Promise 무시
 - `ignoreIIFE` (bool, default: `false`): Promise를 호출하는 IIFE 무시
 - `checkThenables` (bool, default: `false`): Promise가 아닌 thenable 객체도 검사
 - `allowForKnownSafePromises` (array, default: `[]`): 무시할 특정 Promise 타입 지정
 - `allowForKnownSafeCalls` (array, default: `[]`): 무시할 특정 함수 호출 지정
-
-### 예시
 
 **❌ incorrect**
 
@@ -416,21 +325,9 @@ await Promise.resolve("awaited")
 
 ## [unicorn/no-new-array](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-new-array)
 
-### 설명
+`new Array(n)` 생성자는 인자 하나가 길이인지 단일 요소인지 호출 형태만으로 알기 어렵다. 길이 기반 생성은 `Array.from({ length: n })`, 요소 리터럴은 `[value]`처럼 의도가 분명한 표기를 사용한다.
 
-- `new Array(n)` 생성자는 인자 하나가 길이인지 단일 요소인지 호출 형태만으로 알기 어렵다.
-- 길이 기반 생성은 `Array.from({ length: n })`, 요소 리터럴은 `[value]`처럼 의도가 분명한 표기를 사용한다.
-
-### 근거
-
-- **베스트 프랙티스.** `Array.from({ length: n }, mapFn)` 형태는 빈 슬롯 없이 매핑까지 한 번에 끝낼 수 있어 `new Array(n).fill(...)` + `.map(...)` 체이닝의 가독성, 메모리 비효율도 함께 해결한다.
-- 다만 룰은 `new` 생성자 호출만 검출하므로 `Array(n).fill(...)`(생성자 없는 호출)은 잡히지 않는다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** `Array.from({ length: n }, mapFn)` 형태는 빈 슬롯 없이 매핑까지 한 번에 끝낼 수 있어 `new Array(n).fill(...)` + `.map(...)` 체이닝의 가독성, 메모리 비효율도 함께 해결한다 (다만 규칙은 `new` 생성자 호출만 검출하므로 `Array(n).fill(...)`은 잡히지 않는다).
 
 **❌ incorrect**
 

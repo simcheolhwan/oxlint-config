@@ -2,23 +2,15 @@
 
 ## [eslint/array-callback-return](https://oxc.rs/docs/guide/usage/linter/rules/eslint/array-callback-return)
 
-### 설명
+`Array.prototype.map`/`filter`/`reduce` 같은 콜백에서 `return`을 빠뜨리면 결과가 `undefined`로 채워져 의도와 다른 배열이 만들어진다. 반환값이 필요하면 명시적 `return`을 두고, 부수효과만 필요하면 `forEach`로 분리한다.
 
-- `Array.prototype.map`/`filter`/`reduce` 같은 콜백에서 `return`을 빠뜨리면 결과가 `undefined`로 채워져 의도와 다른 배열이 만들어진다.
-- 반환값이 필요하면 명시적 `return`을 두고, 부수효과만 필요하면 `forEach`로 분리한다.
+**베스트 프랙티스.** `undefined`로 채워진 배열은 다음 단계에서야 드러나는 까다로운 버그라 정적 검사 가치가 크고, `forEach` 분리를 자연스럽게 유도하는 부수 효과도 있다.
 
-### 근거
-
-- **베스트 프랙티스.** `undefined`로 채워진 배열은 다음 단계에서야 드러나는 까다로운 버그라 정적 검사 가치가 크다.
-- `forEach` 분리를 자연스럽게 유도하는 부수 효과도 있다.
-
-### 설정
+**Configuration**
 
 - `allowImplicit` (bool, default: `false`): `return` 문 없이 암묵적으로 `undefined` 반환 허용
 - `allowVoid` (bool, default: `false`): `void` 연산자로 반환값 처리 허용 (`checkForEach`와 함께 사용)
 - `checkForEach` (bool, default: `false`): `forEach` 콜백에도 적용
-
-### 예시
 
 **❌ incorrect**
 
@@ -39,21 +31,14 @@ const labels = items.map((item) => {
 
 ## [eslint/eqeqeq](https://oxc.rs/docs/guide/usage/linter/rules/eslint/eqeqeq)
 
-### 설명
+`==`는 암묵적 타입 변환으로 비교 결과가 흔들릴 수 있다. `===`로 엄격 동등 비교를 사용한다.
 
-- `==`는 암묵적 타입 변환으로 비교 결과가 흔들릴 수 있다.
-- `===`로 엄격 동등 비교를 사용한다.
+**베스트 프랙티스.** `==`의 암묵적 변환 규칙은 외우기 어렵고 버그를 만들기 쉬워 항상 `===`이 안전하다.
 
-### 근거
-
-- **베스트 프랙티스.** `==`의 암묵적 변환 규칙은 외우기 어렵고 버그를 만들기 쉬워 항상 `===`이 안전하다.
-
-### 설정
+**Configuration**
 
 - 1번 옵션 (`"always" | "smart"`, default: `"always"`): `"smart"`는 `typeof`/리터럴/nullish 비교에만 `==` 허용
 - 2번 옵션 `{ null: "always" | "never" | "ignore" }` (default: `"always"`): `null` 비교 시 `===` 강제 여부
-
-### 예시
 
 **❌ incorrect**
 
@@ -73,25 +58,17 @@ if (value === "1") {
 
 ## [eslint/max-lines](https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-lines)
 
-### 설명
+파일이 길어질수록 책임이 한 모듈에 누적되어 탐색, 리뷰가 어려워진다. 줄 수 상한을 넘으면 책임 단위로 모듈을 분리한다.
 
-- 파일이 길어질수록 책임이 한 모듈에 누적되어 탐색, 리뷰가 어려워진다.
-- 줄 수 상한을 넘으면 책임 단위로 모듈을 분리한다.
+**취향.** 기본 상한(`max: 300`)을 유지하되 빈 줄과 주석은 의미 있는 신호가 아니라 두 옵션을 켜 실제 코드 줄 수만 세고, 테스트 파일은 시나리오 누적으로 자연스럽게 길어져 `**/*.test.ts`에서 끈다.
 
-### 근거
-
-- **취향.** 기본값은 `max: 300`이며 `skipBlankLines`, `skipComments` 모두 `false`다.
-- 상한은 기본값을 그대로 둔다.
-- 빈 줄과 주석은 의미 있는 코드 신호가 아니라 두 옵션을 켜 실제 코드 줄 수만 센다.
-- 테스트 파일은 시나리오 누적으로 자연스럽게 길어져 `**/*.test.ts`에서 룰을 끈다.
-
-### 설정
+**Configuration**
 
 - `max` (int, default: `300`): 파일 최대 라인 수
 - `skipBlankLines` (bool, default: `false`): 빈 줄 카운트 제외
 - `skipComments` (bool, default: `false`): 주석 줄 카운트 제외
 
-### 예시
+**⚙️ 설정**
 
 ```json
 {
@@ -116,27 +93,18 @@ if (value === "1") {
 
 ## [eslint/max-lines-per-function](https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-lines-per-function)
 
-### 설명
+함수가 길어질수록 책임이 모호해지고 테스트하기 어려워진다. 줄 수 상한을 넘으면 더 작은 함수로 분리한다.
 
-- 함수가 길어질수록 책임이 모호해지고 테스트하기 어려워진다.
-- 줄 수 상한을 넘으면 더 작은 함수로 분리한다.
+**취향.** 베이스를 `max: 80`으로 완화하고 `**/*.tsx`는 props/hooks/핸들러/JSX 트리 누적을 반영해 `max: 160`으로 더 완화하며, 빈 줄/주석은 카운트 제외하고 `**/*.test.ts`는 시나리오 누적으로 끈다.
 
-### 근거
-
-- **취향.** 기본값은 `max: 50`이며 `skipBlankLines`, `skipComments` 모두 `false`다.
-- 베이스를 `max: 80`으로 완화하고 `**/*.tsx`는 props, hooks, 핸들러, JSX 트리가 한 컴포넌트에 누적되는 관용을 반영해 `max: 160`으로 더 완화한다.
-- 일반 함수와 React 컴포넌트는 길어지는 사유가 달라(props, hooks, 핸들러 누적 vs 도메인 로직 분기) 그룹을 구조적으로 나눠 둔다.
-- 빈 줄과 주석은 두 옵션을 켜 실제 코드 줄 수만 센다.
-- 테스트 파일은 시나리오 누적으로 자연스럽게 길어져 `**/*.test.ts`에서 룰을 끈다.
-
-### 설정
+**Configuration**
 
 - `max` (int, default: `50`): 함수 최대 라인 수
 - `skipBlankLines` (bool, default: `false`): 빈 줄 카운트 제외
 - `skipComments` (bool, default: `false`): 주석 줄 카운트 제외
 - `IIFEs` (bool, default: `false`): IIFE도 카운트에 포함
 
-### 예시
+**⚙️ 설정**
 
 ```json
 {
@@ -185,22 +153,9 @@ function renderData() {
 
 ## [eslint/require-await](https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-await) + [typescript/require-await](https://oxc.rs/docs/guide/usage/linter/rules/typescript/require-await)
 
-### 설명
+`async` 함수 안에 `await`이 없으면 비동기 표시가 의미를 잃고 호출자에 불필요한 Promise를 반환한다. typescript 버전은 타입 정보를 사용해 thenable이 아닌 값에 대한 `await`까지 더 정확히 검사한다.
 
-- `async` 함수 안에 `await`이 없으면 비동기 표시가 의미를 잃고 호출자에 불필요한 Promise를 반환한다.
-- `await`을 사용하거나 일반 함수로 선언한다.
-- typescript 버전은 타입 정보를 사용해 thenable이 아닌 값에 대한 `await`까지 더 정확히 검사한다.
-
-### 근거
-
-- **베스트 프랙티스.** 의미 없는 `async`를 제거해 함수 시그니처의 약속을 정직하게 유지한다.
-- oxlint 빌트인 검사와 typescript 플러그인의 타입 인식 검사가 잡는 케이스가 미묘하게 달라 양쪽을 함께 켠다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** oxlint 빌트인 검사와 typescript 플러그인의 타입 인식 검사가 잡는 케이스가 미묘하게 달라 양쪽을 함께 켜 함수 시그니처의 약속을 정직하게 유지한다.
 
 **❌ incorrect**
 
@@ -220,25 +175,16 @@ function load() {
 
 ## [import/max-dependencies](https://oxc.rs/docs/guide/usage/linter/rules/import/max-dependencies)
 
-### 설명
+한 모듈이 너무 많은 의존성을 가져오면 응집도가 낮고 변경 영향이 커진다. 의존성 수 상한을 둬 책임 분리나 import 통합을 유도한다.
 
-- 한 모듈이 너무 많은 의존성을 가져오면 응집도가 낮고 변경 영향이 커진다.
-- 의존성 수 상한을 둬 책임 분리나 import 통합을 유도한다.
+**취향.** 베이스 `max: 12`로 살짝만 완화해 일반 모듈에 적용하고 `**/*.tsx`는 hooks/아이콘/UI primitives/자식 컴포넌트 누적을 반영해 `max: 16`으로 더 완화하며, type import는 빌드 후 사라져 응집도 신호가 아니라 `ignoreTypeImports: true`로 제외하고 테스트 파일과 TanStack Router의 `__root.tsx`는 끈다.
 
-### 근거
-
-- **취향.** 기본값은 `max: 10`이며 `ignoreTypeImports`는 `false`다.
-- 베이스를 `max: 12`로 살짝만 완화해 일반 모듈(`.ts`)에 적용하고, `**/*.tsx`는 hooks, 아이콘, UI primitives, 자식 컴포넌트가 한 컴포넌트에 누적되는 관용을 반영해 `max: 16`으로 더 완화한다.
-- 런타임 결합과 무관한 type import(`import type { ... }`)는 빌드 후 사라져 응집도 신호로 셈할 가치가 없어 `ignoreTypeImports: true`로 제외해 실제 런타임 의존성만 측정한다.
-- 테스트 파일은 mock, 픽스처, 타깃 모듈을 함께 import하느라 자연스럽게 의존성 수가 많아져 `**/*.test.ts`에서 룰을 끈다.
-- TanStack Router의 `__root.tsx`는 모든 provider, context, layout을 모으는 라우트 진입점이라 의존성이 많아 동일하게 끈다.
-
-### 설정
+**Configuration**
 
 - `max` (int, default: `10`): 파일 최대 import 수
 - `ignoreTypeImports` (bool, default: `false`): type import 카운트 제외
 
-### 예시
+**⚙️ 설정**
 
 ```json
 {
@@ -276,25 +222,17 @@ import { ui } from "./ui"
 
 ## [typescript/no-confusing-void-expression](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-confusing-void-expression)
 
-### 설명
+`void` 반환 함수를 값으로 다루는 패턴(`return f()`에서 `f`가 void 반환, 변수 할당 등)은 결과를 쓸 수 없는데 마치 의미 있는 값처럼 보여 혼동을 만든다. 호출과 반환을 분리해 의미를 분명히 한다.
 
-- `void` 반환 함수를 값으로 다루는 패턴(`return f()`에서 `f`가 void 반환, 변수 할당 등)은 결과를 쓸 수 없는데 마치 의미 있는 값처럼 보여 혼동을 만든다.
-- 호출과 반환을 분리해 의미를 분명히 한다.
+**베스트 프랙티스.** `ignoreArrowShorthand: true`로 단축 화살표를 허용해 React 이벤트 핸들러(`onClick={() => mutate()}`)와 HMR dispose 콜백을 풀고, `ignoreVoidReturningFunctions: true`로 void 반환 핸들러를 다른 핸들러에 위임하는 패턴(`<form onSubmit={(event) => onSubmit(event)}>`)도 허용한다.
 
-### 근거
-
-- **베스트 프랙티스.** `ignoreArrowShorthand: true`로 단축 화살표는 허용한다.
-- React 이벤트 핸들러(`onClick={() => mutate()}`)와 HMR dispose 콜백에서 매우 빈번한 패턴이라 모두 블록 본문으로 바꾸면 코드량이 늘고 가독성이 떨어진다.
-- `ignoreVoidReturningFunctions: true`도 함께 켜 시그니처가 `void`로 선언된 함수의 호출 결과를 다른 핸들러에 넘기는 패턴까지 풀어 둔다.
-- `<form onSubmit={(event) => onSubmit(event)}>`처럼 props로 받은 void 반환 핸들러를 위임할 때 호출 측은 이미 반환값이 의미 없음을 타입으로 알고 있어 표현식 사용을 막을 이유가 없다.
-
-### 설정
+**Configuration**
 
 - `ignoreArrowShorthand` (bool, default: `false`): `() => voidFn()` 형태의 화살표 단축 허용
 - `ignoreVoidOperator` (bool, default: `false`): `void` 연산자를 두른 표현식 허용
 - `ignoreVoidReturningFunctions` (bool, default: `false`): void 반환으로 선언된 함수 호출은 허용
 
-### 예시
+**⚙️ 설정**
 
 ```json
 {
@@ -343,21 +281,13 @@ function Form({ onSubmit }: { onSubmit: (event: FormEvent) => void }) {
 
 ## [typescript/no-deprecated](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-deprecated)
 
-### 설명
+JSDoc `@deprecated`가 붙은 API 참조를 정적으로 잡는다. 에디터의 가시 표시(취소선)는 무시되기 쉬워 규칙로 강제한다.
 
-- JSDoc `@deprecated`가 붙은 API 참조를 정적으로 잡는 룰.
-- 에디터의 가시 표시(취소선)는 무시되기 쉬워 룰로 강제한다.
+**베스트 프랙티스.** 의존성 업그레이드 시 곧 사라질 API를 빠르게 발견해 마이그레이션 누락을 막고, 외부 라이브러리와 자체 코드의 deprecate 양쪽에 동일하게 작용한다.
 
-### 근거
-
-- **베스트 프랙티스.** 의존성 업그레이드 시 곧 사라질 API를 빠르게 발견해 마이그레이션 누락을 막는다.
-- 외부 라이브러리(예: Node `url.parse`)와 자체 코드의 deprecate 양쪽에 동일하게 작용한다.
-
-### 설정
+**Configuration**
 
 - `allow` (array, default: `[]`): 허용할 deprecated 타입/값 지정자 목록 (string, file, lib, package 형식)
-
-### 예시
 
 **❌ incorrect**
 
@@ -374,18 +304,11 @@ const parsed = new URL("/foo", "http://example.com")
 
 ## [typescript/no-misused-promises](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-misused-promises)
 
-### 설명
+조건문, spread, `void` 반환 컨텍스트(인자, 객체 프로퍼티, 반환, 변수 할당, 상속 메서드 오버라이드)에 Promise 반환 함수를 넘기는 패턴을 금지한다. JSX 속성 위치는 옵션으로 검사를 끄고 나머지 위치만 잡는다.
 
-- 조건문, spread, `void` 반환 컨텍스트(인자, 객체 프로퍼티, 반환, 변수 할당, 상속 메서드 오버라이드)에 Promise 반환 함수를 넘기는 패턴을 금지하는 룰.
-- JSX 속성 위치는 옵션으로 검사를 끄고 나머지 위치만 잡는다.
+**베스트 프랙티스.** `typescript/no-floating-promises`는 직접 호출만 잡는 반면 이 규칙은 void 컨텍스트의 Promise 전달을 잡아 서로 보완하고, `checksVoidReturn.attributes: false`로 `<form onSubmit={submit}>` 같은 JSX 속성 false positive만 풀어 나머지 위치(setTimeout 인자, void 변수 할당, 조건문, spread)는 그대로 잡는다.
 
-### 근거
-
-- **베스트 프랙티스.** `typescript/no-floating-promises`는 결과를 사용하지 않는 직접 호출만 잡고, 이 룰은 void 컨텍스트에 Promise 반환 함수를 전달해 호출자가 `await`을 잃는 패턴을 잡아 서로 보완한다.
-- 이전엔 `<form onSubmit={submit}>` 같은 JSX 속성 false positive 때문에 카테고리째 껐지만, `checksVoidReturn.attributes: false`로 그 위치만 풀어 핸들러 장황성을 피한다.
-- 나머지 위치(`setTimeout(asyncFn)` 같은 인자 전달, void 변수 할당, void 메서드 오버라이드, 조건문, spread)는 잡히면 거의 항상 실제 버그라 승격 가치가 크다.
-
-### 설정
+**Configuration**
 
 - `checksConditionals` (bool, default: `true`): 조건문에서 Promise 사용 검사
 - `checksSpreads` (bool, default: `true`): spread 구문에서 Promise 사용 검사
@@ -397,7 +320,7 @@ const parsed = new URL("/foo", "http://example.com")
 - `checksVoidReturn.returns` (bool, default: `true`): void 반환 함수에서 Promise 반환
 - `checksVoidReturn.variables` (bool, default: `true`): void 반환 타입 변수 할당
 
-### 예시
+**⚙️ 설정**
 
 ```json
 {
@@ -435,20 +358,9 @@ async function submit(event: FormEvent) {}
 
 ## [typescript/no-unsafe-argument](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-argument)
 
-### 설명
+`any` 타입 값을 함수 인자로 전달하면 호출 측의 타입 안전성이 사라진다. 인자를 정확한 타입으로 좁힌 뒤 전달한다.
 
-- `any` 타입 값을 함수 인자로 전달하면 호출 측의 타입 안전성이 사라진다.
-- 인자를 정확한 타입으로 좁힌 뒤 전달한다.
-
-### 근거
-
-- **베스트 프랙티스.** `any` 오염이 호출 경계로 새는 걸 막아 `no-unsafe-assignment`/`no-unsafe-return`과 한 묶음으로 가드 그물을 완성한다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** `any` 오염이 호출 경계로 새는 걸 막아 `no-unsafe-assignment`/`no-unsafe-return`과 한 묶음으로 가드 그물을 완성한다.
 
 **❌ incorrect**
 
@@ -466,20 +378,9 @@ takeNumber(value)
 
 ## [typescript/no-unsafe-assignment](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-assignment)
 
-### 설명
+`any` 값을 다른 변수에 할당하면 타입 안전성이 전파되며 사라진다. `unknown`으로 받아 좁히거나 정확한 타입을 사용한다.
 
-- `any` 값을 다른 변수에 할당하면 타입 안전성이 전파되며 사라진다.
-- `unknown`으로 받아 좁히거나 정확한 타입을 사용한다.
-
-### 근거
-
-- **베스트 프랙티스.** `any` 전파의 또 다른 경로를 차단해 `no-explicit-any`/`no-unsafe-argument`/`no-unsafe-member-access`/`no-unsafe-return`과 함께 가드 그물을 완성한다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** `any` 전파의 또 다른 경로를 차단해 `no-explicit-any`/`no-unsafe-argument`/`no-unsafe-member-access`/`no-unsafe-return`과 함께 가드 그물을 완성한다.
 
 **❌ incorrect**
 
@@ -497,20 +398,9 @@ const count: number = typeof value === "number" ? value : 0
 
 ## [typescript/no-unsafe-return](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-return)
 
-### 설명
+`any` 타입 값을 함수에서 반환하면 호출자가 타입 보장 없이 그 결과를 사용하게 된다. 정확한 타입으로 좁힌 뒤 반환하거나 `unknown`으로 명시한다.
 
-- `any` 타입 값을 함수에서 반환하면 호출자가 타입 보장 없이 그 결과를 사용하게 된다.
-- 정확한 타입으로 좁힌 뒤 반환하거나 `unknown`으로 명시한다.
-
-### 근거
-
-- **베스트 프랙티스.** `any` 전파를 반환 경계에서도 차단해 `no-unsafe-argument`/`no-unsafe-assignment`/`no-unsafe-member-access`와 한 묶음으로 작동한다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** `any` 전파를 반환 경계에서도 차단해 `no-unsafe-argument`/`no-unsafe-assignment`/`no-unsafe-member-access`와 한 묶음으로 작동한다.
 
 **❌ incorrect**
 
@@ -532,17 +422,11 @@ function read(): number {
 
 ## [typescript/prefer-nullish-coalescing](https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-nullish-coalescing)
 
-### 설명
+`||`는 falsy 값(`0`, `""`, `false`)도 기본값으로 대체해 의도와 다른 결과를 낸다. `??`로 nullish(`null`, `undefined`)인 경우에만 기본값을 적용한다.
 
-- `||`는 falsy 값(`0`, `""`, `false`)도 기본값으로 대체해 의도와 다른 결과를 낸다.
-- `??`로 nullish(`null`, `undefined`)인 경우에만 기본값을 적용한다.
+**베스트 프랙티스.** 카운트의 `0`, 입력값의 `""`처럼 falsy지만 유효한 값을 다룰 때 `||`의 단축 평가가 만드는 미묘한 버그를 막는다.
 
-### 근거
-
-- **베스트 프랙티스.** `||`의 falsy 단축 평가가 만드는 미묘한 버그를 막는다.
-- 카운트의 `0`, 입력값의 `""`처럼 falsy지만 유효한 값을 다룰 때 차이가 분명히 드러난다.
-
-### 설정
+**Configuration**
 
 - `ignoreBooleanCoercion` (bool, default: `false`): `Boolean()` 인자 안의 `||` 허용
 - `ignoreConditionalTests` (bool, default: `true`): 조건 테스트 위치의 `||` 허용
@@ -550,8 +434,6 @@ function read(): number {
 - `ignoreMixedLogicalExpressions` (bool, default: `false`): `&&`와 섞인 `||` 표현식 허용
 - `ignorePrimitives` (object | bool, default: `false`): nullable과 결합한 특정 원시 타입 검사 제외 (`bigint`/`boolean`/`number`/`string`)
 - `ignoreTernaryTests` (bool, default: `false`): `??`로 단순화 가능한 삼항식 허용
-
-### 예시
 
 **❌ incorrect**
 
@@ -567,24 +449,16 @@ const display = value ?? "default"
 
 ## [typescript/switch-exhaustiveness-check](https://oxc.rs/docs/guide/usage/linter/rules/typescript/switch-exhaustiveness-check)
 
-### 설명
+union/enum을 분기하는 `switch`에서 일부 멤버를 빠뜨리면 누락된 값이 조용히 흘러가 런타임까지 드러나지 않는다. 모든 멤버에 대한 `case`를 두거나 `default`에 `const _exhaustive: never = value` 패턴을 둬 컴파일 타임에 누락을 잡는다.
 
-- union/enum을 분기하는 `switch`에서 일부 멤버를 빠뜨리면 누락된 값이 조용히 흘러가 런타임까지 드러나지 않는다.
-- 모든 멤버에 대한 `case`를 두거나, `default`에 `const _exhaustive: never = value` 패턴을 둬 컴파일 타임에 누락을 잡는다.
+**베스트 프랙티스.** TypeScript는 union/enum 멤버가 추가될 때 기존 `switch`가 갱신됐는지 자체 검사하지 않는데, 이 규칙이 그 빈틈을 정적으로 메워 멤버 확장 시 누락된 분기를 빌드 단계에서 드러낸다.
 
-### 근거
-
-- **베스트 프랙티스.** TypeScript는 union/enum 멤버가 추가될 때 기존 `switch`가 갱신됐는지 자체 검사하지 않는다.
-- 이 룰이 그 빈틈을 정적으로 메워 멤버 확장 시 누락된 분기를 빌드 단계에서 드러낸다.
-
-### 설정
+**Configuration**
 
 - `allowDefaultCaseForExhaustiveSwitch` (bool, default: `true`): 모든 멤버를 다룬 exhaustive `switch`에 `default`를 두는 것 허용
 - `considerDefaultExhaustiveForUnions` (bool, default: `false`): union에서 `default` 케이스를 exhaustiveness 충족으로 간주
 - `defaultCaseCommentPattern` (string, default: 없음): `default` 블록의 주석과 매치되면 검사 생략
 - `requireDefaultForNonUnion` (bool, default: `false`): union이 아닌 `switch`에도 `default` 필수화
-
-### 예시
 
 **❌ incorrect**
 
@@ -618,21 +492,9 @@ function label(status: Status) {
 
 ## [unicorn/escape-case](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/escape-case)
 
-### 설명
+문자열의 hex(`\xa9`)와 unicode(`\ud834`) 이스케이프 시퀀스에서 hex 자릿수가 소문자면 식별자와 시각적으로 섞여 읽기 어렵다. hex 자릿수를 모두 대문자로 통일한다.
 
-- 문자열의 hex(`\xa9`)와 unicode(`\ud834`) 이스케이프 시퀀스에서 hex 자릿수가 소문자면 식별자와 시각적으로 섞여 읽기 어렵다.
-- hex 자릿수를 모두 대문자로 통일한다.
-
-### 근거
-
-- **취향.** 이스케이프 값이 주변 식별자/문자열과 분명히 구분되어 가독성이 올라가고 표기가 일관된다.
-- 자동 수정으로 해결되는 가벼운 룰이라 노이즈 부담이 거의 없다.
-
-### 설정
-
-없음
-
-### 예시
+**취향.** 이스케이프 값이 주변 식별자/문자열과 분명히 구분되어 가독성이 올라가고 자동 수정으로 해결되는 가벼운 규칙이라 노이즈 부담이 거의 없다.
 
 **❌ incorrect**
 
@@ -650,22 +512,9 @@ const registered = "\xAE"
 
 ## [unicorn/new-for-builtins](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/new-for-builtins)
 
-### 설명
+`Date`/`Map`/`Set` 같은 빌트인 생성자는 `new` 없이 호출하면 의도와 다른 값(예: `Date()`는 현재 시각 문자열)을 돌려주고, 반대로 `String`/`Number`/`Boolean`에 `new`를 붙이면 원시 값이 아닌 wrapper 객체가 만들어져 `typeof`나 동등 비교 결과가 어긋난다.
 
-- `Date`/`Map`/`Set` 같은 빌트인 생성자는 `new` 없이 호출하면 의도와 다른 값(예: `Date()`는 현재 시각 문자열)을 돌려준다.
-- 반대로 `String`/`Number`/`Boolean`에 `new`를 붙이면 원시 값이 아닌 wrapper 객체가 만들어져 `typeof`나 동등 비교 결과가 어긋난다.
-- 빌트인마다 정해진 호출 형태를 일관되게 사용한다.
-
-### 근거
-
-- **베스트 프랙티스.** 호출 형태만 다른데 동작이 완전히 달라지는 패턴은 거의 의도된 사용이 없는 명백한 버그라 false positive 부담이 적다.
-- pedantic 베이스에선 warn에 묻혀 놓치기 쉬워 error로 승격한다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** 호출 형태만 다른데 동작이 완전히 달라지는 패턴은 거의 의도된 사용이 없는 명백한 버그라 false positive 부담이 적어 pedantic 베이스의 warn에서 error로 승격한다.
 
 **❌ incorrect**
 
@@ -683,20 +532,9 @@ const text = String(value)
 
 ## [unicorn/no-array-callback-reference](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-callback-reference)
 
-### 설명
+`arr.map(fn)`처럼 콜백을 직접 참조하면 함수의 추가 인자(`index`, `array`)까지 전달되어 버그를 만들 수 있다. `arr.map(value => fn(value))`로 호출 시점을 분리한다.
 
-- `arr.map(fn)`처럼 콜백을 직접 참조하면 함수의 추가 인자(`index`, `array`)까지 전달되어 버그를 만들 수 있다.
-- `arr.map(value => fn(value))`로 호출 시점을 분리한다.
-
-### 근거
-
-- **베스트 프랙티스.** 추가 인자 함정을 막지만 정상 사용에서도 람다를 강제해 살짝 장황해진다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** 추가 인자 함정을 막지만 정상 사용에서도 람다를 강제해 살짝 장황해진다.
 
 **❌ incorrect**
 
@@ -712,21 +550,14 @@ const parsed = inputs.map((value) => Number.parseInt(value, 10))
 
 ## [unicorn/no-useless-undefined](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-undefined)
 
-### 설명
+함수 호출이나 `return`에서 명시적 `undefined`는 대부분 불필요하다. 인자나 반환값을 생략한다.
 
-- 함수 호출이나 `return`에서 명시적 `undefined`는 대부분 불필요하다.
-- 인자나 반환값을 생략한다.
+**취향.** 코드 노이즈를 줄여주지만 명시적 `undefined`가 의도 표현으로 필요한 경우도 있다.
 
-### 근거
-
-- **취향.** 코드 노이즈를 줄여주지만 명시적 `undefined`가 의도 표현으로 필요한 경우도 있다.
-
-### 설정
+**Configuration**
 
 - `checkArguments` (bool, default: `true`): 함수 인자로 넘기는 불필요한 `undefined` 검사
 - `checkArrowFunctionBody` (bool, default: `true`): 화살표 함수 본문의 불필요한 `undefined` 검사
-
-### 예시
 
 **❌ incorrect**
 
@@ -742,20 +573,9 @@ return
 
 ## [unicorn/prefer-query-selector](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-query-selector)
 
-### 설명
+`getElementById`, `getElementsByClassName`은 단편적이다. 통일된 셀렉터 표현인 `querySelector`/`querySelectorAll`을 사용한다.
 
-- `getElementById`, `getElementsByClassName`은 단편적이다.
-- 통일된 셀렉터 표현인 `querySelector`/`querySelectorAll`을 사용한다.
-
-### 근거
-
-- **취향.** 셀렉터 표현이 일관되어 인지 비용이 줄어든다.
-
-### 설정
-
-없음
-
-### 예시
+**취향.** 셀렉터 표현이 일관되어 인지 비용이 줄어든다.
 
 **❌ incorrect**
 
@@ -771,20 +591,9 @@ const node = document.querySelector("#root")
 
 ## [unicorn/prefer-string-replace-all](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-string-replace-all)
 
-### 설명
+`String#replace`에 글로벌 정규식(`/g`)으로 모든 occurrence를 바꾸는 패턴은 의도가 한 번에 드러나지 않는다. ES2021의 `String#replaceAll`을 사용해 "전체 치환" 의도를 직접 표현한다.
 
-- `String#replace`에 글로벌 정규식(`/g`)으로 모든 occurrence를 바꾸는 패턴은 의도가 한 번에 드러나지 않는다.
-- ES2021의 `String#replaceAll`을 사용해 "전체 치환" 의도를 직접 표현한다.
-
-### 근거
-
-- **베스트 프랙티스.** `replaceAll`은 문자열 인자도 허용해 정규식 이스케이프 부담이 줄고, 정규식 사용 시 non-global 패턴은 런타임 에러로 명확하게 거부된다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** `replaceAll`은 문자열 인자도 허용해 정규식 이스케이프 부담이 줄고, 정규식 사용 시 non-global 패턴은 런타임 에러로 명확하게 거부된다.
 
 **❌ incorrect**
 
@@ -800,21 +609,9 @@ const cleaned = input.replaceAll("-", "_")
 
 ## [unicorn/prefer-top-level-await](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-top-level-await)
 
-### 설명
+모듈 최상위에서 즉시 실행 async IIFE나 `promise.catch()` 체인으로 비동기를 시작하는 패턴은 의도를 감추고 오류 처리를 우회한다. ES2022 top-level await으로 직접 실행하고 일반 `try/catch`로 오류를 다룬다.
 
-- 모듈 최상위에서 즉시 실행 async IIFE나 `promise.catch()` 체인으로 비동기를 시작하는 패턴은 의도를 감추고 오류 처리를 우회한다.
-- ES2022 top-level await으로 직접 실행하고 일반 `try/catch`로 오류를 다룬다.
-
-### 근거
-
-- **베스트 프랙티스.** Vite는 ESM 환경을 보장해 top-level await을 그대로 쓸 수 있다.
-- IIFE 래퍼와 then/catch 체인이 사라져 모듈 초기화 코드의 흐름이 동기 코드처럼 읽힌다.
-
-### 설정
-
-없음
-
-### 예시
+**베스트 프랙티스.** Vite는 ESM 환경을 보장해 top-level await을 그대로 쓸 수 있고, IIFE 래퍼와 then/catch 체인이 사라져 모듈 초기화 코드의 흐름이 동기 코드처럼 읽힌다.
 
 **❌ incorrect**
 
