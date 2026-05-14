@@ -1,4 +1,6 @@
-# Perf 채택 규칙
+---
+title: "Perf 채택 규칙"
+---
 
 ## [eslint/no-await-in-loop](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-await-in-loop)
 

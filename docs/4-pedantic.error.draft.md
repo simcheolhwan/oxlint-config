@@ -1,4 +1,6 @@
-# Pedantic 채택 규칙 (draft)
+---
+title: "Pedantic 채택 규칙 (draft)"
+---
 
 ## [eslint/max-classes-per-file](https://oxc.rs/docs/guide/usage/linter/rules/eslint/max-classes-per-file)
 

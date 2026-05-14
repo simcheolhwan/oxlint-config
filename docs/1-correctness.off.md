@@ -1,4 +1,6 @@
-# Correctness 제외 규칙
+---
+title: "Correctness 제외 규칙"
+---
 
 ## [jsx-a11y/no-autofocus](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-autofocus)
 

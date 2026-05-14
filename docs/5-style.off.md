@@ -1,4 +1,6 @@
-# Style 제외 규칙
+---
+title: "Style 제외 규칙"
+---
 
 ## [eslint/arrow-body-style](https://oxc.rs/docs/guide/usage/linter/rules/eslint/arrow-body-style)
 

@@ -1,4 +1,6 @@
-# Restriction 채택 규칙
+---
+title: "Restriction 채택 규칙"
+---
 
 ## [eslint/default-case](https://oxc.rs/docs/guide/usage/linter/rules/eslint/default-case)
 

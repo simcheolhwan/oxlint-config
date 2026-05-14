@@ -1,4 +1,6 @@
-# TanStack 규칙 비교 (draft)
+---
+title: "TanStack 규칙 비교 (draft)"
+---
 
 ## 1. 이미 설정함
 
@@ -1410,4 +1412,4 @@ const value = 1
 const value = 1
 ```
 
-<!-- @stylistic/spaced-comment: oxlint 인덱스에 미존재 (eslint/stylistic 양쪽 URL 모두 404). 검토 대상에서 제외. -->
+{/* @stylistic/spaced-comment: oxlint 인덱스에 미존재 (eslint/stylistic 양쪽 URL 모두 404). 검토 대상에서 제외. */}

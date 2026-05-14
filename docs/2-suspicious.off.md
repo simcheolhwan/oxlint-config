@@ -1,4 +1,6 @@
-# Suspicious 제외 규칙
+---
+title: "Suspicious 제외 규칙"
+---
 
 ## [react/react-in-jsx-scope](https://oxc.rs/docs/guide/usage/linter/rules/react/react-in-jsx-scope)
 

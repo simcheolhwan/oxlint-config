@@ -1,4 +1,6 @@
-# Restriction 제외 규칙
+---
+title: "Restriction 제외 규칙"
+---
 
 ## [eslint/no-plusplus](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-plusplus)
 

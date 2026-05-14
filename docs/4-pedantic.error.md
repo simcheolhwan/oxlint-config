@@ -1,4 +1,6 @@
-# Pedantic 채택 규칙
+---
+title: "Pedantic 채택 규칙"
+---
 
 ## [eslint/array-callback-return](https://oxc.rs/docs/guide/usage/linter/rules/eslint/array-callback-return)
 

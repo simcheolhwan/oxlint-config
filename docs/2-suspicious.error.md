@@ -1,4 +1,6 @@
-# Suspicious 채택 규칙
+---
+title: "Suspicious 채택 규칙"
+---
 
 ## [eslint/no-shadow](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-shadow)
 

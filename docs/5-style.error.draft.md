@@ -1,4 +1,6 @@
-# Style 채택 규칙 (draft)
+---
+title: "Style 채택 규칙 (draft)"
+---
 
 ## [eslint/default-param-last](https://oxc.rs/docs/guide/usage/linter/rules/eslint/default-param-last)
 

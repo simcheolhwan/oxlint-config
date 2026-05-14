@@ -1,4 +1,6 @@
-# Style 제외 규칙 (draft)
+---
+title: "Style 제외 규칙 (draft)"
+---
 
 ## [eslint/prefer-exponentiation-operator](https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-exponentiation-operator)
 

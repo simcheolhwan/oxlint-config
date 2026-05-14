@@ -1,4 +1,6 @@
-# Restriction 채택 규칙 (draft)
+---
+title: "Restriction 채택 규칙 (draft)"
+---
 
 ## [import/no-commonjs](https://oxc.rs/docs/guide/usage/linter/rules/import/no-commonjs)
 

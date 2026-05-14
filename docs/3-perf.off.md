@@ -1,4 +1,6 @@
-# Perf 제외 규칙
+---
+title: "Perf 제외 규칙"
+---
 
 ## [oxc/no-map-spread](https://oxc.rs/docs/guide/usage/linter/rules/oxc/no-map-spread)
 

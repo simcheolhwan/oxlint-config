@@ -1,4 +1,6 @@
-# Restriction 제외 규칙 (draft)
+---
+title: "Restriction 제외 규칙 (draft)"
+---
 
 ## [typescript/non-nullable-type-assertion-style](https://oxc.rs/docs/guide/usage/linter/rules/typescript/non-nullable-type-assertion-style)
 

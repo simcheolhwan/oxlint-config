@@ -1,4 +1,6 @@
-# Correctness 채택 규칙
+---
+title: "Correctness 채택 규칙"
+---
 
 ## [eslint/no-dupe-keys](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-dupe-keys)
 

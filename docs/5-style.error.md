@@ -1,4 +1,6 @@
-# Style 채택 규칙
+---
+title: "Style 채택 규칙"
+---
 
 ## [eslint/init-declarations](https://oxc.rs/docs/guide/usage/linter/rules/eslint/init-declarations)
 

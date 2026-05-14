@@ -1,4 +1,6 @@
-# Pedantic 제외 규칙
+---
+title: "Pedantic 제외 규칙"
+---
 
 ## [eslint/no-inline-comments](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-inline-comments)
 
