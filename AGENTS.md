@@ -17,6 +17,15 @@
 - `vp pack`: `dist/` 빌드. 배포 직전 dts 포함 산출물이 정상인지 확인.
 - `vp run <script>`: `package.json` 스크립트 실행 (예: `vp run build`).
 
+## 린트 규칙 검증
+
+`fixtures/`는 `lintConfig`가 규칙을 실제로 검출하는지 확인하는 검증 자산이다. 패키지 산출물이 아니다 (`dist`에 포함되지 않음).
+
+- 고의로 린트 오류를 담는다. **수정하거나 오류를 고치지 마라.** `vp lint`로 규칙 검출 여부를 확인하는 용도다.
+- 각 오류 옆 인라인 코멘트가 `<plugin>/<rule> (<category>)`를 명시한다.
+- `vite.config.ts`의 `staged`는 `fixtures/`를 제외하므로 커밋 시 자동 fix되지 않는다.
+- `vite.config.ts`의 `lint.jsPlugins`는 `@tanstack/eslint-plugin-query`를 로드해 `fixtures/hook.ts`의 `@tanstack/query/exhaustive-deps`를 검증한다.
+
 ## 문서 구조
 
 각 `docs/*.md`는 frontmatter `title: "..."`를 두며, 본문은 `## …`부터 시작한다. `title`은 [Mintlify](https://mintlify.com) 사이드바 라벨, 페이지 헤더 H1, 브라우저 탭 제목에 모두 사용된다.
