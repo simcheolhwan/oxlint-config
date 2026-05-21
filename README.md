@@ -5,19 +5,19 @@ oxlint config for [vite-plus](https://viteplus.dev/).
 ## Install
 
 ```bash
-vp i -D @simcheolhwan/oxlint-config
+pnpm i -D @simcheolhwan/oxlint-config
 ```
 
 To use TanStack Router/Query rules, install the corresponding plugins:
 
 ```bash
-vp i -D @tanstack/eslint-plugin-router @tanstack/eslint-plugin-query
+pnpm i -D @tanstack/eslint-plugin-router @tanstack/eslint-plugin-query
 ```
 
 The `tsconfig.json` example below extends `@tsconfig/vite-react`:
 
 ```bash
-vp i -D @tsconfig/vite-react
+pnpm i -D @tsconfig/vite-react
 ```
 
 ## Usage
@@ -51,6 +51,7 @@ export default defineConfig({
   fmt: { semi: false, sortImports: true, ignorePatterns: ["**/routeTree.gen.ts"] },
   lint: {
     ...lintConfig,
+    ignorePatterns: ["**/routeTree.gen.ts"],
     jsPlugins: ["@tanstack/eslint-plugin-router", "@tanstack/eslint-plugin-query"],
     rules: {
       ...lintConfig.rules,
