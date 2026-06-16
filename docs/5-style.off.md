@@ -402,6 +402,28 @@ JSX의 props spread(`{...props}`) 사용을 금지하고 필요한 props만 명�
 <Button label={props.label} onClick={props.onClick} />
 ```
 
+## [typescript/consistent-indexed-object-style](https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-indexed-object-style)
+
+동적 키 객체 타입을 `Record<K, V>` 또는 `{ [key: K]: V }` 인덱스 시그니처 중 하나로 통일하도록 강제한다. 기본 옵션 `"record"`는 `Record<K, V>`를, `"index-signature"`는 인덱스 시그니처를 강제한다.
+
+**취향.** named 인덱스 시그니처(`{ [userId: string]: number }`)가 키의 도메인 의미를 드러내 원래 `"index-signature"` 강제를 선호했으나, autofix가 의미 있는 이름을 추론하지 못하고 모든 키를 `{ [key: string]: V }`로 변환해 그 이점이 사라지므로, 의미 있는 키 이름은 사람이 직접 붙이도록 규칙을 끈다.
+
+**Configuration**
+
+- `style` (`"record" | "index-signature"`, default: `"record"`): 동적 키 객체 타입 표기 스타일
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+type ScoreByUser = Record<string, number>
+```
+
+**⚠️ rule: correct (노이즈)**
+
+```ts
+type ScoreByUser = { [key: string]: number }
+```
+
 ## [unicorn/filename-case](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/filename-case)
 
 파일명의 대소문자 규칙(`kebabCase`, `pascalCase` 등)을 일관되게 강제한다.

@@ -673,36 +673,6 @@ type Names = Array<string>
 type Names = string[]
 ```
 
-## [typescript/consistent-indexed-object-style](https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-indexed-object-style)
-
-동적 키 객체 타입을 `Record<K, V>` 또는 `{ [key: K]: V }` 인덱스 시그니처 중 하나로 통일한다. 옵션 `"index-signature"`로 인덱스 시그니처 표기를 강제한다.
-
-**취향.** `Record<string, number>`는 짧지만 키의 도메인 의미를 잃는 반면 `{ [userId: string]: number }`는 인덱스 이름으로 키가 무엇을 가리키는지 즉시 드러나, 자동 수정도 가능해 도입 비용이 낮다.
-
-**Configuration**
-
-- `style` (`"record" | "index-signature"`, default: `"record"`): 동적 키 객체 타입 표기 스타일
-
-**⚙️ 설정**
-
-```json
-{
-  "typescript/consistent-indexed-object-style": ["error", "index-signature"]
-}
-```
-
-**❌ incorrect**
-
-```ts
-type ScoreByUser = Record<string, number>
-```
-
-**✅ correct**
-
-```ts
-type ScoreByUser = { [userId: string]: number }
-```
-
 ## [typescript/consistent-type-definitions](https://oxc.rs/docs/guide/usage/linter/rules/typescript/consistent-type-definitions)
 
 객체 형태의 타입 정의에 `interface`와 `type` 중 하나만 쓰도록 강제한다. 기본 옵션은 `"interface"`이며 그대로 채택한다.
