@@ -48,6 +48,7 @@ export const lintConfig: OxlintConfig = {
         "import/prefer-default-export": ["error", { target: "any" }],
         "typescript/explicit-function-return-type": "off",
         "typescript/explicit-module-boundary-types": "off",
+        "unicorn/consistent-function-scoping": "off",
       },
     },
     {
