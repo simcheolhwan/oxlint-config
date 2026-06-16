@@ -357,12 +357,12 @@ export function Hello() {
 
 한 모듈이 React 컴포넌트만 export하도록 강제해 Fast Refresh(HMR)가 컴포넌트 상태를 안전하게 보존하도록 한다. 컴포넌트와 비컴포넌트(유틸 함수 등)를 같은 파일에서 함께 export하면 편집 시 컴포넌트가 리마운트되어 상태를 잃거나, 번들러별로 HMR 동작이 갈리는 깨짐이 발생한다.
 
-**베스트 프랙티스.** vite + React 환경의 HMR 안정성을 코드 단계에서 보장하기 위해 `allowConstantExport: true`로 primitive 상수 동거를 허용하고(vite 프리셋 기본 동작), Context 파일(`**/*Context.tsx`)은 Provider/Context/hook 동거가 정상 패턴이라 override로 끈다.
+**베스트 프랙티스.** vite + React 환경의 HMR 안정성을 코드 단계에서 보장하기 위해 `allowConstantExport: true`로 primitive 상수 동거를 허용하고(vite 프리셋 기본 동작), TanStack Router가 라우트 모듈마다 요구하는 `export const Route = createFileRoute(...)` 패턴은 `allowExportNames: ["Route"]`로 HMR-safe 동거를 허용하며, Context 파일(`**/*Context.tsx`)은 Provider/Context/hook 동거가 정상 패턴이라 override로 끈다.
 
 **Configuration**
 
 - `allowConstantExport` (bool, default: `false`): primitive 상수(string, number, boolean, template literal) 동거 허용. vite 프리셋에서 기본 활성화
-- `allowExportNames` (string[], default: `[]`): HMR-safe로 간주할 named export 목록 (예: Remix의 `loader`, `action`)
+- `allowExportNames` (string[], default: `[]`): HMR-safe로 간주할 named export 목록 (예: TanStack Router의 `Route`, Remix의 `loader`)
 - `checkJS` (bool, default: `false`): JSX 포함 `.js` 파일 검사
 - `customHOCs` (string[], default: `[]`): 컴포넌트로 인정할 커스텀 HOC 식별자 목록
 
@@ -371,7 +371,10 @@ export function Hello() {
 ```json
 {
   "rules": {
-    "react/only-export-components": ["error", { "allowConstantExport": true }]
+    "react/only-export-components": [
+      "error",
+      { "allowConstantExport": true, "allowExportNames": ["Route"] }
+    ]
   },
   "overrides": [
     { "files": ["**/*Context.tsx"], "rules": { "react/only-export-components": "off" } }
@@ -398,6 +401,17 @@ export function Header() {
 export const VERSION = "3"
 export function Header() {
   return <h1>v{VERSION}</h1>
+}
+```
+
+**✅ correct**
+
+`allowExportNames`로 TanStack Router의 `Route` 동거가 허용된다.
+
+```tsx
+export const Route = createFileRoute("/")({ component: HomePage })
+function HomePage() {
+  return <div>Home</div>
 }
 ```
 

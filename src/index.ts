@@ -81,5 +81,11 @@ export const lintConfig: OxlintConfig = {
         "unicorn/no-process-exit": "off",
       },
     },
+    {
+      files: ["**/*.d.ts"],
+      rules: {
+        "import/unambiguous": "off",
+      },
+    },
   ],
 }

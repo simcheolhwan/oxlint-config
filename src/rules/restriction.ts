@@ -12,7 +12,10 @@ export const restriction: DummyRuleMap = {
   "import/unambiguous": "error",
   "react/button-has-type": "error",
   "react/jsx-filename-extension": ["error", { extensions: [".tsx"] }],
-  "react/only-export-components": ["error", { allowConstantExport: true }],
+  "react/only-export-components": [
+    "error",
+    { allowConstantExport: true, allowExportNames: ["Route"] },
+  ],
   "typescript/explicit-function-return-type": ["error", { allowExpressions: true }],
   "typescript/explicit-module-boundary-types": "error",
   "typescript/no-dynamic-delete": "error",

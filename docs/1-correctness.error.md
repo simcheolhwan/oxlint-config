@@ -167,6 +167,34 @@ await expect(load()).rejects.toThrow("not found")
 </button>
 ```
 
+## [jsx-a11y/control-has-associated-label](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/control-has-associated-label)
+
+버튼, 입력, 링크 같은 인터랙티브 요소에 접근 가능한 텍스트 라벨이 없어 보조 기술 사용자가 컨트롤의 용도를 알 수 없다. 텍스트 콘텐츠나 `aria-label`/`aria-labelledby`를 넣거나 `<label>`로 감싼다.
+
+**베스트 프랙티스.** `label-has-associated-control`이 `<label>`과 컨트롤의 연결을 보는 반면 이 규칙은 컨트롤 쪽에 접근 가능한 이름이 존재하는지를 보장해, 아이콘 전용 버튼처럼 라벨 텍스트가 비는 흔한 누락을 잡는다.
+
+**Configuration**
+
+- `controlComponents` (string[], default: `[]`): 인터랙티브 컨트롤로 취급할 커스텀 컴포넌트
+- `depth` (integer, default: `2`): 요소 내부에서 접근 가능한 라벨을 탐색할 최대 깊이
+- `ignoreElements` (string[], default: `[]`): 검사에서 제외할 요소
+- `ignoreRoles` (string[], default: `[]`): 검사에서 제외할 인터랙티브 role
+- `labelAttributes` (string[], default: `[]`): 접근 가능한 라벨 텍스트로 인정할 추가 속성
+
+**❌ incorrect**
+
+```tsx
+<button type="button" />
+<a href="/path" />
+```
+
+**✅ correct**
+
+```tsx
+<button type="button" aria-label="Save" />
+<a href="/path">Learn more</a>
+```
+
 ## [jsx-a11y/label-has-associated-control](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/label-has-associated-control)
 
 `<label>`이 폼 컨트롤과 연결되지 않으면 스크린리더가 라벨과 입력의 짝을 알 수 없고 라벨 클릭으로 컨트롤에 포커스할 수도 없다. `htmlFor`로 컨트롤 `id`를 가리키거나 컨트롤을 라벨 안에 중첩한다.
@@ -271,6 +299,28 @@ await expect(load()).rejects.toThrow("not found")
 <div role="button" tabIndex={0} onClick={open} onKeyDown={openOnEnter}>
   Open
 </div>
+```
+
+## [jsx-a11y/prefer-tag-over-role](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/prefer-tag-over-role)
+
+`role="button"`처럼 제네릭 요소에 ARIA role을 붙이는 대신, 같은 역할을 기본 제공하는 시맨틱 HTML 태그를 사용하도록 강제한다. `<div role="button">`은 `<button>`으로 대체한다.
+
+**베스트 프랙티스.** 시맨틱 태그는 role뿐 아니라 키보드 동작, 포커스 관리까지 네이티브로 제공하므로, role로 흉내 내는 것보다 접근성과 가독성이 모두 낫다.
+
+**❌ incorrect**
+
+```tsx
+<div role="button" onClick={open}>
+  Open
+</div>
+```
+
+**✅ correct**
+
+```tsx
+<button type="button" onClick={open}>
+  Open
+</button>
 ```
 
 ## [react/exhaustive-deps](https://oxc.rs/docs/guide/usage/linter/rules/react/exhaustive-deps)

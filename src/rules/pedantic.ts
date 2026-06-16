@@ -32,6 +32,7 @@ export const pedantic: DummyRuleMap = {
   "eslint/no-inline-comments": "off",
   "eslint/no-negated-condition": "off",
   "eslint/no-warning-comments": "off",
+  "eslint/require-unicode-regexp": "off",
   "typescript/only-throw-error": "off",
   "typescript/prefer-readonly-parameter-types": "off",
   "typescript/strict-boolean-expressions": "off",

@@ -92,6 +92,22 @@ function loadResults(query: string) {
 }
 ```
 
+## [eslint/require-unicode-regexp](https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-unicode-regexp)
+
+모든 정규식 리터럴과 `RegExp` 생성자에 `u`(또는 `v`) 플래그를 강제해 UTF-16 surrogate pair를 정확히 다루고 Annex B 관용 파싱으로 무음 처리되던 패턴 오류를 조기에 드러낸다.
+
+**취향.** 실제 코드의 정규식 대부분은 URL, 식별자, 토큰 같은 ASCII 패턴이라 surrogate pair 이슈가 없고, `u` 플래그는 기존 정규식의 불필요한 이스케이프를 syntax error로 바꿔 깨뜨릴 수 있어 일률 강제는 노이즈가 크다. 유니코드 처리가 필요한 정규식에만 개발자가 의도적으로 플래그를 붙이는 편이 낫다.
+
+**Configuration**
+
+- `requireFlag` (`"u" | "v"`, default: 없음): 두 플래그가 모두 허용될 때 강제할 특정 플래그 지정. 미지정 시 `u`/`v` 둘 다 통과
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+const slug = /[a-z0-9-]+/
+```
+
 ## [typescript/only-throw-error](https://oxc.rs/docs/guide/usage/linter/rules/typescript/only-throw-error)
 
 `throw` 문에 `Error` 인스턴스가 아닌 값(문자열, 객체 리터럴, 함수 호출 결과 등)을 던지는 패턴을 금지해 스택 트레이스가 사라지거나 도구가 인식하지 못하는 위험을 막는다.
