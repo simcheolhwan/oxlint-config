@@ -311,7 +311,7 @@ export function increment() {
 
 `prefer-default-export`는 단일 export 모듈에서 default 사용을 권장하고, `no-named-export`는 named export를 전면 금지한다. 두 규칙을 짝지어 컴포넌트 파일에 default export를 강제한다.
 
-**취향.** `.ts`는 named export가 자동 import/트리 셰이킹에 유리하므로 메인 rules에서 두 규칙을 `"off"`로 명시 선언해 정책을 코드로 드러내고, `**/*.tsx`에서만 켜되 hooks(`**/use*.tsx`)/Context 모듈(`**/*Context.tsx`)/TanStack Router 라우트(`src/routes/**/[!-]*.tsx`)는 named export가 컨벤션이라 override로 끈다.
+**취향.** `.ts`는 named export가 자동 import/트리 셰이킹에 유리하므로 메인 rules에서 두 규칙을 `"off"`로 명시 선언해 정책을 코드로 드러내고, `**/*.tsx`에서만 켜되 hooks(`**/use*.tsx`)/Context 모듈(`**/*Context.tsx`)/TanStack Router 라우트(`**/routes/**/[!-]*.tsx`)는 named export가 컨벤션이라 override로 끈다.
 
 **Configuration**
 
@@ -335,7 +335,7 @@ export function increment() {
       }
     },
     {
-      "files": ["**/use*.tsx", "**/*Context.tsx", "src/routes/**/[!-]*.tsx"],
+      "files": ["**/use*.tsx", "**/*Context.tsx", "**/routes/**/[!-]*.tsx"],
       "rules": {
         "import/no-named-export": "off",
         "import/prefer-default-export": "off"

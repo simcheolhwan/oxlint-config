@@ -357,7 +357,7 @@ export function Hello() {
 
 한 모듈이 React 컴포넌트만 export하도록 강제해 Fast Refresh(HMR)가 컴포넌트 상태를 안전하게 보존하도록 한다. 컴포넌트와 비컴포넌트(유틸 함수 등)를 같은 파일에서 함께 export하면 편집 시 컴포넌트가 리마운트되어 상태를 잃거나, 번들러별로 HMR 동작이 갈리는 깨짐이 발생한다.
 
-**베스트 프랙티스.** vite + React 환경의 HMR 안정성을 코드 단계에서 보장하기 위해 `allowConstantExport: true`로 primitive 상수 동거를 허용하고(vite 프리셋 기본 동작), TanStack Router가 라우트 모듈마다 요구하는 `export const Route = createFileRoute(...)` 패턴은 `allowExportNames: ["Route"]`로 HMR-safe 동거를 허용하며, Context 파일(`**/*Context.tsx`)은 Provider/Context/hook 동거가 정상 패턴이라 override로 끈다.
+**베스트 프랙티스.** vite + React 환경의 HMR 안정성을 코드 단계에서 보장하기 위해 `allowConstantExport: true`로 primitive 상수 동거를 허용하고(vite 프리셋 기본 동작), hooks(`**/use*.tsx`)/Context(`**/*Context.tsx`)/TanStack Router 라우트(`**/routes/**/[!-]*.tsx`) 모듈은 hook과 Context, `export const Route = createFileRoute(...)` 동거가 정상 패턴이라 named export 허용 override와 같은 블록에서 끈다.
 
 **Configuration**
 
@@ -371,13 +371,13 @@ export function Hello() {
 ```json
 {
   "rules": {
-    "react/only-export-components": [
-      "error",
-      { "allowConstantExport": true, "allowExportNames": ["Route"] }
-    ]
+    "react/only-export-components": ["error", { "allowConstantExport": true }]
   },
   "overrides": [
-    { "files": ["**/*Context.tsx"], "rules": { "react/only-export-components": "off" } }
+    {
+      "files": ["**/use*.tsx", "**/*Context.tsx", "**/routes/**/[!-]*.tsx"],
+      "rules": { "react/only-export-components": "off" }
+    }
   ]
 }
 ```
@@ -406,7 +406,7 @@ export function Header() {
 
 **✅ correct**
 
-`allowExportNames`로 TanStack Router의 `Route` 동거가 허용된다.
+라우트 모듈(`**/routes/**/[!-]*.tsx`)은 override로 허용된다.
 
 ```tsx
 export const Route = createFileRoute("/")({ component: HomePage })
@@ -417,7 +417,7 @@ function HomePage() {
 
 **✅ correct**
 
-`**/*Context.tsx`는 override로 허용된다.
+Context 모듈(`**/*Context.tsx`)은 override로 허용된다.
 
 ```tsx
 export const ThemeContext = createContext<Theme>("light")

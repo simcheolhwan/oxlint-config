@@ -55,11 +55,6 @@ export const lintConfig: OxlintConfig = {
       rules: {
         "import/no-named-export": "off",
         "import/prefer-default-export": "off",
-      },
-    },
-    {
-      files: ["**/*Context.tsx"],
-      rules: {
         "react/only-export-components": "off",
       },
     },
