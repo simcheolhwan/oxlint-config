@@ -29,7 +29,7 @@ pnpm i -D @tsconfig/vite-react
   "extends": "@tsconfig/vite-react/tsconfig.json",
   "compilerOptions": {
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "types": ["vite-plus/client"],
+    "types": ["vite-plus/client", "vite-plus/test/globals"],
     "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src"]
@@ -67,6 +67,7 @@ export default defineConfig({
       "@tanstack/query/stable-query-client": "error",
     },
   },
+  test: { globals: true },
   staged: { "*": "vp check --fix" },
 })
 ```

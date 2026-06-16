@@ -625,13 +625,11 @@ describe(parseDate, () => {
 
 `describe`, `it`, `expect` 같은 vitest globals를 항상 명시적으로 import 하도록 강제한다.
 
-**베스트 프랙티스.** 이 저장소는 vitest를 `vite-plus/test`에서 재노출해 사용하는데 규칙이 이를 인식하지 못하고 무조건 `from "vitest"`로 import 추가를 시도해 자동 수정이 잘못된 라인을 반복 삽입한다.
+**베스트 프랙티스.** 이 저장소는 `test.globals`를 켜고 `vite-plus/test/globals` 타입으로 globals를 import 없이 사용한다. 규칙은 import를 강제하며 vite-plus의 재노출을 인식하지 못해 무조건 `from "vitest"` import 추가를 시도하므로, 자동 수정이 잘못된 라인을 반복 삽입한다.
 
 **🆗 rule: incorrect (허용)**
 
 ```ts
-import { describe, expect, it } from "vite-plus/test"
-
 describe("parse", () => {
   it("works", () => expect(true).toBe(true))
 })
@@ -641,7 +639,6 @@ describe("parse", () => {
 
 ```ts
 import { describe, expect, it } from "vitest"
-import { describe, expect, it } from "vite-plus/test"
 
 describe("parse", () => {
   it("works", () => expect(true).toBe(true))
