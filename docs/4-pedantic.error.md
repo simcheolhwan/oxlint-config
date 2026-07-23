@@ -541,13 +541,13 @@ const text = String(value)
 **❌ incorrect**
 
 ```ts
-const parsed = inputs.map(Number.parseInt)
+const sanitized = inputs.map(sanitize)
 ```
 
 **✅ correct**
 
 ```ts
-const parsed = inputs.map((value) => Number.parseInt(value, 10))
+const sanitized = inputs.map((value) => sanitize(value))
 ```
 
 ## [unicorn/no-useless-undefined](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-undefined)
@@ -571,6 +571,26 @@ return undefined
 
 ```ts
 return
+```
+
+## [unicorn/prefer-number-coercion](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-number-coercion)
+
+`parseFloat()`와 기수 10의 `parseInt()`는 숫자 접두어만 파싱하고 뒤따르는 텍스트를 조용히 무시한다. 입력 전체를 파싱하는 `Number()`로 강제 변환 의도를 정확히 표현한다.
+
+**베스트 프랙티스.** `Number.parseInt("12px", 10)`은 `12`를 반환해 비정상 입력을 조용히 통과시키지만 `Number("12px")`는 `NaN`으로 실패해 문제를 드러낸다. 접두어 파싱이 의도인 기수 10 이외의 `parseInt`는 검출하지 않는다.
+
+**❌ incorrect**
+
+```ts
+const ratio = Number.parseFloat(input)
+const count = Number.parseInt(input, 10)
+```
+
+**✅ correct**
+
+```ts
+const ratio = Number(input)
+const count = Math.trunc(Number(input))
 ```
 
 ## [unicorn/prefer-query-selector](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-query-selector)

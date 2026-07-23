@@ -745,7 +745,6 @@ if (!isValid(input)) {
 **❌ incorrect**
 
 ```ts
-const count = parseInt(input, 10)
 if (isNaN(count)) {
   return 0
 }
@@ -754,7 +753,6 @@ if (isNaN(count)) {
 **✅ correct**
 
 ```ts
-const count = Number.parseInt(input, 10)
 if (Number.isNaN(count)) {
   return 0
 }

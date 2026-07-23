@@ -24,6 +24,7 @@ export const pedantic: DummyRuleMap = {
   "unicorn/new-for-builtins": "error",
   "unicorn/no-array-callback-reference": "error",
   "unicorn/no-useless-undefined": "error",
+  "unicorn/prefer-number-coercion": "error",
   "unicorn/prefer-query-selector": "error",
   "unicorn/prefer-string-replace-all": "error",
   "unicorn/prefer-top-level-await": "error",
