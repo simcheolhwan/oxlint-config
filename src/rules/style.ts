@@ -6,7 +6,7 @@ export const style: DummyRuleMap = {
   "eslint/max-params": ["error", { max: 4 }],
   "eslint/max-statements": ["error", { max: 20 }],
   "eslint/no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
-  "eslint/prefer-destructuring": ["error", { enforceForRenamedProperties: true }],
+  "eslint/prefer-destructuring": "error",
   "eslint/prefer-template": "error",
   "eslint/sort-imports": ["error", { ignoreDeclarationSort: true }],
   "import/consistent-type-specifier-style": ["error", "prefer-top-level"],

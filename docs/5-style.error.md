@@ -150,19 +150,19 @@ import { bar } from "lib"
 
 배열, 객체 접근에 destructuring 사용을 강제한다.
 
-**베스트 프랙티스.** `const a = obj.a; const b = obj.b` 같은 반복 대신 `const { a, b } = obj`로 묶고, `enforceForRenamedProperties: true`로 `const renamed = obj.original`처럼 단일 프로퍼티를 다른 이름으로 받는 패턴까지 `const { original: renamed } = obj` 표기로 통일한다.
+**베스트 프랙티스.** `const a = obj.a; const b = obj.b` 같은 반복 대신 `const { a, b } = obj`로 묶는다.
 
 **Configuration**
 
 - `VariableDeclarator` (object, default: `{ array: true, object: true }`): 변수 선언에서 배열/객체 비구조화 강제
 - `AssignmentExpression` (object, default: `{ array: true, object: true }`): 할당식에서 배열/객체 비구조화 강제
-- `enforceForRenamedProperties` (bool, default: `false`): 이름 변경 시에도 객체 비구조화 강제
+- `enforceForRenamedProperties` (bool, default: `false`): 이름 변경 시에도 객체 비구조화 강제. 켜지 않는다 — computed 접근(`arr[i]`, `obj[key]`)까지 `const { [i]: item } = arr` 표기를 강제해 오히려 가독성을 해친다. (과거 `["error", { enforceForRenamedProperties: true }]`로 설정했으나 첫 번째 옵션 자리에 두어 무시되고 있었고, oxlint 1.73의 엄격한 스키마 검증에서 파싱 오류가 드러나 기본값 채택으로 정리)
 
 **⚙️ 설정**
 
 ```json
 {
-  "eslint/prefer-destructuring": ["error", { "enforceForRenamedProperties": true }]
+  "eslint/prefer-destructuring": "error"
 }
 ```
 
@@ -175,14 +175,6 @@ const name = user.name
 const email = user.email
 ```
 
-**❌ incorrect**
-
-`enforceForRenamedProperties`로 이름 변경 단순 할당도 잡힌다.
-
-```ts
-const userName = user.name
-```
-
 **✅ correct**
 
 객체 destructuring으로 묶는 형태.
@@ -193,10 +185,10 @@ const { name, email } = user
 
 **✅ correct**
 
-이름 변경은 destructuring 표기로 통일한다.
+이름을 바꿔 받는 단순 할당은 허용한다 (`enforceForRenamedProperties` 미사용).
 
 ```ts
-const { name: userName } = user
+const userName = user.name
 ```
 
 ## [eslint/prefer-template](https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-template)
