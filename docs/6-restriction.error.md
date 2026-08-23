@@ -688,7 +688,7 @@ const total = numbers.reduce((sum, n) => sum + n, 0)
 
 `process.exit()`는 호출 즉시 프로세스를 종료시켜 finally 블록, 정리 로직을 건너뛴다. 오류 상황에서는 `throw`로 호출자에게 제어권을 넘겨 정상적인 오류 처리 흐름을 유지한다.
 
-**베스트 프랙티스.** 라이브러리와 앱 코드에서는 `throw`로 통일하고 서버 함수와 CLI 스크립트(`**/{functions,scripts}/**/*.ts`)는 최상위 진입점이라 비정상 종료 코드를 반환하는 것이 정상 동작이므로 재정의에서 끈다.
+**베스트 프랙티스.** 라이브러리와 앱 코드에서는 `throw`로 통일하고 서버 함수와 CLI 스크립트(`**/{server,functions,scripts}/**/*.ts`)는 최상위 진입점이라 비정상 종료 코드를 반환하는 것이 정상 동작이므로 재정의에서 끈다.
 
 **⚙️ 설정**
 
@@ -699,7 +699,7 @@ const total = numbers.reduce((sum, n) => sum + n, 0)
   },
   "overrides": [
     {
-      "files": ["**/{functions,scripts}/**/*.ts"],
+      "files": ["**/{server,functions,scripts}/**/*.ts"],
       "rules": { "unicorn/no-process-exit": "off" }
     }
   ]

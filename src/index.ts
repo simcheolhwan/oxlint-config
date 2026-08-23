@@ -76,7 +76,7 @@ export const lintConfig: OxlintConfig = {
       },
     },
     {
-      files: ["**/{functions,scripts}/**/*.ts"],
+      files: ["**/{server,functions,scripts}/**/*.ts"],
       rules: {
         "import/no-nodejs-modules": "off",
         "unicorn/no-process-exit": "off",

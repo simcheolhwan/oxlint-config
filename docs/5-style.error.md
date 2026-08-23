@@ -405,7 +405,7 @@ import * as Lib from "legacy-lib"
 
 `fs`, `path`, `crypto` 같은 Node.js 내장 모듈 import를 금지한다. 브라우저 번들에 포함되면 런타임 오류가 발생하거나 번들러가 무거운 폴리필을 추가해 번들 크기가 커지고 환경 일관성이 저하된다.
 
-**베스트 프랙티스.** 기본 앱 코드(`src/**/*.ts`)는 브라우저 타깃이라 Node API가 들어올 자리가 없어 정적으로 차단하고, 서버 함수, 빌드 스크립트, codemod처럼 Node.js에서 동작하는 `**/{functions,scripts}/**/*.ts`는 재정의에서 끈다.
+**베스트 프랙티스.** 기본 앱 코드(`src/**/*.ts`)는 브라우저 타깃이라 Node API가 들어올 자리가 없어 정적으로 차단하고, 서버 함수, 빌드 스크립트, codemod처럼 Node.js에서 동작하는 `**/{server,functions,scripts}/**/*.ts`는 재정의에서 끈다.
 
 **Configuration**
 
@@ -420,7 +420,7 @@ import * as Lib from "legacy-lib"
   },
   "overrides": [
     {
-      "files": ["**/{functions,scripts}/**/*.ts"],
+      "files": ["**/{server,functions,scripts}/**/*.ts"],
       "rules": { "import/no-nodejs-modules": "off" }
     }
   ]
