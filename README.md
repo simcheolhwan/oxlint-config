@@ -47,7 +47,6 @@ import { defineConfig } from "vite-plus"
 export default defineConfig({
   plugins: [tanstackRouter({ quoteStyle: "double" }), react()],
   resolve: { alias: { "@": new URL("src", import.meta.url).pathname } },
-  server: { port: 5173, strictPort: true },
   fmt: { semi: false, sortImports: true, ignorePatterns: ["**/routeTree.gen.ts"] },
   lint: {
     ...lintConfig,
