@@ -1,0 +1,40 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "@simcheolhwan/oxlint-config",
+  "colors": {
+    "primary": "#000000"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Overview",
+        "pages": ["0-overview"]
+      },
+      {
+        "group": "Correctness",
+        "pages": ["1-correctness.error", "1-correctness.off"]
+      },
+      {
+        "group": "Suspicious",
+        "pages": ["2-suspicious.error", "2-suspicious.off"]
+      },
+      {
+        "group": "Perf",
+        "pages": ["3-perf.error", "3-perf.off"]
+      },
+      {
+        "group": "Pedantic",
+        "pages": ["4-pedantic.error", "4-pedantic.off"]
+      },
+      {
+        "group": "Style",
+        "pages": ["5-style.error", "5-style.off"]
+      },
+      {
+        "group": "Restriction",
+        "pages": ["6-restriction.error", "6-restriction.off"]
+      }
+    ]
+  }
+}

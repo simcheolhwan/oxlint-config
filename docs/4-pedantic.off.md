@@ -1,0 +1,224 @@
+---
+title: "Pedantic 제외 규칙"
+---
+
+## [eslint/no-inline-comments](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-inline-comments)
+
+코드와 같은 줄에 붙는 인라인 주석을 금지하고 모든 주석을 별도 줄로 분리하도록 강제한다.
+
+**취향.** 한 줄 메모는 코드 옆에 붙어 있을 때 의미가 가장 분명하고, 별도 줄로 분리하면 시각적 흐름이 끊긴다.
+
+**Configuration**
+
+- `ignorePattern` (regex string, default: 없음): 무시할 인라인 주석 패턴
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+const count = 0 // initial value
+```
+
+**⚠️ rule: correct (노이즈)**
+
+```ts
+// initial value
+const count = 0
+```
+
+## [eslint/no-negated-condition](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-negated-condition) + [unicorn/no-negated-condition](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-negated-condition)
+
+`if (!x) A else B`나 `!x ? a : b`처럼 부정 조건을 우선 분기에 두면 부정 조건부터 해석해야 한다는 규칙. Oxlint에서 두 규칙은 `if`와 삼항을 모두 검출하는 동치 규칙이다.
+
+**취향.** `if`와 삼항 모두 부정 조건이 자연스러운 경우가 많아 일률 금지는 노이즈가 크므로 양쪽을 모두 끈다.
+
+**🆗 rule: incorrect (허용)**
+
+`if` 문에서 부정 조건을 우선 분기에 두는 형태.
+
+```ts
+if (!isReady) {
+  wait()
+} else {
+  start()
+}
+```
+
+**🆗 rule: incorrect (허용)**
+
+삼항식에서 부정 조건을 우선 분기에 두는 형태.
+
+```ts
+const label = !isReady ? "wait" : "go"
+```
+
+**⚠️ rule: correct (노이즈)**
+
+`if` 문을 긍정 조건으로 재정렬한 형태.
+
+```ts
+if (isReady) {
+  start()
+} else {
+  wait()
+}
+```
+
+**⚠️ rule: correct (노이즈)**
+
+삼항식을 긍정 조건으로 재정렬한 형태.
+
+```ts
+const label = isReady ? "go" : "wait"
+```
+
+## [eslint/no-warning-comments](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-warning-comments)
+
+`// TODO`, `// FIXME`, `// XXX` 같은 작업 표시 주석을 금지해 미완성 작업 흔적을 코드에 남기지 못하게 한다.
+
+**취향.** TODO와 FIXME는 진행 중 작업을 표시하는 의도된 표식이고, 린트 오류로 검출하면 매번 억제하거나 메모를 강제로 지우게 되어 인라인 메모와 이슈 트래커의 역할을 구분하기 어려워진다.
+
+**Configuration**
+
+- `terms` (array, default: `["todo", "fixme", "xxx"]`): 매칭할 용어 목록
+- `location` (string, default: `"start"`): 검사 위치 (`start` 주석 시작 / `anywhere` 전체)
+- `decoration` (array, default: `[]`): 무시할 시작 문자 (예: JSDoc의 `*`)
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+// TODO: 검색 결과 페이지네이션 추가
+function loadResults(query: string) {
+  return fetchSearch(query)
+}
+```
+
+## [eslint/require-unicode-regexp](https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-unicode-regexp)
+
+모든 정규식 리터럴과 `RegExp` 생성자에 `u`(또는 `v`) 플래그를 강제해 UTF-16 surrogate pair를 정확히 다루고 Annex B 관용 파싱에서 오류 없이 허용하던 패턴 오류를 조기에 검출한다.
+
+**취향.** 실제 코드의 정규식 대부분은 URL, 식별자, 토큰 같은 ASCII 패턴이라 surrogate pair 문제가 없고, `u` 플래그는 기존 정규식의 불필요한 이스케이프를 문법 오류로 바꿀 수 있어 일률 강제는 노이즈가 크다. Unicode 처리가 필요한 정규식에만 개발자가 의도적으로 플래그를 붙이는 편이 낫다.
+
+**Configuration**
+
+- `requireFlag` (`"u" | "v"`, default: 없음): 두 플래그가 모두 허용될 때 강제할 특정 플래그 지정. 미지정 시 `u`/`v` 둘 다 통과
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+const slug = /[a-z0-9-]+/
+```
+
+## [typescript/only-throw-error](https://oxc.rs/docs/guide/usage/linter/rules/typescript/only-throw-error)
+
+`throw` 문에 `Error` 인스턴스가 아닌 값(문자열, 객체 리터럴, 함수 호출 결과 등)을 던지는 패턴을 금지해 스택 트레이스가 사라지거나 도구가 인식하지 못하는 위험을 막는다.
+
+**취향.** TanStack Router는 인증과 리디렉션을 `throw redirect({...})`로 처리하도록 권장하는데, `redirect()`는 Error 서브클래스가 아닌 라우터 제어 흐름 객체라 규칙이 모두 오탐으로 보고하므로 이 카테고리에서는 규칙을 끈다.
+
+**Configuration**
+
+- `allow` (array, default: `[]`): 허용할 비-Error 타입/값 지정자 목록 (string, file, lib, package 형식)
+- `allowRethrowing` (bool, default: `true`): `catch`가 받은 비-Error 값의 재throw 허용
+- `allowThrowingAny` (bool, default: `true`): `any` 타입 값 throw 허용
+- `allowThrowingUnknown` (bool, default: `true`): `unknown` 타입 값 throw 허용
+
+**🆗 rule: incorrect (허용)**
+
+```tsx
+import { createFileRoute, redirect } from "@tanstack/react-router"
+
+export const Route = createFileRoute("/_authed")({
+  beforeLoad: ({ context, location }) => {
+    if (!context.auth.isAuthenticated) {
+      throw redirect({ to: "/login", search: { redirect: location.href } })
+    }
+  },
+})
+```
+
+## [typescript/prefer-readonly-parameter-types](https://oxc.rs/docs/guide/usage/linter/rules/typescript/prefer-readonly-parameter-types)
+
+변경 가능한 객체 매개변수에 `readonly` 속성 사용을 강제해 함수가 입력을 변경하지 않는다는 제약을 타입으로 표현한다.
+
+**취향.** 모든 객체 매개변수마다 `readonly` 키워드가 늘어나 시그니처 가독성이 크게 떨어지고, 외부 라이브러리 타입이 readonly가 아닐 때 오탐도 크게 늘어난다.
+
+**Configuration**
+
+- `allow` (array, default: `[]`): 검사에서 제외할 타입/값 지정자 목록
+- `checkParameterProperties` (bool, default: `true`): 생성자 매개변수 프로퍼티 검사
+- `ignoreInferredTypes` (bool, default: `false`): 명시적 타입이 없는 매개변수 제외
+- `treatMethodsAsReadonly` (bool, default: `false`): 변경 가능 메서드를 readonly로 간주
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+function mutate(options: { count: number }) {
+  options.count += 1
+}
+```
+
+**⚠️ rule: correct (노이즈)**
+
+```ts
+function read(options: { readonly count: number }) {
+  return options.count + 1
+}
+```
+
+## [typescript/strict-boolean-expressions](https://oxc.rs/docs/guide/usage/linter/rules/typescript/strict-boolean-expressions)
+
+`if (value)`처럼 truthy/falsy에 의존하는 분기는 `0`, `""`, `null` 등에서 의도치 않은 동작을 만든다고 보고 `value !== null` 등 명시적 비교를 요구한다.
+
+**취향.** 안전성은 향상되지만 코드가 매우 장황해져 가독성과 트레이드오프가 크다.
+
+**Configuration**
+
+- `allowAny` (bool, default: `false`): 불리언 컨텍스트에서 `any` 허용
+- `allowNullableBoolean` (bool, default: `false`): `boolean | null | undefined` 허용
+- `allowNullableEnum` (bool, default: `false`): nullable enum 허용
+- `allowNullableNumber` (bool, default: `false`): `number | null | undefined` 허용
+- `allowNullableObject` (bool, default: `true`): nullable object 허용
+- `allowNullableString` (bool, default: `false`): `string | null | undefined` 허용
+- `allowNumber` (bool, default: `true`): `number`를 불리언 컨텍스트에서 허용
+- `allowString` (bool, default: `true`): `string`을 불리언 컨텍스트에서 허용
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+if (text) {
+  render(text)
+}
+```
+
+**⚠️ rule: correct (노이즈)**
+
+```ts
+if (text !== null && text !== undefined && text.length > 0) {
+  render(text)
+}
+```
+
+## [typescript/strict-void-return](https://oxc.rs/docs/guide/usage/linter/rules/typescript/strict-void-return)
+
+`void` 반환 타입의 콜백에서 값을 반환하지 못하게 하는 규칙. 호출자가 반환값을 사용하지 않는다는 타입 의미를 유지한다.
+
+**취향.** `void` 콜백에 한 줄 함수를 쓰는 흔한 패턴까지 검출해 코드 길이만 늘린다.
+
+**Configuration**
+
+- `allowReturnAny` (bool, default: `false`): void 콜백 위치에서 `any` 반환 허용
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+const handlers: Array<() => void> = [() => fetchValue()]
+```
+
+**⚠️ rule: correct (노이즈)**
+
+```ts
+const handlers: Array<() => void> = [
+  () => {
+    fetchValue()
+  },
+]
+```
