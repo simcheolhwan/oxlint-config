@@ -8,6 +8,13 @@ oxlint config for [vite-plus](https://viteplus.dev/).
 pnpm add -D github:simcheolhwan/oxlint-config
 ```
 
+Allow the Git dependency's build script in `pnpm-workspace.yaml`:
+
+```yaml
+allowBuilds:
+  "@simcheolhwan/oxlint-config@git+https://github.com/simcheolhwan/oxlint-config.git": true
+```
+
 To use TanStack Router/Query rules, install the corresponding plugins:
 
 ```bash
