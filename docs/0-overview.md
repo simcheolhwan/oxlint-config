@@ -12,15 +12,15 @@ Oxlint는 correctness 중심의 고신호 rule을 기본 활성화한다. 우선
 
 ## 카테고리
 
-| 카테고리      | App      | Library  | 비고                           |
-| ------------- | -------- | -------- | ------------------------------ |
-| `correctness` | 🔴 error | 🔴 error | CI gate                        |
-| `suspicious`  | 🟡 warn  | 🟡 warn  | 안정화 후 🔴 error 승격        |
-| `perf`        | 🟡 warn  | 🟡 warn  |                                |
-| `pedantic`    | ⚪ off   | 🟡 warn  | Library는 API 품질 요구가 높음 |
-| `style`       | ⚪ off   | ⚪ off   | formatter와 충돌 가능          |
-| `restriction` | ⚪ off   | ⚪ off   | 개별 rule만 선택               |
-| `nursery`     | ⚪ off   | ⚪ off   | 개발 중 rule                   |
+| 카테고리      | App      | Library  | 비고                  |
+| ------------- | -------- | -------- | --------------------- |
+| `correctness` | 🔴 error | 🔴 error | CI gate               |
+| `suspicious`  | 🔴 error | 🔴 error | CI gate               |
+| `perf`        | 🟡 warn  | 🟡 warn  |                       |
+| `pedantic`    | 🟡 warn  | 🟡 warn  |                       |
+| `style`       | ⚪ off   | ⚪ off   | formatter와 충돌 가능 |
+| `restriction` | ⚪ off   | ⚪ off   | 개별 rule만 선택      |
+| `nursery`     | ⚪ off   | ⚪ off   | 개발 중 rule          |
 
 ## 플러그인
 

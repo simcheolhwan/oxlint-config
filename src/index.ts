@@ -60,13 +60,18 @@ export const lintConfig: OxlintConfig = {
       },
     },
     {
-      files: ["**/*.test.ts"],
+      files: ["**/__root.tsx"],
+      rules: {
+        "import/max-dependencies": "off",
+      },
+    },
+    {
+      files: ["**/*.test.{ts,tsx}"],
       rules: {
         "eslint/max-lines": "off",
         "eslint/max-lines-per-function": "off",
         "eslint/max-statements": "off",
         "import/max-dependencies": "off",
-        "jest/require-hook": "error",
         "vitest/require-hook": "error",
       },
     },

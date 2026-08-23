@@ -1,6 +1,6 @@
 {
   "name": "@simcheolhwan/oxlint-config",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "oxlint config",
   "homepage": "https://github.com/simcheolhwan/oxlint-config#readme",
   "license": "MIT",
@@ -21,6 +21,7 @@
   "scripts": {
     "build": "vp pack",
     "dev": "vp pack --watch",
+    "test": "vp test",
     "check": "vp check",
     "prepublishOnly": "vp run build",
     "prepare": "vp config"
@@ -35,7 +36,7 @@
     "vite-plus": "^0.2.9"
   },
   "peerDependencies": {
-    "vite-plus": "*"
+    "vite-plus": ">=0.2.2"
   },
   "packageManager": "pnpm@11.22.0"
 }

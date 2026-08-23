@@ -14,6 +14,7 @@
 
 - `vp install`: 원격 변경을 받은 뒤 가장 먼저 실행해 의존성을 동기화한다.
 - `vp check`: 포맷, lint, 타입 체크.
+- `vp test`: `fixtures/`의 고의 오류가 예상한 규칙과 심각도로 검출되는지 확인.
 - `vp pack`: `dist/` 빌드. 배포 직전 dts 포함 산출물이 정상인지 확인.
 - `vp run <script>`: `package.json` 스크립트 실행 (예: `vp run build`).
 
@@ -21,10 +22,10 @@
 
 `fixtures/`는 `lintConfig`가 규칙을 실제로 검출하는지 확인하는 검증 자산이다. 패키지 산출물이 아니다 (`dist`에 포함되지 않음).
 
-- 고의로 린트 오류를 담는다. **수정하거나 오류를 고치지 마라.** `vp lint`로 규칙 검출 여부를 확인하는 용도다.
+- 고의로 린트 오류를 담는다. **수정하거나 오류를 고치지 마라.** 일반 `vp check`에서는 제외하고 `vp test`가 규칙 검출 결과를 검증한다.
 - 각 오류 옆 인라인 코멘트가 `<plugin>/<rule> (<category>)`를 명시한다.
 - `vite.config.ts`의 `staged`는 `fixtures/`를 제외하므로 커밋 시 자동 fix되지 않는다.
-- `vite.config.ts`의 `lint.jsPlugins`는 `@tanstack/eslint-plugin-query`를 로드해 `fixtures/hook.ts`의 `@tanstack/query/exhaustive-deps`를 검증한다.
+- 루트 `vite.config.ts`의 `lint.ignorePatterns`는 일반 린트에서 `fixtures/`를 제외하고, `fixtures/vite.config.ts`는 fixture 검증 시 이 디렉터리를 별도 Vite+ 프로젝트로 실행한다.
 
 ## 문서 구조
 
@@ -40,7 +41,7 @@
 
 파일 안의 규칙 항목과 `src/rules/<카테고리>.ts`의 같은 코멘트 그룹(예: `// error`) 안의 규칙은 `<plugin>/<rule>` 전체 경로 기준 알파벳순으로 정렬한다. 추가와 승격 시에도 정렬을 유지한다.
 
-`src/rules/<카테고리>.ts`의 `// error` / `// off` 그룹은 `.error.md` / `.off.md` 분류와 1:1 매칭이 기본이다. **예외**: `src/index.ts`의 `overrides`에서 `error`로 켜는 규칙은 메인 그룹이 `// off`여도 `.error.md`에 둔다. 규칙을 실제로 사용하는지가 분류 기준이고, 메인 off + override error 패턴은 항목 본문에서 설명한다. 예: `import/no-named-export`, `import/prefer-default-export` (`**/*.tsx` override), `jest/require-hook`, `vitest/require-hook` (`**/*.test.ts` override).
+`src/rules/<카테고리>.ts`의 `// error` / `// off` 그룹은 `.error.md` / `.off.md` 분류와 1:1 매칭이 기본이다. **예외**: `src/index.ts`의 `overrides`에서 `error`로 켜는 규칙은 메인 그룹이 `// off`여도 `.error.md`에 둔다. 규칙을 실제로 사용하는지가 분류 기준이고, 메인 off + override error 패턴은 항목 본문에서 설명한다. 예: `import/no-named-export`, `import/prefer-default-export` (`**/*.tsx` override), `vitest/require-hook` (`**/*.test.{ts,tsx}` override).
 
 ## 규칙 항목 작성 형식
 

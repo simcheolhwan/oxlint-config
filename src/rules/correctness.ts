@@ -4,7 +4,6 @@ export const correctness: DummyRuleMap = {
   // error
   "eslint/no-dupe-keys": "error",
   "eslint/no-unused-vars": ["error", { ignoreRestSiblings: true }],
-  "jest/require-to-throw-message": "error",
   "jsx-a11y/alt-text": "error",
   "jsx-a11y/anchor-is-valid": "error",
   "jsx-a11y/click-events-have-key-events": "error",

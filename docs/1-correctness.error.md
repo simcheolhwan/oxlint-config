@@ -78,26 +78,6 @@ const { password, ...safeUser } = user
 return safeUser
 ```
 
-## [jest/require-to-throw-message](https://oxc.rs/docs/guide/usage/linter/rules/jest/require-to-throw-message) + [vitest/require-to-throw-message](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-to-throw-message)
-
-`.toThrow()` 또는 `.toThrowError()`를 인자 없이 호출하면 던지기만 하면 어떤 에러든 통과한다. 기대 메시지나 에러 클래스를 인자로 명시해 무엇을 던지는지까지 검증한다.
-
-**베스트 프랙티스.** 인자가 없으면 회귀로 다른 원인의 에러가 던져져도 테스트가 그대로 통과해 결함을 감추고, 두 플러그인이 같은 규칙을 각자 제공하므로 둘 다 켠다.
-
-**❌ incorrect**
-
-```ts
-expect(() => parse(input)).toThrow()
-await expect(load()).rejects.toThrow()
-```
-
-**✅ correct**
-
-```ts
-expect(() => parse(input)).toThrow("Unexpected token")
-await expect(load()).rejects.toThrow("not found")
-```
-
 ## [jsx-a11y/alt-text](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/alt-text)
 
 이미지에 `alt`가 없어 보조 기술이 내용을 알 수 없다. 의미 있는 `alt`를 쓰거나 장식 이미지에는 `alt=""`를 사용한다.
@@ -393,4 +373,24 @@ const zeros = new Array(5).fill(0)
 ```ts
 const slots = Array.from({ length: 5 })
 const zeros = Array.from({ length: 5 }, () => 0)
+```
+
+## [vitest/require-to-throw-message](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-to-throw-message)
+
+`.toThrow()` 또는 `.toThrowError()`를 인자 없이 호출하면 던지기만 하면 어떤 에러든 통과한다. 기대 메시지나 에러 클래스를 인자로 명시해 무엇을 던지는지까지 검증한다.
+
+**베스트 프랙티스.** 인자가 없으면 회귀로 다른 원인의 에러가 던져져도 테스트가 그대로 통과해 결함을 감춘다.
+
+**❌ incorrect**
+
+```ts
+expect(() => parse(input)).toThrow()
+await expect(load()).rejects.toThrow()
+```
+
+**✅ correct**
+
+```ts
+expect(() => parse(input)).toThrow("Unexpected token")
+await expect(load()).rejects.toThrow("not found")
 ```

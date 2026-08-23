@@ -63,7 +63,7 @@ function init(options: { a: number; b: number; c: number; d: number; e: number }
 
 함수 내 statement 개수의 상한을 강제한다.
 
-**취향.** 기본값 `max: 10`은 일반 헬퍼와 React 컴포넌트에서 자주 초과돼 노이즈가 크므로 `.ts`/`.tsx` 구분 없이 `max: 20`으로 완화하고, 테스트 파일은 시나리오 누적으로 자연스럽게 statement가 많아져 `**/*.test.ts`에서 끈다.
+**취향.** 기본값 `max: 10`은 일반 헬퍼와 React 컴포넌트에서 자주 초과돼 노이즈가 크므로 `.ts`/`.tsx` 구분 없이 `max: 20`으로 완화하고, 테스트 파일은 시나리오 누적으로 자연스럽게 statement가 많아져 `**/*.test.{ts,tsx}`에서 끈다.
 
 **Configuration**
 
@@ -77,7 +77,7 @@ function init(options: { a: number; b: number; c: number; d: number; e: number }
   "rules": {
     "eslint/max-statements": ["error", { "max": 20 }]
   },
-  "overrides": [{ "files": ["**/*.test.ts"], "rules": { "eslint/max-statements": "off" } }]
+  "overrides": [{ "files": ["**/*.test.{ts,tsx}"], "rules": { "eslint/max-statements": "off" } }]
 }
 ```
 
@@ -405,7 +405,7 @@ import * as Lib from "legacy-lib"
 
 `fs`, `path`, `crypto` 같은 Node.js 빌트인 모듈 import를 금지한다. 브라우저 번들에 섞이면 런타임 에러가 나거나 번들러가 무거운 폴리필을 끌어와 번들 크기, 환경 일관성이 모두 망가진다.
 
-**베스트 프랙티스.** 기본 앱 코드(`src/**/*.ts`)는 브라우저 타깃이라 Node API가 들어올 자리가 없어 정적으로 차단하고, 빌드 스크립트나 codemod 등 Node에서만 동작하는 `scripts/**/*.ts`는 override로 끈다.
+**베스트 프랙티스.** 기본 앱 코드(`src/**/*.ts`)는 브라우저 타깃이라 Node API가 들어올 자리가 없어 정적으로 차단하고, 서버 함수, 빌드 스크립트, codemod처럼 Node.js에서 동작하는 `**/{functions,scripts}/**/*.ts`는 override로 끈다.
 
 **Configuration**
 
@@ -418,7 +418,12 @@ import * as Lib from "legacy-lib"
   "rules": {
     "import/no-nodejs-modules": "error"
   },
-  "overrides": [{ "files": ["scripts/**/*.ts"], "rules": { "import/no-nodejs-modules": "off" } }]
+  "overrides": [
+    {
+      "files": ["**/{functions,scripts}/**/*.ts"],
+      "rules": { "import/no-nodejs-modules": "off" }
+    }
+  ]
 }
 ```
 
@@ -440,111 +445,11 @@ const data = await response.json()
 
 **✅ correct**
 
-`scripts/**/*.ts`는 오버라이드로 규칙이 꺼져 있어 Node 빌트인 사용이 허용된다.
+`functions/**/*.ts`와 `scripts/**/*.ts`는 override로 규칙이 꺼져 있어 Node.js 빌트인 사용이 허용된다.
 
 ```ts
 import fs from "node:fs"
 const config = fs.readFileSync("./config.json", "utf8")
-```
-
-## [jest/prefer-ending-with-an-expect](https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-ending-with-an-expect)
-
-테스트 본문 마지막 statement가 assertion(`expect(...)` 등)이 아니면 잡는다. setup이나 side-effect로 끝나면 검증이 누락된 채 silent하게 통과될 수 있다.
-
-**베스트 프랙티스.** vitest는 jest API와 호환되므로 jest 플러그인 규칙이 그대로 작동하고, `vitest/*`에는 동치 규칙이 없어 jest 플러그인을 도입해 보강한다.
-
-**Configuration**
-
-- `assertFunctionNames` (string[], default: `["expect"]`): assertion 함수로 취급할 함수 이름 목록
-- `additionalTestBlockFunctions` (string[], default: `[]`): test 블록으로 취급할 추가 함수 이름 목록
-
-**❌ incorrect**
-
-```ts
-it("changes selection", () => {
-  const select = render(MySelect)
-  expect(select).toBeDefined()
-  select.setProp("value", 2)
-})
-```
-
-**✅ correct**
-
-```ts
-it("changes selection", () => {
-  const select = render(MySelect)
-  expect(select).toBeDefined()
-  select.setProp("value", 2)
-  expect(select.toHTML()).toContain('value="2"')
-})
-```
-
-## [jest/prefer-strict-equal](https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-strict-equal)
-
-`expect(...).toEqual(...)`는 객체, 배열의 `undefined` 값을 비교에서 무시해 `{ a: 1, b: undefined }`와 `{ a: 1 }`을 같다고 통과시킨다. `toStrictEqual`은 키 존재 여부와 prototype까지 검사하므로 모양 차이를 누락 없이 잡는다.
-
-**베스트 프랙티스.** vitest는 jest matcher API와 호환되어 jest 플러그인 규칙이 그대로 작동하고, `jest/prefer-ending-with-an-expect`/`jest/require-hook`/`vitest/require-to-throw-message`와 짝을 이뤄 테스트 엄격도를 일관되게 끌어올린다.
-
-**❌ incorrect**
-
-```ts
-expect(user).toEqual({ id: "u1", name: "Sim" })
-```
-
-**✅ correct**
-
-```ts
-expect(user).toStrictEqual({ id: "u1", name: "Sim" })
-```
-
-## [jest/require-hook](https://oxc.rs/docs/guide/usage/linter/rules/jest/require-hook) + [vitest/require-hook](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-hook)
-
-테스트 파일 최상위나 `describe` 본문 직접 위치에 표현식 실행 코드를 두면 파일이 로드되는 시점에 부수효과가 일어나 테스트 격리와 실행 순서 의존성이 깨진다. 셋업 코드를 `beforeAll`, `beforeEach` 같은 hook 안으로 옮기게 강제한다. jest와 vitest 두 규칙은 동일 의도이며 vitest 플러그인이 jest API를 그대로 처리하므로 둘 다 켠다.
-
-**베스트 프랙티스.** 테스트 파일이 아닌 일반 코드까지 잡으면 false positive가 폭증하므로 메인 rules에는 `"off"`로 두고 `**/*.test.ts` override에서만 `"error"`로 켠다.
-
-**Configuration**
-
-- `allowedFunctionCalls` (string[], default: `[]`): hook 밖에서 허용할 함수 이름 목록 (jest와 vitest 동일)
-
-**⚙️ 설정**
-
-```json
-{
-  "rules": {
-    "jest/require-hook": "off",
-    "vitest/require-hook": "off"
-  },
-  "overrides": [
-    {
-      "files": ["**/*.test.ts"],
-      "rules": {
-        "jest/require-hook": "error",
-        "vitest/require-hook": "error"
-      }
-    }
-  ]
-}
-```
-
-**❌ incorrect**
-
-```ts
-initializeDatabase()
-describe("user", () => {
-  it("creates", () => expect(create()).toBe(true))
-})
-```
-
-**✅ correct**
-
-```ts
-beforeEach(() => {
-  initializeDatabase()
-})
-describe("user", () => {
-  it("creates", () => expect(create()).toBe(true))
-})
 ```
 
 ## [promise/prefer-await-to-then](https://oxc.rs/docs/guide/usage/linter/rules/promise/prefer-await-to-then)
@@ -838,4 +743,52 @@ expect(error).toBeFalsy()
 ```ts
 expect(isReady).toBe(true)
 expect(error).toBe(false)
+```
+
+## [vitest/require-hook](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-hook)
+
+테스트 파일 최상위나 `describe` 본문 직접 위치에 표현식 실행 코드를 두면 파일을 불러올 때 부수 효과가 발생해 테스트 격리와 실행 순서 의존성이 깨진다. 설정 코드를 `beforeAll`, `beforeEach` 같은 훅 안으로 옮기게 강제한다.
+
+**베스트 프랙티스.** 테스트 파일이 아닌 일반 코드까지 잡으면 false positive가 폭증하므로 메인 rules에는 `"off"`로 두고 `**/*.test.{ts,tsx}` override에서만 `"error"`로 켠다.
+
+**Configuration**
+
+- `allowedFunctionCalls` (string[], default: `[]`): 훅 밖에서 허용할 함수 이름 목록
+
+**⚙️ 설정**
+
+```json
+{
+  "rules": {
+    "vitest/require-hook": "off"
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.{ts,tsx}"],
+      "rules": {
+        "vitest/require-hook": "error"
+      }
+    }
+  ]
+}
+```
+
+**❌ incorrect**
+
+```ts
+initializeDatabase()
+describe("user", () => {
+  it("creates", () => expect(create()).toBe(true))
+})
+```
+
+**✅ correct**
+
+```ts
+beforeEach(() => {
+  initializeDatabase()
+})
+describe("user", () => {
+  it("creates", () => expect(create()).toBe(true))
+})
 ```

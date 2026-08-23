@@ -62,7 +62,7 @@ if (value === "1") {
 
 파일이 길어질수록 책임이 한 모듈에 누적되어 탐색, 리뷰가 어려워진다. 줄 수 상한을 넘으면 책임 단위로 모듈을 분리한다.
 
-**취향.** 기본 상한(`max: 300`)을 유지하되 빈 줄과 주석은 의미 있는 신호가 아니라 두 옵션을 켜 실제 코드 줄 수만 세고, 테스트 파일은 시나리오 누적으로 자연스럽게 길어져 `**/*.test.ts`에서 끈다.
+**취향.** 기본 상한(`max: 300`)을 유지하되 빈 줄과 주석은 의미 있는 신호가 아니라 두 옵션을 켜 실제 코드 줄 수만 세고, 테스트 파일은 시나리오 누적으로 자연스럽게 길어져 `**/*.test.{ts,tsx}`에서 끈다.
 
 **Configuration**
 
@@ -77,7 +77,7 @@ if (value === "1") {
   "rules": {
     "eslint/max-lines": ["error", { "skipBlankLines": true, "skipComments": true }]
   },
-  "overrides": [{ "files": ["**/*.test.ts"], "rules": { "eslint/max-lines": "off" } }]
+  "overrides": [{ "files": ["**/*.test.{ts,tsx}"], "rules": { "eslint/max-lines": "off" } }]
 }
 ```
 
@@ -97,7 +97,7 @@ if (value === "1") {
 
 함수가 길어질수록 책임이 모호해지고 테스트하기 어려워진다. 줄 수 상한을 넘으면 더 작은 함수로 분리한다.
 
-**취향.** 베이스를 `max: 80`으로 완화하고 `**/*.tsx`는 props/hooks/핸들러/JSX 트리 누적을 반영해 `max: 160`으로 더 완화하며, 빈 줄/주석은 카운트 제외하고 `**/*.test.ts`는 시나리오 누적으로 끈다.
+**취향.** 베이스를 `max: 80`으로 완화하고 `**/*.tsx`는 props/hooks/핸들러/JSX 트리 누적을 반영해 `max: 160`으로 더 완화하며, 빈 줄/주석은 카운트 제외하고 `**/*.test.{ts,tsx}`는 시나리오 누적으로 끈다.
 
 **Configuration**
 
@@ -126,7 +126,7 @@ if (value === "1") {
         ]
       }
     },
-    { "files": ["**/*.test.ts"], "rules": { "eslint/max-lines-per-function": "off" } }
+    { "files": ["**/*.test.{ts,tsx}"], "rules": { "eslint/max-lines-per-function": "off" } }
   ]
 }
 ```
@@ -200,7 +200,7 @@ function load() {
         "import/max-dependencies": ["error", { "max": 16, "ignoreTypeImports": true }]
       }
     },
-    { "files": ["**/*.test.ts"], "rules": { "import/max-dependencies": "off" } },
+    { "files": ["**/*.test.{ts,tsx}"], "rules": { "import/max-dependencies": "off" } },
     { "files": ["**/__root.tsx"], "rules": { "import/max-dependencies": "off" } }
   ]
 }

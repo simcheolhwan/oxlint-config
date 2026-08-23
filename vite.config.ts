@@ -9,12 +9,7 @@ export default defineConfig({
   },
   lint: {
     ...lintConfig,
-    // fixtures 검증용
-    jsPlugins: ["@tanstack/eslint-plugin-query"],
-    rules: {
-      ...lintConfig.rules,
-      "@tanstack/query/exhaustive-deps": "error",
-    },
+    ignorePatterns: ["fixtures/**"],
   },
   staged: {
     "!fixtures/**": "vp check --fix",
@@ -22,5 +17,9 @@ export default defineConfig({
   pack: {
     dts: { tsgo: true },
     exports: true,
+  },
+  test: {
+    globals: true,
+    include: ["scripts/**/*.test.ts"],
   },
 })

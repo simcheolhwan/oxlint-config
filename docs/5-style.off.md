@@ -313,26 +313,6 @@ const b = 2
 export { a, b }
 ```
 
-## [jest/prefer-lowercase-title](https://oxc.rs/docs/guide/usage/linter/rules/jest/prefer-lowercase-title) + [vitest/prefer-lowercase-title](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-lowercase-title)
-
-`describe`/`it`/`test` 제목 첫 글자를 항상 소문자로 강제한다. jest와 vitest 두 규칙은 동일 의도다.
-
-**취향.** 테스트 제목은 한국어 혼용, 고유명사 대문자(`API`, `HTTP`, `GET`), 문장형 표현이 자주 등장해 일률 소문자 강제가 부자연스러우므로 jest 플러그인을 도입했으니 두 규칙 모두 명시적으로 끈다.
-
-**Configuration**
-
-- `ignore` (string[], default: `[]`): 검사 제외 함수 (`describe`, `test`, `it`, `bench`) (jest와 vitest 동일)
-- `allowedPrefixes` (string[], default: `[]`): 대문자 시작을 허용할 접두사 목록 (jest와 vitest 동일)
-- `ignoreTopLevelDescribe` (bool, default: `false`): 최상위 `describe`는 대문자 허용 (jest와 vitest 동일)
-- `lowercaseFirstCharacterOnly` (bool, default: `true`): 첫 글자만 소문자 검사 (jest와 vitest 동일)
-
-**🆗 rule: incorrect (허용)**
-
-```ts
-describe("Parses ISO date", () => {})
-describe("GET /users", () => {})
-```
-
 ## [promise/prefer-await-to-callbacks](https://oxc.rs/docs/guide/usage/linter/rules/promise/prefer-await-to-callbacks)
 
 `callback(err, data)` 같은 Node-style 콜백 사용을 금지하고 `async`/`await`을 강제한다.
@@ -643,6 +623,26 @@ import { describe, expect, it } from "vitest"
 describe("parse", () => {
   it("works", () => expect(true).toBe(true))
 })
+```
+
+## [vitest/prefer-lowercase-title](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-lowercase-title)
+
+`describe`/`it`/`test` 제목 첫 글자를 항상 소문자로 강제한다.
+
+**취향.** 테스트 제목은 한국어 혼용, 고유명사 대문자(`API`, `HTTP`, `GET`), 문장형 표현이 자주 등장해 일률 소문자 강제가 부자연스러우므로 명시적으로 끈다.
+
+**Configuration**
+
+- `ignore` (string[], default: `[]`): 검사 제외 함수 (`describe`, `test`, `it`, `bench`)
+- `allowedPrefixes` (string[], default: `[]`): 대문자 시작을 허용할 접두사 목록
+- `ignoreTopLevelDescribe` (bool, default: `false`): 최상위 `describe`는 대문자 허용
+- `lowercaseFirstCharacterOnly` (bool, default: `true`): 첫 글자만 소문자 검사
+
+**🆗 rule: incorrect (허용)**
+
+```ts
+describe("Parses ISO date", () => {})
+describe("GET /users", () => {})
 ```
 
 ## [vitest/prefer-to-be-falsy](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be-falsy) + [vitest/prefer-to-be-truthy](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-to-be-truthy)
