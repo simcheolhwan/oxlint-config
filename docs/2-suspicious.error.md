@@ -37,6 +37,37 @@ function transform() {
 }
 ```
 
+## [eslint/no-underscore-dangle](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-underscore-dangle)
+
+밑줄로 시작하거나 끝나는 식별자와 멤버 접근을 제한한다. 클래스의 비공개 상태는 `#privateField`로 표현하고, 외부 데이터가 정의한 밑줄 키는 대괄호 표기로 접근한다.
+
+**취향.** 밑줄 기반 private 관례를 표준 private class field와 구분하고, 시스템이 소유하지 않은 외부 키는 대괄호 표기로 눈에 띄게 만들어 코드 소유권을 명확히 한다.
+
+**Configuration**
+
+- `allow` (string[], default: `[]`): 밑줄 사용을 허용할 식별자명 목록
+- `allowAfterSuper` (bool, default: `false`): `super` 객체 멤버의 밑줄 허용
+- `allowAfterThis` (bool, default: `false`): `this` 객체 멤버의 밑줄 허용
+- `allowAfterThisConstructor` (bool, default: `false`): `this.constructor` 객체 멤버의 밑줄 허용
+- `allowFunctionParams` (bool, default: `true`): 함수 매개변수 이름의 밑줄 허용
+- `allowInArrayDestructuring` (bool, default: `true`): 배열 구조 분해 변수명의 밑줄 허용
+- `allowInObjectDestructuring` (bool, default: `true`): 객체 구조 분해 변수명의 밑줄 허용
+- `allowInUsingDeclarations` (bool, default: `false`): `using`과 `await using` 선언의 밑줄 허용
+- `enforceInClassFields` (bool, default: `false`): 클래스 필드명의 밑줄 검사
+- `enforceInMethodNames` (bool, default: `false`): 메서드명의 밑줄 검사
+
+**❌ incorrect**
+
+```ts
+const source = fileData._CFURLString
+```
+
+**✅ correct**
+
+```ts
+const source = fileData["_CFURLString"]
+```
+
 ## [eslint/preserve-caught-error](https://oxc.rs/docs/guide/usage/linter/rules/eslint/preserve-caught-error)
 
 `catch` 블록에서 새 `Error`를 던질 때 원본 오류를 잃으면 원인 추적이 어려워진다. `throw new Error("...", { cause: caughtError })`처럼 `cause`로 원본을 보존한다.
@@ -149,6 +180,39 @@ CSS는 `allow` 목록으로 허용된다.
 
 ```ts
 import "./styles.css"
+```
+
+## [promise/no-multiple-resolved](https://oxc.rs/docs/guide/usage/linter/rules/promise/no-multiple-resolved)
+
+`Promise` 생성자의 executor에서 하나의 실행 경로가 `resolve`나 `reject`를 여러 번 호출할 수 있는 코드를 금지한다. 조건별 완료 경로를 분리해 한 번만 호출한다.
+
+**베스트 프랙티스.** Promise는 첫 번째 완료만 반영하고 이후 호출을 조용히 무시하므로, 중복 완료는 잘못된 분기나 누락된 조기 반환을 감추는 오류 신호다.
+
+**❌ incorrect**
+
+```ts
+new Promise((resolve, reject) => {
+  read((error, value) => {
+    if (error) {
+      reject(error)
+    }
+    resolve(value)
+  })
+})
+```
+
+**✅ correct**
+
+```ts
+new Promise((resolve, reject) => {
+  read((error, value) => {
+    if (error) {
+      reject(error)
+    } else {
+      resolve(value)
+    }
+  })
+})
 ```
 
 ## [typescript/no-unnecessary-boolean-literal-compare](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-boolean-literal-compare)
@@ -293,4 +357,22 @@ const sorted = [...array].sort()
 
 ```ts
 const sorted = array.toSorted()
+```
+
+## [unicorn/no-hex-escape](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-hex-escape)
+
+문자열의 16진수 이스케이프(`\xNN`)를 Unicode 이스케이프(`\uNNNN`)로 바꿔 표기를 통일한다.
+
+**취향.** 같은 코드 포인트를 두 길이의 이스케이프로 표현하지 않도록 제한해 제어 문자와 Unicode 문자의 표기를 일관되게 유지하며, 자동 수정이 가능해 도입 비용이 낮다.
+
+**❌ incorrect**
+
+```ts
+const escape = "\x1B"
+```
+
+**✅ correct**
+
+```ts
+const escape = "\u001B"
 ```

@@ -329,6 +329,31 @@ useEffect(() => {
 }, [props.title])
 ```
 
+## [typescript/no-base-to-string](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-base-to-string)
+
+객체를 문자열로 변환했을 때 기본값인 `"[object Object]"`가 나올 수 있는 호출을 금지한다. 문자열로 표현할 필드를 직접 선택하거나 유용한 `toString` 구현을 제공한다.
+
+**베스트 프랙티스.** 로그, UI, 식별자에 의미 없는 기본 문자열이 섞이는 결함을 타입 정보로 미리 차단하며, 문자열 변환 의도를 코드에 드러낸다.
+
+**Configuration**
+
+- `checkUnknown` (bool, default: `false`): `unknown` 타입 값의 문자열 변환도 검사
+- `ignoredTypeNames` (string[], default: `["Error", "RegExp", "URL", "URLSearchParams"]`): 유용한 문자열을 반환한다고 간주해 검사에서 제외할 타입명 목록
+
+**❌ incorrect**
+
+```ts
+const user = { id: 1, name: "Ada" }
+const label = user.toString()
+```
+
+**✅ correct**
+
+```ts
+const user = { id: 1, name: "Ada" }
+const label = `${user.id}:${user.name}`
+```
+
 ## [typescript/no-floating-promises](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-floating-promises)
 
 처리되지 않은 Promise는 reject 시 `unhandledrejection`으로 보고되어 디버깅이 어려워진다. `await`을 붙이거나 `.catch()`를 연결하거나 `void` 연산자로 의도를 명시한다.

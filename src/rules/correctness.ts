@@ -13,6 +13,7 @@ export const correctness: DummyRuleMap = {
   "jsx-a11y/no-static-element-interactions": "error",
   "jsx-a11y/prefer-tag-over-role": "error",
   "react/exhaustive-deps": "error",
+  "typescript/no-base-to-string": "error",
   "typescript/no-floating-promises": "error",
   "unicorn/no-new-array": "error",
   "vitest/require-to-throw-message": "error",

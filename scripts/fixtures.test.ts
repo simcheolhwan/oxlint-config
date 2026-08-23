@@ -8,14 +8,18 @@ interface Diagnostic {
 const expectedDiagnostics: Diagnostic[] = [
   { code: "@tanstack/query(exhaustive-deps)", severity: "error" },
   { code: "eslint(eqeqeq)", severity: "error" },
+  { code: "eslint(no-underscore-dangle)", severity: "error" },
   { code: "eslint(no-unused-vars)", severity: "error" },
+  { code: "promise(no-multiple-resolved)", severity: "error" },
   { code: "react-hooks(exhaustive-deps)", severity: "error" },
   { code: "react-hooks(rules-of-hooks)", severity: "warning" },
   { code: "typescript(array-type)", severity: "error" },
   { code: "typescript(consistent-type-definitions)", severity: "error" },
+  { code: "typescript(no-base-to-string)", severity: "error" },
   { code: "typescript(no-non-null-assertion)", severity: "error" },
   { code: "unicorn(no-array-for-each)", severity: "error" },
   { code: "unicorn(no-array-sort)", severity: "error" },
+  { code: "unicorn(no-hex-escape)", severity: "error" },
   { code: "vitest(require-hook)", severity: "error" },
   { code: "vitest(require-to-throw-message)", severity: "error" },
 ]
