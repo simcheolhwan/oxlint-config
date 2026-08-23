@@ -34,17 +34,6 @@
       {
         "group": "Restriction",
         "pages": ["6-restriction.error", "6-restriction.off"]
-      },
-      {
-        "group": "Drafts",
-        "pages": [
-          "4-pedantic.error.draft",
-          "5-style.error.draft",
-          "5-style.off.draft",
-          "6-restriction.error.draft",
-          "6-restriction.off.draft",
-          "tanstack.draft"
-        ]
       }
     ]
   }
