@@ -12,17 +12,16 @@
 
 ## 검증 명령
 
-- `vp install`: 원격 변경을 받은 뒤 가장 먼저 실행해 의존성을 동기화한다.
-- `vp check`: 포매팅, 린트, 타입 검사.
-- `vp test`: `fixtures/`의 고의 오류가 예상한 규칙과 심각도로 검출되는지 확인.
+- `pnpm install`: 원격 변경을 받은 뒤 가장 먼저 실행해 의존성을 동기화한다.
+- `pnpm check`: 포매팅, 린트, 타입 검사.
+- `pnpm test`: `fixtures/`의 고의 오류가 예상한 규칙과 심각도로 검출되는지 확인.
 - `vp pack`: `dist/` 빌드. 배포 직전 dts 포함 산출물이 정상인지 확인.
-- `vp run <script>`: `package.json` 스크립트 실행 (예: `vp run build`).
 
 ## 린트 규칙 검증
 
 `fixtures/`는 `lintConfig`가 규칙을 실제로 검출하는지 확인하는 검증 자산이다. 패키지 산출물이 아니다 (`dist`에 포함되지 않음).
 
-- 고의로 린트 오류를 담는다. **수정하거나 오류를 고치지 마라.** 일반 `vp check`에서는 제외하고 `vp test`가 규칙 검출 결과를 검증한다.
+- 고의로 린트 오류를 담는다. **수정하거나 오류를 고치지 마라.** 일반 `pnpm check`에서는 제외하고 `pnpm test`가 규칙 검출 결과를 검증한다.
 - 각 오류 옆 인라인 코멘트가 `<plugin>/<rule> (<category>)`를 명시한다.
 - `vite.config.ts`의 `staged`는 `fixtures/`를 제외하므로 커밋 시 자동 수정되지 않는다.
 - 루트 `vite.config.ts`의 `lint.ignorePatterns`는 일반 린트에서 `fixtures/`를 제외하고, `fixtures/vite.config.ts`는 검증 파일 검사 시 이 디렉터리를 별도 Vite+ 프로젝트로 실행한다.
@@ -80,7 +79,7 @@
 - `src/rules/<카테고리>.ts` 또는 `src/index.ts`의 `rules`/`overrides`/`categories`를 바꾸면 해당 카테고리의 `docs/N-*.md`를 같은 작업에서 업데이트한다.
 - 새 Oxlint 내장 플러그인을 활성화할 때는 `src/index.ts`의 `plugins` 배열에 등록하고, 채택 규칙을 `src/rules/<카테고리>.ts`에, 결정 근거를 `docs/N-*.md`에 같은 작업에서 추가한다.
 - `categories`를 새로 켤 때는 내장 기능이 자동 활성화하는 규칙 중 끄고 싶은 항목을 `src/rules/*.ts`의 `// off` 그룹에 명시적으로 등록한다 (예: `react/react-in-jsx-scope`).
-- 변경 후 `vp check`로 오탐을 확인하고, 새 오탐이 나오면 `.off.md`에 근거를 남긴 뒤 끈다.
+- 변경 후 `pnpm check`로 오탐을 확인하고, 새 오탐이 나오면 `.off.md`에 근거를 남긴 뒤 끈다.
 
 ## 작성 언어
 
