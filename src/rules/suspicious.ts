@@ -8,6 +8,7 @@ export const suspicious: DummyRuleMap = {
   "import/no-named-as-default": "error",
   "import/no-unassigned-import": ["error", { allow: ["**/*.css"] }],
   "promise/no-multiple-resolved": "error",
+  "react/exhaustive-effect-dependencies": "error",
   "typescript/no-unnecessary-boolean-literal-compare": "error",
   "typescript/no-unnecessary-type-arguments": "error",
   "typescript/no-unnecessary-type-parameters": "error",

@@ -5,7 +5,8 @@ import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 
 export function useScaledLogger(factor: number): void {
-  // react/exhaustive-deps (correctness): deps 배열에 'factor' 누락.
+  // react/exhaustive-deps (correctness): 의존성 배열에 'factor' 누락.
+  // react/exhaustive-effect-dependencies (suspicious): 의존성 배열에 'factor' 누락.
   useEffect(() => {
     console.info(factor * 2)
   }, [])
@@ -14,6 +15,7 @@ export function useScaledLogger(factor: number): void {
 export function useMaybeState(enabled: boolean): void {
   if (enabled) {
     // react/rules-of-hooks (pedantic): 훅을 조건부(if)로 호출.
+    // react/hooks (suspicious): 훅을 조건부(if)로 호출.
     const [value, setValue] = useState(0)
     console.info(value)
     setValue(1)

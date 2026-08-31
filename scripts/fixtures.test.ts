@@ -12,7 +12,12 @@ const expectedDiagnostics: Diagnostic[] = [
   { code: "eslint(no-unused-vars)", severity: "error" },
   { code: "promise(no-multiple-resolved)", severity: "error" },
   { code: "react-hooks(exhaustive-deps)", severity: "error" },
+  { code: "react(exhaustive-effect-dependencies)", severity: "error" },
+  { code: "react(exhaustive-effect-dependencies)", severity: "error" },
+  { code: "react(hooks)", severity: "error" },
+  { code: "react(refs)", severity: "error" },
   { code: "react-hooks(rules-of-hooks)", severity: "warning" },
+  { code: "react(set-state-in-effect)", severity: "error" },
   { code: "typescript(array-type)", severity: "error" },
   { code: "typescript(consistent-type-definitions)", severity: "error" },
   { code: "typescript(no-base-to-string)", severity: "error" },
@@ -54,7 +59,16 @@ function compareDiagnostics(left: Diagnostic, right: Diagnostic): number {
 test("fixtures report the expected lint diagnostics", () => {
   const result = spawnSync(
     "vp",
-    ["-C", "fixtures", "lint", "basic.ts", "hook.ts", "vitest.test.ts", "--format=json"],
+    [
+      "-C",
+      "fixtures",
+      "lint",
+      "basic.ts",
+      "compiler.ts",
+      "hook.ts",
+      "vitest.test.ts",
+      "--format=json",
+    ],
     { encoding: "utf8" },
   )
 

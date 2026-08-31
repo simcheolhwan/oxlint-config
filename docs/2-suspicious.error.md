@@ -215,6 +215,28 @@ new Promise((resolve, reject) => {
 })
 ```
 
+## [react/exhaustive-effect-dependencies](https://oxc.rs/docs/guide/usage/linter/rules/react/exhaustive-effect-dependencies)
+
+effect 의존성 배열에서 effect가 읽지만 누락된 값과 읽지 않는데 포함된 값을 검출한다. 실제로 읽는 값만 의존성 배열에 포함하거나 불필요한 effect를 제거한다.
+
+**베스트 프랙티스.** 누락된 의존성은 이전 렌더링의 값을 참조하게 하고 불필요한 의존성은 effect를 다시 실행하므로, 의존성 배열을 effect 본문과 일치시킨다.
+
+**❌ incorrect**
+
+```tsx
+useEffect(() => {
+  document.title = title
+}, [theme])
+```
+
+**✅ correct**
+
+```tsx
+useEffect(() => {
+  document.title = title
+}, [title])
+```
+
 ## [typescript/no-unnecessary-boolean-literal-compare](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-boolean-literal-compare)
 
 이미 `boolean` 타입인 식별자를 `=== true`/`!== false`로 비교하는 불필요한 코드를 검출한다. 변수를 그대로 사용하고 부정이 필요하면 `!`만 붙인다.

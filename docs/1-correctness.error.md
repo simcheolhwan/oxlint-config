@@ -329,6 +329,58 @@ useEffect(() => {
 }, [props.title])
 ```
 
+## [react/refs](https://oxc.rs/docs/guide/usage/linter/rules/react/refs)
+
+렌더링 중 `ref.current`를 읽거나 쓰면 React가 값의 변경을 추적하지 못한다. `ref.current` 접근은 이벤트 핸들러나 effect 안에서만 수행한다.
+
+**베스트 프랙티스.** 렌더링 중 `ref.current`를 읽으면 React가 값 변경을 구독하지 않아 화면에 오래된 값이 남을 수 있고, DOM 연결 전 값을 참조할 수도 있다.
+
+**❌ incorrect**
+
+```tsx
+function SearchInput() {
+  const inputRef = useRef<HTMLInputElement>(null)
+  const value = inputRef.current?.value
+  return <span>{value}</span>
+}
+```
+
+**✅ correct**
+
+```tsx
+function SearchInput() {
+  const inputRef = useRef<HTMLInputElement>(null)
+
+  function readValue() {
+    return inputRef.current?.value
+  }
+
+  return <input ref={inputRef} onChange={readValue} />
+}
+```
+
+## [react/set-state-in-effect](https://oxc.rs/docs/guide/usage/linter/rules/react/set-state-in-effect)
+
+effect 본문에서 상태를 동기적으로 변경하면 즉시 추가 렌더링이 발생한다. props와 상태에서 얻을 수 있는 값은 렌더링 중 계산한다.
+
+**베스트 프랙티스.** effect에서 파생 상태를 즉시 변경하면 첫 렌더링 직후 같은 값을 다시 렌더링하므로, 파생 관계를 직접 계산해 불필요한 렌더링과 상태 동기화 오류를 함께 없앤다.
+
+**❌ incorrect**
+
+```tsx
+const [isSelected, setIsSelected] = useState(false)
+
+useEffect(() => {
+  setIsSelected(selectedId === itemId)
+}, [itemId, selectedId])
+```
+
+**✅ correct**
+
+```tsx
+const isSelected = selectedId === itemId
+```
+
 ## [typescript/no-base-to-string](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-base-to-string)
 
 객체를 문자열로 변환했을 때 기본값인 `"[object Object]"`가 나올 수 있는 호출을 금지한다. 문자열로 표현할 필드를 직접 선택하거나 유용한 `toString` 구현을 제공한다.
