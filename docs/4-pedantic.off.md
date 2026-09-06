@@ -4,13 +4,13 @@ title: "Pedantic 제외 규칙"
 
 ## [eslint/no-inline-comments](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-inline-comments)
 
-코드와 같은 줄에 붙는 인라인 주석을 금지하고 모든 주석을 별도 줄로 분리하도록 강제한다.
+코드와 같은 줄에 붙는 인라인 코멘트를 금지하고 모든 코멘트를 별도 줄로 분리하도록 강제한다.
 
 **취향.** 한 줄 메모는 코드 옆에 붙어 있을 때 의미가 가장 분명하고, 별도 줄로 분리하면 시각적 흐름이 끊긴다.
 
 **Configuration**
 
-- `ignorePattern` (regex string, default: 없음): 무시할 인라인 주석 패턴
+- `ignorePattern` (regex string, default: 없음): 무시할 인라인 코멘트 패턴
 
 **🆗 rule: incorrect (허용)**
 
@@ -73,14 +73,14 @@ const label = isReady ? "go" : "wait"
 
 ## [eslint/no-warning-comments](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-warning-comments)
 
-`// TODO`, `// FIXME`, `// XXX` 같은 작업 표시 주석을 금지해 미완성 작업 흔적을 코드에 남기지 못하게 한다.
+`// TODO`, `// FIXME`, `// XXX` 같은 작업 표시 코멘트를 금지해 미완성 작업 흔적을 코드에 남기지 못하게 한다.
 
 **취향.** TODO와 FIXME는 진행 중 작업을 표시하는 의도된 표식이고, 린트 오류로 검출하면 매번 억제하거나 메모를 강제로 지우게 되어 인라인 메모와 이슈 트래커의 역할을 구분하기 어려워진다.
 
 **Configuration**
 
 - `terms` (array, default: `["todo", "fixme", "xxx"]`): 매칭할 용어 목록
-- `location` (string, default: `"start"`): 검사 위치 (`start` 주석 시작 / `anywhere` 전체)
+- `location` (string, default: `"start"`): 검사 위치 (`start` 코멘트 시작 / `anywhere` 전체)
 - `decoration` (array, default: `[]`): 무시할 시작 문자 (예: JSDoc의 `*`)
 
 **🆗 rule: incorrect (허용)**

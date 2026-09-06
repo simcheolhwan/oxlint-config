@@ -323,7 +323,7 @@ JSX 문법은 `.tsx` 확장자에서만 작성한다. 도구 추론과 에디터
 
 - `allow` (`"always" | "as-needed"`, default: `"always"`): `"as-needed"`는 실제 JSX 포함 파일만 검사
 - `extensions` (string[], default: `[".jsx"]`): 유효한 파일 확장자 목록
-- `ignoreFilesWithoutCode` (bool, default: `false`): 빈 파일, 주석만 있는 파일 무시
+- `ignoreFilesWithoutCode` (bool, default: `false`): 빈 파일, 코멘트만 있는 파일 무시
 
 **⚙️ 설정**
 

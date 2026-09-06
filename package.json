@@ -16,19 +16,23 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "test": "vp test",
+    "lint": "vp lint",
+    "lint:fix": "vp lint --fix",
     "check": "vp check",
+    "test": "vp test",
     "setup": "vp config",
     "prepare": "vp pack"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "latest",
     "@tanstack/react-query": "latest",
+    "@tsconfig/bases": "latest",
     "@types/node": "latest",
     "@types/react": "latest",
     "react": "latest",
     "typescript": "latest",
-    "vite-plus": "latest"
+    "vite-plus": "latest",
+    "zod": "latest"
   },
   "peerDependencies": {
     "vite-plus": ">=0.3.0"

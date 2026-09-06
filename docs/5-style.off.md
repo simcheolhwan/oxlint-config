@@ -29,17 +29,17 @@ const helper = () => {
 
 ## [eslint/capitalized-comments](https://oxc.rs/docs/guide/usage/linter/rules/eslint/capitalized-comments)
 
-주석이 항상 대문자로 시작해야 한다고 강제한다.
+코멘트가 항상 대문자로 시작해야 한다고 강제한다.
 
-**취향.** 주석 톤은 사람마다 다르고 맥락마다 달라 대소문자를 강제할 가치가 거의 없다.
+**취향.** 코멘트 톤은 사람마다 다르고 맥락마다 달라 대소문자를 강제할 가치가 거의 없다.
 
 **Configuration**
 
-- `mode` (`"always" | "never"`, default: `"always"`): 주석 첫 글자 대문자 여부
-- `ignorePattern` (regex string, default: 없음): 제외할 주석 패턴
-- `ignoreInlineComments` (bool, default: 없음): 인라인 주석 무시
-- `ignoreConsecutiveComments` (bool, default: 없음): 연속 주석 중 첫 번째 이후 무시
-- `line` / `block` (object, default: 없음): 줄/블록 주석에 위 옵션을 개별 적용
+- `mode` (`"always" | "never"`, default: `"always"`): 코멘트 첫 글자 대문자 여부
+- `ignorePattern` (regex string, default: 없음): 제외할 코멘트 패턴
+- `ignoreInlineComments` (bool, default: 없음): 인라인 코멘트 무시
+- `ignoreConsecutiveComments` (bool, default: 없음): 연속 코멘트 중 첫 번째 이후 무시
+- `line` / `block` (object, default: 없음): 줄/블록 코멘트에 위 옵션을 개별 적용
 
 **🆗 rule: incorrect (허용)**
 

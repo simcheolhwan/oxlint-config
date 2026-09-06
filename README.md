@@ -21,6 +21,12 @@ To use TanStack Router/Query rules, install the corresponding plugins:
 pnpm i -D @tanstack/eslint-plugin-router @tanstack/eslint-plugin-query
 ```
 
+The `vite.config.ts` example below enables the React Compiler through `@vitejs/plugin-react`, which needs `oxc-transform-react`. The config includes React Compiler diagnostics such as `react/refs` and `react/set-state-in-effect`:
+
+```bash
+pnpm i -D oxc-transform-react
+```
+
 The `tsconfig.json` example below extends `@tsconfig/vite-react`:
 
 ```bash
@@ -52,11 +58,12 @@ import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite-plus"
 
 export default defineConfig({
-  plugins: [tanstackRouter({ quoteStyle: "double" }), react()],
+  plugins: [tanstackRouter({ quoteStyle: "double" }), react({ compiler: true })],
   resolve: { alias: { "@": new URL("src", import.meta.url).pathname } },
   fmt: { semi: false, sortImports: true, ignorePatterns: ["**/routeTree.gen.ts"] },
   lint: {
     ...lintConfig,
+    env: { browser: true, node: true },
     ignorePatterns: ["**/routeTree.gen.ts"],
     jsPlugins: ["@tanstack/eslint-plugin-router", "@tanstack/eslint-plugin-query"],
     rules: {

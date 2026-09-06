@@ -62,13 +62,13 @@ if (value === "1") {
 
 파일이 길어질수록 책임이 한 모듈에 누적되어 탐색, 리뷰가 어려워진다. 줄 수 상한을 넘으면 책임 단위로 모듈을 분리한다.
 
-**취향.** 기본 상한(`max: 300`)을 유지하되 빈 줄과 주석은 의미 있는 신호가 아니라 두 옵션을 켜 실제 코드 줄 수만 세고, 테스트 파일은 시나리오 누적으로 자연스럽게 길어져 `**/*.test.{ts,tsx}`에서 끈다.
+**취향.** 기본 상한(`max: 300`)을 유지하되 빈 줄과 코멘트는 의미 있는 신호가 아니라 두 옵션을 켜 실제 코드 줄 수만 세고, 테스트 파일은 시나리오 누적으로 자연스럽게 길어져 `**/*.test.{ts,tsx}`에서 끈다.
 
 **Configuration**
 
 - `max` (int, default: `300`): 파일 최대 줄 수
 - `skipBlankLines` (bool, default: `false`): 빈 줄 계산에서 제외
-- `skipComments` (bool, default: `false`): 주석 줄 계산에서 제외
+- `skipComments` (bool, default: `false`): 코멘트 줄 계산에서 제외
 
 **⚙️ 설정**
 
@@ -97,13 +97,13 @@ if (value === "1") {
 
 함수가 길어질수록 책임이 모호해지고 테스트하기 어려워진다. 줄 수 상한을 넘으면 더 작은 함수로 분리한다.
 
-**취향.** 기본값을 `max: 80`으로 완화하고 `**/*.tsx`는 props/hooks/핸들러/JSX 트리 누적을 반영해 `max: 160`으로 더 완화하며, 빈 줄과 주석은 계산에서 제외하고 `**/*.test.{ts,tsx}`는 시나리오 누적으로 끈다.
+**취향.** 기본값을 `max: 80`으로 완화하고 `**/*.tsx`는 props/hooks/핸들러/JSX 트리 누적을 반영해 `max: 160`으로 더 완화하며, 빈 줄과 코멘트는 계산에서 제외하고 `**/*.test.{ts,tsx}`는 시나리오 누적으로 끈다.
 
 **Configuration**
 
 - `max` (int, default: `50`): 함수 최대 줄 수
 - `skipBlankLines` (bool, default: `false`): 빈 줄 계산에서 제외
-- `skipComments` (bool, default: `false`): 주석 줄 계산에서 제외
+- `skipComments` (bool, default: `false`): 코멘트 줄 계산에서 제외
 - `IIFEs` (bool, default: `false`): IIFE도 계산에 포함
 
 **⚙️ 설정**
@@ -459,7 +459,7 @@ union/enum을 분기하는 `switch`에서 일부 멤버를 빠뜨리면 누락�
 
 - `allowDefaultCaseForExhaustiveSwitch` (bool, default: `true`): 모든 멤버를 다룬 exhaustive `switch`에 `default`를 두는 것 허용
 - `considerDefaultExhaustiveForUnions` (bool, default: `false`): union에서 `default` 케이스를 exhaustiveness 충족으로 간주
-- `defaultCaseCommentPattern` (string, default: 없음): `default` 블록의 주석과 매치되면 검사 생략
+- `defaultCaseCommentPattern` (string, default: 없음): `default` 블록의 코멘트와 매치되면 검사 생략
 - `requireDefaultForNonUnion` (bool, default: `false`): union이 아닌 `switch`에도 `default` 필수화
 
 **❌ incorrect**

@@ -8,14 +8,13 @@
 
 빌드, 린트, 포매팅은 [Vite+](https://viteplus.dev/guide/)의 `vp` CLI로 통합되어 있다. 로컬 문서는 `node_modules/vite-plus/docs`에 있고, `vp help` 또는 `vp <command> --help`로 명령과 옵션을 조회한다.
 
-저장소 루트의 `CLAUDE.md`는 `AGENTS.md` 심볼릭 링크다. 두 파일은 같은 내용을 가리키므로 `AGENTS.md`만 수정한다.
-
 ## 검증 명령
 
 - `pnpm install`: 원격 변경을 받은 뒤 가장 먼저 실행해 의존성을 동기화한다.
 - `pnpm check`: 포매팅, 린트, 타입 검사.
+- `pnpm lint`: 린트만 실행. `pnpm lint:fix`는 자동 수정을 적용한다.
 - `pnpm test`: `fixtures/`의 고의 오류가 예상한 규칙과 심각도로 검출되는지 확인.
-- `vp pack`: `dist/` 빌드. 배포 직전 dts 포함 산출물이 정상인지 확인.
+- `pnpm exec vp pack`: `dist/` 빌드. 배포 직전 dts 포함 산출물이 정상인지 확인.
 
 ## 린트 규칙 검증
 
@@ -25,6 +24,7 @@
 - 각 오류 옆 인라인 코멘트가 `<plugin>/<rule> (<category>)`를 명시한다.
 - `vite.config.ts`의 `staged`는 `fixtures/`를 제외하므로 커밋 시 자동 수정되지 않는다.
 - 루트 `vite.config.ts`의 `lint.ignorePatterns`는 일반 린트에서 `fixtures/`를 제외하고, `fixtures/vite.config.ts`는 검증 파일 검사 시 이 디렉터리를 별도 Vite+ 프로젝트로 실행한다.
+- `fixtures/tsconfig.json`은 루트 설정을 상속하되, 고의 오류가 규칙 검출과 무관한 타입 오류(`TS6133`, `TS2322`)로 함께 보고되지 않도록 `noUnusedParameters`와 `noUncheckedIndexedAccess`를 끈다.
 
 ## 문서 구조
 
@@ -83,4 +83,4 @@
 
 ## 작성 언어
 
-문서와 주석은 한국어. 규칙 이름, JSON 키, URL, 코드 식별자는 원문 그대로 둔다.
+문서와 코멘트는 한국어. 규칙 이름, JSON 키, URL, 코드 식별자는 원문 그대로 둔다.

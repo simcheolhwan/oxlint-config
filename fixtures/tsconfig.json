@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    // 고의 린트 오류(미사용 매개변수, 인덱스 접근)가 규칙 검출과 무관한 타입 오류로 함께 보고되지 않도록 끈다.
+    "noUnusedParameters": false,
+    "noUncheckedIndexedAccess": false
+  }
+}

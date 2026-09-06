@@ -18,7 +18,7 @@ Oxlint는 correctness 중심의 신뢰도 높은 규칙을 기본 활성화한�
 | `suspicious`  | 🔴 error | 🔴 error   | CI 통과 조건       |
 | `perf`        | 🟡 warn  | 🟡 warn    |                    |
 | `pedantic`    | 🟡 warn  | 🟡 warn    |                    |
-| `style`       | ⚪ off   | ⚪ off     | 포맷터와 충돌 가능 |
+| `style`       | ⚪ off   | ⚪ off     | 포매터와 충돌 가능 |
 | `restriction` | ⚪ off   | ⚪ off     | 개별 규칙만 선택   |
 | `nursery`     | ⚪ off   | ⚪ off     | 개발 중인 규칙     |
 

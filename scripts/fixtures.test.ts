@@ -1,9 +1,11 @@
 import { spawnSync } from "node:child_process"
 
-interface Diagnostic {
-  code: string
-  severity: string
-}
+import { z } from "zod"
+
+const diagnosticSchema = z.object({ code: z.string(), severity: z.string() })
+const reportSchema = z.object({ diagnostics: z.array(diagnosticSchema) })
+
+type Diagnostic = z.infer<typeof diagnosticSchema>
 
 const expectedDiagnostics: Diagnostic[] = [
   { code: "@tanstack/query(exhaustive-deps)", severity: "error" },
@@ -29,29 +31,6 @@ const expectedDiagnostics: Diagnostic[] = [
   { code: "vitest(require-to-throw-message)", severity: "error" },
 ]
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null
-}
-
-function parseDiagnostics(output: string): Diagnostic[] {
-  const report: unknown = JSON.parse(output)
-  if (!isRecord(report) || !Array.isArray(report.diagnostics)) {
-    throw new TypeError("Oxlint JSON output does not contain diagnostics")
-  }
-
-  return report.diagnostics.map((diagnostic: unknown) => {
-    if (
-      !isRecord(diagnostic) ||
-      typeof diagnostic.code !== "string" ||
-      typeof diagnostic.severity !== "string"
-    ) {
-      throw new TypeError("Oxlint diagnostic has an unexpected shape")
-    }
-
-    return { code: diagnostic.code, severity: diagnostic.severity }
-  })
-}
-
 function compareDiagnostics(left: Diagnostic, right: Diagnostic): number {
   return left.code.localeCompare(right.code)
 }
@@ -74,7 +53,8 @@ test("fixtures report the expected lint diagnostics", () => {
 
   expect(result.error).toBeUndefined()
   expect(result.status).toBe(1)
-  expect(parseDiagnostics(result.stdout).toSorted(compareDiagnostics)).toStrictEqual(
+  const { diagnostics } = reportSchema.parse(JSON.parse(result.stdout))
+  expect(diagnostics.toSorted(compareDiagnostics)).toStrictEqual(
     expectedDiagnostics.toSorted(compareDiagnostics),
   )
 })
