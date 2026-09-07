@@ -7,7 +7,6 @@ export const restriction: DummyRuleMap = {
   "eslint/no-console": ["error", { allow: ["warn", "error", "info"] }],
   "eslint/no-empty-function": ["error", { allow: ["arrowFunctions"] }],
   "eslint/no-use-before-define": ["error", { functions: false }],
-  "eslint/no-void": ["error", { allowAsStatement: true }],
   "import/no-relative-parent-imports": "error",
   "import/unambiguous": "error",
   "react/button-has-type": "error",
@@ -27,6 +26,7 @@ export const restriction: DummyRuleMap = {
   // off
   "eslint/no-plusplus": "off",
   "eslint/no-undefined": "off",
+  "eslint/no-void": "off",
   "import/no-default-export": "off",
   "oxc/no-async-await": "off",
   "oxc/no-optional-chaining": "off",

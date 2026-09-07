@@ -79,6 +79,7 @@
 - `src/rules/<카테고리>.ts` 또는 `src/index.ts`의 `rules`/`overrides`/`categories`를 바꾸면 해당 카테고리의 `docs/N-*.md`를 같은 작업에서 업데이트한다.
 - 새 Oxlint 내장 플러그인을 활성화할 때는 `src/index.ts`의 `plugins` 배열에 등록하고, 채택 규칙을 `src/rules/<카테고리>.ts`에, 결정 근거를 `docs/N-*.md`에 같은 작업에서 추가한다.
 - `categories`를 새로 켤 때는 내장 기능이 자동 활성화하는 규칙 중 끄고 싶은 항목을 `src/rules/*.ts`의 `// off` 그룹에 명시적으로 등록한다 (예: `react/react-in-jsx-scope`).
+- `categories`가 자동 활성화하는 규칙도 채택하면 `src/rules/<카테고리>.ts`의 `// error` 그룹과 `docs/N-*.error.md`에 개별 항목을 둔다. 카테고리 활성화만으로 문서화를 생략하지 않는다.
 - 변경 후 `pnpm check`로 오탐을 확인하고, 새 오탐이 나오면 `.off.md`에 근거를 남긴 뒤 끈다.
 
 ## 작성 언어

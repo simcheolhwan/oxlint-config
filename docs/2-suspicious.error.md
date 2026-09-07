@@ -237,6 +237,32 @@ useEffect(() => {
 }, [title])
 ```
 
+## [react/memo-dependencies](https://oxc.rs/docs/guide/usage/linter/rules/react/memo-dependencies)
+
+`useMemo`와 `useCallback`의 의존성 배열에서 본문이 읽지만 누락된 값과 읽지 않는데 포함된 값을 검출한다. React Compiler가 자동으로 메모이제이션하므로 수동 `useMemo`/`useCallback` 자체를 제거하는 편이 간단하다.
+
+**베스트 프랙티스.** 누락된 의존성은 오래된 메모 값을 돌려주고 불필요한 의존성은 매번 다시 계산하게 하며, React Compiler 환경에서는 수동 메모이제이션이 컴파일러 추론과 어긋날 때만 보고되므로 제거해도 성능이 유지된다.
+
+**❌ incorrect**
+
+```tsx
+function SearchBox({ onSearch, placeholder }: SearchBoxProps) {
+  const [query, setQuery] = useState("")
+  const submit = useCallback(() => onSearch(query.trim()), [query, onSearch, placeholder])
+  return <input value={query} onChange={(event) => setQuery(event.target.value)} onBlur={submit} />
+}
+```
+
+**✅ correct**
+
+```tsx
+function SearchBox({ onSearch, placeholder }: SearchBoxProps) {
+  const [query, setQuery] = useState("")
+  const submit = (): void => onSearch(query.trim())
+  return <input value={query} onChange={(event) => setQuery(event.target.value)} onBlur={submit} />
+}
+```
+
 ## [typescript/no-unnecessary-boolean-literal-compare](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unnecessary-boolean-literal-compare)
 
 이미 `boolean` 타입인 식별자를 `=== true`/`!== false`로 비교하는 불필요한 코드를 검출한다. 변수를 그대로 사용하고 부정이 필요하면 `!`만 붙인다.

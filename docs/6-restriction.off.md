@@ -46,6 +46,24 @@ let value = undefined
 let value
 ```
 
+## [eslint/no-void](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-void)
+
+`void` 연산자 사용을 금지한다. `allowAsStatement: true`로 문 위치만 허용하는 설정에서도 화살표 단축 본문의 `() => void refetch()`는 표현식 위치라 차단한다.
+
+**취향.** 콜백에서 Promise를 버리는 `() => void refetch()` 형태를 문 위치로 옮기려면 블록 본문 래퍼가 늘어 코드가 장황해지고, `typescript/no-confusing-void-expression`은 `ignoreArrowShorthand: true`, `typescript/no-floating-promises`는 기본값 `ignoreVoid: true`라 이 형태를 다른 규칙이 막지 않으므로 끈다.
+
+**Configuration**
+
+- `allowAsStatement` (bool, default: `false`): 단독 문 위치의 `void` 허용
+
+**🆗 rule: incorrect (허용)**
+
+```tsx
+<button type="button" onClick={() => void refetch()}>
+  새로고침
+</button>
+```
+
 ## [import/no-default-export](https://oxc.rs/docs/guide/usage/linter/rules/import/no-default-export)
 
 모듈의 default export 사용을 금지하고 named export로 통일하도록 강제한다.

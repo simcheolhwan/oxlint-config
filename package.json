@@ -30,6 +30,7 @@
     "@types/node": "latest",
     "@types/react": "latest",
     "react": "latest",
+    "react-hook-form": "latest",
     "typescript": "latest",
     "vite-plus": "latest",
     "zod": "latest"

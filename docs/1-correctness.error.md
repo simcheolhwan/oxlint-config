@@ -329,6 +329,57 @@ useEffect(() => {
 }, [props.title])
 ```
 
+## [react/immutability](https://oxc.rs/docs/guide/usage/linter/rules/react/immutability)
+
+props, 상태, 훅 인자, 훅 반환값처럼 Rules of React가 불변으로 정한 값을 직접 변경하는 코드를 검출한다. 새 값을 만들어 setter나 지역 변수로 교체한다.
+
+**베스트 프랙티스.** React는 참조 동일성으로 재렌더링 여부를 판단하므로 불변 값을 직접 변경하면 화면이 갱신되지 않거나 React Compiler의 메모이제이션 결과가 실제 값과 어긋난다.
+
+**❌ incorrect**
+
+```tsx
+function CartSummary({ items }: { items: CartItem[] }) {
+  const [cart] = useState({ total: 0 })
+  cart.total = items.reduce((sum, item) => sum + item.price, 0)
+  return <strong>{cart.total}</strong>
+}
+```
+
+**✅ correct**
+
+```tsx
+function CartSummary({ items }: { items: CartItem[] }) {
+  const total = items.reduce((sum, item) => sum + item.price, 0)
+  return <strong>{total}</strong>
+}
+```
+
+## [react/incompatible-library](https://oxc.rs/docs/guide/usage/linter/rules/react/incompatible-library)
+
+메모이제이션과 호환되지 않는 라이브러리 API(React Hook Form의 `watch`, TanStack Table의 `useReactTable` 등) 사용을 검출한다. 구독 기반 대체 API로 바꾼다.
+
+**베스트 프랙티스.** 이 API들은 매 렌더링마다 값을 다시 읽는 방식에 의존하므로 React Compiler가 결과를 메모이제이션하면 값이 바뀌어도 화면이 갱신되지 않는다. React Hook Form의 `useWatch`는 구독 기반이라 호환된다.
+
+**❌ incorrect**
+
+```tsx
+function ShippingFields() {
+  const { register, watch } = useForm<CheckoutForm>()
+  const sameAsBilling = watch("sameAsBilling")
+  return sameAsBilling ? null : <input {...register("shippingAddress")} />
+}
+```
+
+**✅ correct**
+
+```tsx
+function ShippingFields() {
+  const { register, control } = useForm<CheckoutForm>()
+  const sameAsBilling = useWatch({ control, name: "sameAsBilling" })
+  return sameAsBilling ? null : <input {...register("shippingAddress")} />
+}
+```
+
 ## [react/refs](https://oxc.rs/docs/guide/usage/linter/rules/react/refs)
 
 렌더링 중 `ref.current`를 읽거나 쓰면 React가 값의 변경을 추적하지 못한다. `ref.current` 접근은 이벤트 핸들러나 effect 안에서만 수행한다.

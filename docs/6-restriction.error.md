@@ -184,37 +184,6 @@ function HomePage() {
 }
 ```
 
-## [eslint/no-void](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-void)
-
-`void` 연산자는 표현식 결과를 `undefined`로 만드는 역사적 문법이라 일반 표현식 안에 섞이면 의도가 모호해진다. 문 형태(`void promise`)만 허용하면 fire-and-forget Promise 관용구를 유지하면서도 식 안의 `void` 사용을 차단할 수 있다.
-
-**베스트 프랙티스.** `allowAsStatement: true`로 fire-and-forget Promise 패턴(`void doAsyncWork()`)만 허용하고, `const x = void 0` 같은 표현식 안 사용은 `undefined`로 직접 쓰면 충분해 차단해도 노이즈가 없다.
-
-**Configuration**
-
-- `allowAsStatement` (bool, default: `false`): 단독 문 위치의 `void` 허용
-
-**⚙️ 설정**
-
-```json
-{
-  "eslint/no-void": ["error", { "allowAsStatement": true }]
-}
-```
-
-**❌ incorrect**
-
-```ts
-const ignored = void someExpression
-return void cleanup()
-```
-
-**✅ correct**
-
-```ts
-void doAsyncWork()
-```
-
 ## [import/no-relative-parent-imports](https://oxc.rs/docs/guide/usage/linter/rules/import/no-relative-parent-imports)
 
 `../`로 상위 디렉터리를 참조하는 import를 금지한다. 같은 디렉터리와 하위 디렉터리 import(`./`), 외부 패키지, 별칭 import는 그대로 허용한다.
