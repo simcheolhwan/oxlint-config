@@ -53,5 +53,5 @@ export function sortValues(values: number[]): number[] {
   return [...values].sort((a, b) => a - b)
 }
 
-// unicorn/no-hex-escape (suspicious): 16진수 대신 Unicode 이스케이프 사용.
+// unicorn/no-hex-escape (suspicious): 16진수 대신 유니코드 이스케이프 사용.
 export const escape = "\x1B"

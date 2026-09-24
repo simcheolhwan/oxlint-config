@@ -4,13 +4,13 @@ title: "Correctness 제외 규칙"
 
 ## [jsx-a11y/no-autofocus](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/no-autofocus)
 
-JSX 요소의 `autoFocus` 속성을 일률 금지한다. 자동 포커스가 사용자 의도를 거슬러 보조 기술 흐름을 깨뜨릴 수 있다는 점을 근거로 한다.
+JSX 요소의 `autoFocus` 속성을 일률 금지한다. 자동 포커스가 사용자 의도를 거슬러 보조 기술 사용 흐름을 방해할 수 있다는 점을 근거로 한다.
 
-**취향.** UX 가이드(VERCEL.md `Autofocus`)는 데스크톱 단일 주 입력 폼에 한해 자동 포커스를 권장하는데, 규칙은 그 정당한 사용까지 오탐으로 보고하고 회피 패턴이 `useEffect`+`ref` 반복 코드로 가독성을 떨어뜨린다.
+**취향.** UX 가이드(VERCEL.md `Autofocus`)는 데스크톱 단일 주 입력 폼에 한해 자동 포커스를 권장하는데, 규칙은 그 정당한 사용까지 오탐으로 보고하고 회피 패턴인 `useEffect`와 `ref` 조합의 반복 코드가 가독성을 떨어뜨린다.
 
 **Configuration**
 
-- `ignoreNonDOM` (bool, default: `false`): 사용자 정의 컴포넌트(non-DOM) 무시
+- `ignoreNonDOM` (bool, default: `false`): 사용자 지정 컴포넌트(non-DOM) 무시
 
 **🆗 rule: incorrect (허용)**
 

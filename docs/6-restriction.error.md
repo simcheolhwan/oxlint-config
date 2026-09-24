@@ -10,7 +10,7 @@ title: "Restriction 채택 규칙"
 
 **Configuration**
 
-- `commentPattern` (regex, default: `"no default"`): default 생략을 허용으로 인식할 코멘트 패턴
+- `commentPattern` (regex, default: `"no default"`): `default` 생략 의도로 인식할 코멘트 패턴
 
 **❌ incorrect**
 
@@ -54,7 +54,7 @@ switch (status) {
 
 ## [eslint/no-alert](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-alert)
 
-`alert`/`confirm`/`prompt` 같은 차단성 브라우저 다이얼로그 호출을 금지한다. 운영 코드에 남으면 UX를 끊고 임시 디버그 코드가 그대로 머지되는 흔적이 된다.
+`alert`, `confirm`, `prompt` 같은 실행을 차단하는 브라우저 다이얼로그 호출을 금지한다. 운영 코드에 남으면 사용자 흐름을 중단시키고 임시 디버그 코드가 그대로 머지되는 흔적이 된다.
 
 **베스트 프랙티스.** SPA 환경에서 네이티브 다이얼로그는 디자인 시스템과 일관되지 않고, 운영 알림은 토스트나 모달, 확인은 사용자 지정 확인 다이얼로그로, 디버깅 흔적은 `console.warn`/`console.error`(`no-console`의 `allow`로 허용)로 처리한다.
 
@@ -80,11 +80,11 @@ if (await openConfirmDialog("삭제하시겠습니까?")) {
 
 `console.*` 호출을 차단해 디버그 흔적이 운영 코드에 남지 않도록 한다. `allow` 옵션으로 의도된 로깅 메서드만 허용한다.
 
-**베스트 프랙티스.** `console.log`는 디버깅 임시 코드의 대표 흔적이라 차단하고, `warn`/`error`/`info`는 의도된 사용자 메시지이거나 비정상 흐름 알림이라 `allow`로 허용해 임시 코드만 검출한다.
+**베스트 프랙티스.** `console.log`는 디버깅 임시 코드의 대표 흔적이라 차단하고, `warn`, `error`, `info`는 의도된 사용자 메시지이거나 비정상 흐름 알림이라 `allow`로 허용해 임시 코드만 검출한다.
 
 **Configuration**
 
-- `allow` (string[], default: `[]`): 허용할 console 메서드 이름 목록
+- `allow` (string[], default: `[]`): 허용할 `console` 메서드 이름 목록
 
 **⚙️ 설정**
 
@@ -146,14 +146,14 @@ const ModalContext = createContext({ open: () => {}, close: () => {} })
 
 식별자를 정의 전에 사용하면 호이스팅에 의존하게 된다. 변수와 클래스는 TDZ 또는 런타임 오류를 일으킬 수 있으므로 검사하고, 함수는 안전하게 호이스팅되므로 허용한다.
 
-**베스트 프랙티스.** `functions: false`로 함수 호이스팅만 허용해 "메인 컴포넌트는 파일 상단, 보조 함수는 그 아래" 같은 코드 정렬 패턴(특히 TanStack Router의 `createFileRoute(...)({ component: Page })`)을 유지하고, 변수와 클래스 호이스팅은 위험 신호라 그대로 검출한다.
+**베스트 프랙티스.** `functions: false`로 함수 호이스팅만 허용해 "메인 컴포넌트는 파일 상단, 보조 함수는 그 아래" 같은 코드 배치 패턴(특히 TanStack Router의 `createFileRoute(...)({ component: Page })`)을 유지하고, 변수와 클래스 호이스팅은 위험 신호라 그대로 검출한다.
 
 **Configuration**
 
 - `functions` (bool, default: `true`): 함수 선언 검사
 - `classes` (bool, default: `true`): 클래스 선언 검사
 - `variables` (bool, default: `true`): 변수 선언 검사
-- `enums` (bool, default: `true`): enum 선언 검사
+- `enums` (bool, default: `true`): 열거형 선언 검사
 - `typedefs` (bool, default: `true`): 타입 별칭, 인터페이스, 타입 매개변수 검사
 - `ignoreTypeReferences` (bool, default: `true`): 타입 전용 참조 무시
 - `allowNamedExports` (bool, default: `false`): 선언 전 named export 허용
@@ -188,7 +188,7 @@ function HomePage() {
 
 `../`로 상위 디렉터리를 참조하는 import를 금지한다. 같은 디렉터리와 하위 디렉터리 import(`./`), 외부 패키지, 별칭 import는 그대로 허용한다.
 
-**베스트 프랙티스.** `@` alias가 `src/`로 설정되어 있어 부모 경로 import는 모두 `@/...`로 대체할 수 있고, `../../`는 파일을 옮기는 순간 깨지므로 alias로 위치 무관 안정성을 확보한다.
+**베스트 프랙티스.** `@` 별칭이 `src/`로 설정되어 있어 상위 경로 import는 모두 `@/...`로 대체할 수 있고, `../../`는 파일을 옮기면 경로가 깨지므로 별칭으로 파일 위치와 무관한 경로를 유지한다.
 
 **❌ incorrect**
 
@@ -199,7 +199,7 @@ import Button from "../components/Button"
 
 **✅ correct**
 
-alias로 부모 경로를 대체한다.
+별칭으로 상위 경로를 대체한다.
 
 ```ts
 import { formatDate } from "@/utils/date"
@@ -208,7 +208,7 @@ import Button from "@/components/Button"
 
 **✅ correct**
 
-같은 디렉터리 안 협력자는 `./`로 가까운 결합을 유지한다.
+같은 디렉터리 안의 관련 모듈은 `./`로 가까운 결합을 유지한다.
 
 ```ts
 import { helper } from "./helper"
@@ -261,7 +261,7 @@ declare module "some-pkg" {
 
 `<button>`의 `type` 속성이 누락되면 HTML 기본값이 `"submit"`이라 폼 내부에 놓인 버튼이 의도하지 않은 폼 제출을 일으킨다. `type="button"`을 명시해 클릭과 Enter 키로 폼을 제출하지 않도록 한다.
 
-**베스트 프랙티스.** 명시 비용이 거의 없고 무음 제출 버그를 정확히 차단하므로 세 가지 유효 type을 모두 허용하는 기본 옵션이면 충분하다.
+**베스트 프랙티스.** 명시 비용이 거의 없고 의도하지 않은 제출 버그를 정확히 차단하므로 세 가지 유효한 `type` 값을 모두 허용하는 기본 옵션이면 충분하다.
 
 **Configuration**
 
@@ -284,9 +284,9 @@ declare module "some-pkg" {
 
 ## [react/jsx-filename-extension](https://oxc.rs/docs/guide/usage/linter/rules/react/jsx-filename-extension)
 
-JSX 문법은 `.tsx` 확장자에서만 작성한다. 도구 추론과 에디터 설정이 명확해진다.
+JSX 문법은 `.tsx` 확장자에서만 작성한다. 도구 추론과 편집기 설정이 명확해진다.
 
-**베스트 프랙티스.** 규칙의 기본 옵션은 `.jsx`만 허용하므로 TypeScript+React 환경에서는 `extensions: [".tsx"]` 옵션을 명시한다.
+**베스트 프랙티스.** 규칙의 기본 옵션은 `.jsx`만 허용하므로 TypeScript와 React 환경에서는 `extensions: [".tsx"]` 옵션을 명시한다.
 
 **Configuration**
 
@@ -326,12 +326,12 @@ export function Hello() {
 
 한 모듈이 React 컴포넌트만 export하도록 강제해 Fast Refresh(HMR)가 컴포넌트 상태를 안전하게 보존하도록 한다. 컴포넌트와 비컴포넌트(유틸리티 함수 등)를 같은 파일에서 함께 export하면 편집 시 컴포넌트가 다시 마운트되어 상태를 잃거나 번들러마다 HMR 동작이 달라진다.
 
-**베스트 프랙티스.** Vite + React 환경의 HMR 안정성을 코드 단계에서 보장하기 위해 `allowConstantExport: true`로 원시 값 상수 동거를 허용하고(Vite 프리셋 기본 동작), 훅(`**/use*.tsx`)/Context(`**/*Context.tsx`)/TanStack Router 라우트(`**/routes/**/[!-]*.tsx`) 모듈은 훅과 Context, `export const Route = createFileRoute(...)` 동거가 정상 패턴이라 named export 허용 재정의와 같은 블록에서 끈다.
+**베스트 프랙티스.** Vite와 React 환경의 HMR 안정성을 코드 단계에서 보장하기 위해 `allowConstantExport: true`로 원시 값 상수를 컴포넌트와 함께 export하는 것을 허용하고(Vite 프리셋 기본 동작), 훅(`**/use*.tsx`), Context(`**/*Context.tsx`), TanStack Router 라우트(`**/routes/**/[!-]*.tsx`) 모듈은 훅, Context, `export const Route = createFileRoute(...)`를 컴포넌트와 함께 export하는 것이 정상 패턴이라 named export 허용 재정의와 같은 블록에서 끈다.
 
 **Configuration**
 
-- `allowConstantExport` (bool, default: `false`): 원시 값 상수(string, number, boolean, template literal) 동거 허용. Vite 프리셋에서 기본 활성화
-- `allowExportNames` (string[], default: `[]`): HMR-safe로 간주할 named export 목록 (예: TanStack Router의 `Route`, Remix의 `loader`)
+- `allowConstantExport` (bool, default: `false`): 원시 값 상수(string, number, boolean, 템플릿 리터럴)를 컴포넌트와 함께 export하는 것 허용. Vite 프리셋에서 기본 활성화
+- `allowExportNames` (string[], default: `[]`): HMR에 안전하다고 간주할 named export 목록 (예: TanStack Router의 `Route`, Remix의 `loader`)
 - `checkJS` (bool, default: `false`): JSX 포함 `.js` 파일 검사
 - `customHOCs` (string[], default: `[]`): 컴포넌트로 인정할 사용자 지정 HOC 식별자 목록
 
@@ -364,7 +364,7 @@ export function Header() {
 
 **✅ correct**
 
-`allowConstantExport`로 허용된 원시 값 상수 동거.
+`allowConstantExport`로 허용된 원시 값 상수 export.
 
 ```tsx
 export const VERSION = "3"
@@ -412,16 +412,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 - `allowConciseArrowFunctionExpressionsStartingWithVoid` (bool, default: `false`): `void`로 시작하는 간결한 화살표 함수 허용
 - `allowFunctionsWithoutTypeParameters` (bool, default: `false`): 제네릭 없는 함수 허용
 - `allowIIFEs` (bool, default: `false`): IIFE 허용
-- `allowedNames` (string[], default: `[]`): 반환 타입 어노테이션 면제 함수 이름 목록
+- `allowedNames` (string[], default: `[]`): 반환 타입 표기를 면제할 함수 이름 목록
 
 `typescript/explicit-module-boundary-types`
 
-- `allowArgumentsExplicitlyTypedAsAny` (bool, default: `false`): `any`로 명시된 인수 허용
+- `allowArgumentsExplicitlyTypedAsAny` (bool, default: `false`): `any`로 명시된 인자 허용
 - `allowDirectConstAssertionInArrowFunctions` (bool, default: `true`): `as const` 반환 화살표 함수 허용
 - `allowHigherOrderFunctions` (bool, default: `true`): 고차 함수 허용
 - `allowOverloadFunctions` (bool, default: `false`): 오버로드 함수 허용
 - `allowTypedFunctionExpressions` (bool, default: `true`): 타입 지정 함수 표현식 허용
-- `allowedNames` (string[], default: `[]`): 타입 검사 면제 함수 이름 목록
+- `allowedNames` (string[], default: `[]`): 타입 검사를 면제할 함수 이름 목록
 
 **⚙️ 설정**
 
@@ -463,7 +463,7 @@ export function add(a: number, b: number): number {
 
 **✅ correct**
 
-`allowExpressions`로 표현식 위치의 화살표는 허용된다.
+`allowExpressions`로 표현식 위치의 화살표 함수는 허용된다.
 
 ```ts
 const ids = users.map((user) => user.id)
@@ -483,7 +483,7 @@ export function Button({ label }: { label: string }) {
 
 `delete obj[expr]`처럼 계산된 키에 대한 `delete` 사용을 금지하고 정적 접근(`delete obj.key`)만 허용한다.
 
-**베스트 프랙티스.** 동적 키 삭제는 V8 hidden class 최적화를 깨 객체 모양 그룹을 분기시키고, 동적 키가 필요한 경우는 `Map`/`Set`이 더 적합하다.
+**베스트 프랙티스.** 동적 키 삭제는 V8의 hidden class 최적화를 무효화해 객체 모양 그룹을 분기시키고, 동적 키가 필요한 경우는 `Map`/`Set`이 더 적합하다.
 
 **❌ incorrect**
 
@@ -501,9 +501,9 @@ cache.delete(`item-${id}`)
 
 ## [typescript/no-non-null-assertion](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-non-null-assertion)
 
-`!` non-null assertion은 타입 시스템을 강제로 우회한다. 타입 가드로 범위를 축소하거나 null 가능성을 처리한다.
+`!` non-null assertion은 타입 시스템을 강제로 우회한다. 타입 가드로 타입을 좁히거나 `null` 가능성을 처리한다.
 
-**베스트 프랙티스.** `!`은 타입 시스템 우회라 사고를 가리므로 가드를 강제해 안전성을 회복한다.
+**베스트 프랙티스.** `!`은 타입 시스템을 우회해 런타임 오류 가능성을 감추므로 가드를 강제해 안전성을 회복한다.
 
 **❌ incorrect**
 
@@ -572,7 +572,7 @@ const load = (): Promise<string> => Promise.resolve("done")
 
 규칙 이름을 명시하지 않은 `eslint-disable`/`oxlint-disable` 코멘트를 금지한다. 비워 두면 해당 위치의 모든 규칙을 끄게 된다.
 
-**베스트 프랙티스.** 이름 없는 disable은 의도한 한 규칙뿐 아니라 같은 줄의 다른 진단까지 보고하지 않고 PR 리뷰에서도 추적할 수 없어 린트 결과를 신뢰하기 어려우므로 항상 규칙 이름을 명시하도록 강제한다.
+**베스트 프랙티스.** 규칙 이름이 없는 disable 코멘트는 의도한 한 규칙뿐 아니라 같은 줄의 다른 진단까지 보고하지 않고 PR 리뷰에서도 추적할 수 없어 린트 결과를 신뢰하기 어려우므로 항상 규칙 이름을 명시하도록 강제한다.
 
 **❌ incorrect**
 
@@ -590,7 +590,7 @@ const id = user!.id
 
 ## [unicorn/no-array-for-each](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-for-each)
 
-`Array#forEach` 대신 `for...of` 사용을 강제한다. 콜백이 새 함수 경계를 만들어 TypeScript의 type narrowing이 중단되고, `break`/`continue`/`return`으로 조기 종료가 불가능하며, 콜백 호출 오버헤드만큼 느리다.
+`Array#forEach` 대신 `for...of` 사용을 강제한다. 콜백이 새 함수 경계를 만들어 TypeScript의 type narrowing이 중단되고, `break`, `continue`, `return`으로 조기 종료가 불가능하며, 콜백 호출 오버헤드만큼 느리다.
 
 **베스트 프랙티스.** `for...of`는 외부 스코프의 type narrowing을 유지하고 비동기 문맥에서 `await`을 그대로 쓸 수 있으며 조기 종료까지 지원하므로 명시적 반복문으로 통일하면 의도와 성능이 모두 분명해진다.
 
@@ -612,7 +612,7 @@ for (const item of items) {
 
 ## [unicorn/no-array-reduce](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-array-reduce)
 
-`Array#reduce`/`reduceRight`는 누산 로직을 한 줄 표현식에 압축해 가독성을 떨어뜨리고 spread 누적(`(acc, x) => [...acc, x]`)처럼 O(n²) 성능 문제가 발생하기 쉽다. `map`/`filter`/`for...of`로 풀어 쓰면 의도와 비용이 모두 분명해진다.
+`Array#reduce`/`reduceRight`는 누산 로직을 한 줄 표현식에 압축해 가독성을 떨어뜨리고 spread 누적(`(acc, x) => [...acc, x]`)처럼 O(n²) 성능 문제가 발생하기 쉽다. `map`, `filter`, `for...of`로 풀어 쓰면 의도와 비용이 모두 분명해진다.
 
 **베스트 프랙티스.** `allowSimpleOperations: true`(기본값)로 숫자 합산, 곱셈 같은 단순 산술 reduce는 허용하고 복잡한 객체 누적이나 컬렉션 합치기만 검출한다.
 
@@ -655,7 +655,7 @@ const total = numbers.reduce((sum, n) => sum + n, 0)
 
 ## [unicorn/no-process-exit](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-process-exit)
 
-`process.exit()`는 호출 즉시 프로세스를 종료시켜 finally 블록, 정리 로직을 건너뛴다. 오류 상황에서는 `throw`로 호출자에게 제어권을 넘겨 정상적인 오류 처리 흐름을 유지한다.
+`process.exit()`는 호출 즉시 프로세스를 종료시켜 `finally` 블록과 정리 로직을 건너뛴다. 오류 상황에서는 `throw`로 호출자에게 제어권을 넘겨 정상적인 오류 처리 흐름을 유지한다.
 
 **베스트 프랙티스.** 라이브러리와 앱 코드에서는 `throw`로 통일하고 서버 함수와 CLI 스크립트(`**/{server,functions,scripts}/**/*.ts`)는 최상위 진입점이라 비정상 종료 코드를 반환하는 것이 정상 동작이므로 재정의에서 끈다.
 
@@ -707,7 +707,7 @@ if (!isValid(input)) {
 
 ## [unicorn/prefer-number-properties](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-number-properties)
 
-전역 `parseInt`/`parseFloat`/`isNaN`/`isFinite`/`NaN` 대신 `Number.parseInt`/`Number.isNaN` 같은 `Number` 정적 멤버를 강제한다. ES2015에서 `Number`로 이동한 이후 전역 버전과 동작이 미묘하게 달라 출처를 명시해야 안전하다.
+전역 `parseInt`, `parseFloat`, `isNaN`, `isFinite`, `NaN` 대신 `Number.parseInt`/`Number.isNaN` 같은 `Number` 정적 멤버를 강제한다. ES2015에서 `Number`로 이동한 이후 전역 버전과 동작이 미묘하게 달라 출처를 명시해야 안전하다.
 
 **베스트 프랙티스.** 전역 `isNaN("foo")`는 인자를 숫자로 강제 변환한 뒤 `NaN` 여부를 검사해 `true`를 반환하지만 `Number.isNaN("foo")`는 강제 변환 없이 `false`를 반환하므로 출처가 분명한 `Number.*`를 사용해 의도하지 않은 변환을 차단한다.
 

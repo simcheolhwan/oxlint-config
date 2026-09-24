@@ -11,7 +11,7 @@ title: "Style 제외 규칙"
 **Configuration**
 
 - `style` (`"as-needed" | "never" | "always"`, default: `"as-needed"`): 화살표 함수 본문 중괄호 요구 방식
-- `requireReturnForObjectLiteral` (bool, default: `false`): 객체 리터럴 반환 시 중괄호+`return` 강제 (`as-needed` 모드 전용)
+- `requireReturnForObjectLiteral` (bool, default: `false`): 객체 리터럴 반환 시 중괄호와 `return` 강제 (`as-needed` 모드 전용)
 
 **🆗 rule: incorrect (허용)**
 
@@ -55,14 +55,14 @@ const helper = () => {
 
 ## [eslint/curly](https://oxc.rs/docs/guide/usage/linter/rules/eslint/curly)
 
-단일 문장 분기에도 항상 중괄호를 강제한다.
+단일 문 분기에도 항상 중괄호를 강제한다.
 
 **취향.** 한 줄 분기 압축이 가독성에 더 좋은 경우가 많아 일률 강제는 노이즈다.
 
 **Configuration**
 
 - `type` (`"all" | "multi" | "multi-line" | "multi-or-nest"`, default: `"all"`): 중괄호 요구 시점
-- `consistent` (`"consistent"`, default: 없음): if-else 전체 브랜치에 중괄호 통일 강제 (위치 인자)
+- `consistent` (`"consistent"`, default: 없음): if-else의 모든 분기에 중괄호 통일 강제 (위치 인자)
 
 **🆗 rule: incorrect (허용)**
 
@@ -88,7 +88,7 @@ if (isReady) {
 
 - `style` (`"expression" | "declaration"`, default: `"expression"`): 함수 선언 방식
 - `allowArrowFunctions` (bool, default: `false`): 화살표 함수 허용
-- `allowTypeAnnotation` (bool, default: `false`): 타입 어노테이션 있는 함수 허용
+- `allowTypeAnnotation` (bool, default: `false`): 타입 표기가 있는 함수 허용
 - `overrides.namedExports` (`"ignore" | "expression" | "declaration"`, default: `null`): named export에 별도 스타일 적용
 
 **🆗 rule: incorrect (허용)**
@@ -107,9 +107,9 @@ const helperB = () => {}
 
 ## [eslint/id-length](https://oxc.rs/docs/guide/usage/linter/rules/eslint/id-length)
 
-한 글자 식별자 사용을 금지한다. `exceptionPatterns`(허용 패턴), `properties: "never"`(객체 속성 제외) 옵션으로 일부 케이스를 풀 수 있다.
+한 글자 식별자 사용을 금지한다. `exceptionPatterns`(허용 패턴), `properties: "never"`(객체 속성 제외) 옵션으로 일부 경우를 허용할 수 있다.
 
-**베스트 프랙티스.** `exceptionPatterns: ["^[A-Z]$"]`로 제너릭을, `properties: "never"`로 외부 API 키를 허용해도 `Array#toSorted`, `reduce` 콜백의 `(a, b)` 같은 표준 라이브러리 관례를 계속 보고하므로 규칙 자체를 끈다.
+**베스트 프랙티스.** `exceptionPatterns: ["^[A-Z]$"]`로 제네릭 타입 매개변수를, `properties: "never"`로 외부 API 키를 허용해도 `Array#toSorted`, `reduce` 콜백의 `(a, b)` 같은 표준 라이브러리 관례를 계속 보고하므로 규칙 자체를 끈다.
 
 **Configuration**
 
@@ -161,7 +161,7 @@ for (const item of items) {
 
 ## [eslint/no-implicit-coercion](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-implicit-coercion)
 
-`!!x`, `+x`, `"" + x`, `` `${x}` `` 같은 implicit coercion 패턴을 명시적 변환 함수(`Boolean()`, `Number()`, `String()`)로 바꾸도록 강제한다.
+`!!x`, `+x`, `"" + x`, `` `${x}` `` 같은 암묵적 타입 변환 패턴을 명시적 변환 함수(`Boolean()`, `Number()`, `String()`)로 바꾸도록 강제한다.
 
 **취향.** `!!value`, `+input`, `"" + x` 같은 관용구는 JS 코드베이스에서 충분히 짧고 의도가 명확해, 명시적 함수 호출로 바꾸면 글자 수만 늘 뿐 가독성 이득이 작다.
 
@@ -191,7 +191,7 @@ const num = Number(input)
 
 이름 없는 숫자 리터럴(매직 넘버) 사용을 금지하고 의미를 드러내는 상수로 추출하도록 요구한다.
 
-**취향.** 숫자를 다루는 프로젝트에서 자명한 값(`0`, `1`)까지 모두 검출해 노이즈가 급증하므로 규칙을 끄고, 의미가 강한 큰 숫자는 상수로 추출하는 관용을 본문 정책으로 유지한다.
+**취향.** 숫자를 다루는 프로젝트에서 자명한 값(`0`, `1`)까지 모두 검출해 노이즈가 급증하므로 규칙을 끄고, 의미가 강한 큰 숫자는 상수로 추출하는 관례를 본문 정책으로 유지한다.
 
 **Configuration**
 
@@ -200,10 +200,10 @@ const num = Number(input)
 - `ignoreDefaultValues` (bool, default: `false`): 함수 매개변수와 구조 분해 기본값 무시
 - `ignoreClassFieldInitialValues` (bool, default: `false`): 클래스 필드 초기값 무시
 - `ignoreReadonlyClassProperties` (bool, default: `false`): readonly 클래스 프로퍼티 무시
-- `ignoreEnums` (bool, default: `false`): TypeScript enum 무시
+- `ignoreEnums` (bool, default: `false`): TypeScript 열거형 무시
 - `ignoreNumericLiteralTypes` (bool, default: `false`): TypeScript 숫자 리터럴 타입 무시
 - `ignoreTypeIndexes` (bool, default: `false`): TypeScript 타입 인덱스 무시
-- `enforceConst` (bool, default: `false`): const 선언 강제
+- `enforceConst` (bool, default: `false`): `const` 선언 강제
 - `detectObjects` (bool, default: `false`): 객체 프로퍼티 숫자도 검사
 
 **🆗 rule: incorrect (허용)**
@@ -221,7 +221,7 @@ setTimeout(refresh, ONE_DAY_MS)
 
 ## [eslint/no-nested-ternary](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-nested-ternary) + [unicorn/no-nested-ternary](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-nested-ternary)
 
-3항 연산자의 중첩을 금지한다. Oxlint에서 두 규칙은 동일 의도다.
+삼항 연산자의 중첩을 금지한다. Oxlint에서 두 규칙은 동일 의도다.
 
 **취향.** 중첩 깊이에 따라 가독성 영향이 일정하지 않아 일률 금지가 과도하고, 단순 분기 매핑은 손실이 작고 과도한 중첩은 코드 리뷰에서 판단한다.
 
@@ -242,9 +242,9 @@ else status = "idle"
 
 ## [eslint/no-ternary](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-ternary)
 
-3항 연산자(`a ? b : c`) 사용을 금지한다.
+삼항 연산자(`a ? b : c`) 사용을 금지한다.
 
-**베스트 프랙티스.** `if/else`로 풀면 더 장황해지고 React JSX 조건부 렌더링에서 3항은 표준 관용구라 이 규칙을 켜는 사례가 거의 없다.
+**베스트 프랙티스.** `if/else`로 풀면 더 장황해지고 React JSX 조건부 렌더링에서 삼항 연산자는 표준 관용구라 이 규칙을 켜는 사례가 거의 없다.
 
 **🆗 rule: incorrect (허용)**
 
@@ -262,15 +262,15 @@ else label = "Loading"
 
 ## [eslint/sort-keys](https://oxc.rs/docs/guide/usage/linter/rules/eslint/sort-keys)
 
-객체 리터럴의 키를 알파벳 순으로 정렬하도록 강제한다.
+객체 리터럴의 키를 알파벳순으로 정렬하도록 강제한다.
 
-**취향.** 의미 그룹핑이 알파벳 순보다 가독성이 좋은 경우가 많고 diff 충돌만 늘린다.
+**취향.** 의미 단위 그룹화가 알파벳순보다 가독성이 좋은 경우가 많고 diff 충돌만 늘린다.
 
 **Configuration**
 
 - `order` (`"asc" | "desc"`, default: 없음): 정렬 방향 (위치 인자)
 - `caseSensitive` (bool, default: `true`): 대소문자 구분 정렬
-- `natural` (bool, default: `false`): 자연어 순서 정렬 (`a2` < `a10`)
+- `natural` (bool, default: `false`): 자연 정렬 (`a2` < `a10`)
 - `minKeys` (int, default: `2`): 정렬 강제 최소 프로퍼티 수
 - `allowLineSeparatedGroups` (bool, default: `false`): 빈 줄로 구분된 그룹은 독립 정렬
 
@@ -315,9 +315,9 @@ export { a, b }
 
 ## [promise/prefer-await-to-callbacks](https://oxc.rs/docs/guide/usage/linter/rules/promise/prefer-await-to-callbacks)
 
-`callback(err, data)` 같은 Node-style 콜백 사용을 금지하고 `async`/`await`을 강제한다.
+`callback(err, data)` 같은 Node.js 스타일 콜백 사용을 금지하고 `async`/`await`을 강제한다.
 
-**베스트 프랙티스.** Firebase SDK, 이벤트 리스너 등 콜백 시그니처가 강제되는 라이브러리에서 오탐이 급증하고, `promise/prefer-await-to-then`이 이미 Promise 체이닝을 차단해 새 코드는 자연스럽게 `async`/`await`이 되므로 이 규칙까지 강제할 가치가 낮다.
+**베스트 프랙티스.** Firebase SDK, 이벤트 리스너 등 콜백 시그니처가 강제되는 라이브러리에서 오탐이 급증하고, `promise/prefer-await-to-then`이 이미 Promise 체이닝을 차단해 새 코드는 `async`/`await`로 작성되므로 이 규칙까지 강제할 가치가 낮다.
 
 **🆗 rule: incorrect (허용)**
 
@@ -361,11 +361,11 @@ JSX 이벤트 핸들러 prop 이름과 함수 이름이 접두사 관례(`on*` p
 
 JSX의 props spread(`{...props}`) 사용을 금지하고 필요한 prop만 명시적으로 전달하도록 강제한다.
 
-**베스트 프랙티스.** 추적성은 향상되지만 래퍼 컴포넌트, HOC, 다형성 컴포넌트, shadcn/ui처럼 네이티브 element를 감싸는 디자인 시스템 컴포넌트 같은 정상 패턴까지 막아 장황해진다.
+**베스트 프랙티스.** 추적성은 향상되지만 래퍼 컴포넌트, HOC, 다형성 컴포넌트, shadcn/ui처럼 네이티브 요소를 감싸는 디자인 시스템 컴포넌트 같은 정상 패턴까지 막아 장황해진다.
 
 **Configuration**
 
-- `html` (`"enforce" | "ignore"`, default: `"enforce"`): HTML 엘리먼트(`div`, `img` 등) 검사 여부
+- `html` (`"enforce" | "ignore"`, default: `"enforce"`): HTML 요소(`div`, `img` 등) 검사 여부
 - `custom` (`"enforce" | "ignore"`, default: `"enforce"`): 사용자 지정 컴포넌트 검사 여부
 - `explicitSpread` (`"enforce" | "ignore"`, default: `"enforce"`): spread 내부의 모든 키가 명시된 경우 검사 여부
 - `exceptions` (string[], default: `[]`): 검사 동작을 반전시킬 컴포넌트 목록
@@ -412,8 +412,8 @@ type ScoreByUser = { [key: string]: number }
 
 **Configuration**
 
-- `case` (`"kebabCase" | "camelCase" | "snakeCase" | "pascalCase"`, default: `"kebabCase"`): 단일 케이스 강제
-- `cases` (object, default: 없음): 복수 케이스 허용 시 개별 boolean 지정 (예: `{ kebabCase: true, pascalCase: true }`)
+- `case` (`"kebabCase" | "camelCase" | "snakeCase" | "pascalCase"`, default: `"kebabCase"`): 단일 대소문자 규칙 강제
+- `cases` (object, default: 없음): 여러 대소문자 규칙 허용 시 규칙별 불리언 지정 (예: `{ kebabCase: true, pascalCase: true }`)
 - `ignore` (regex string, default: 없음): 제외할 파일명 패턴
 - `multipleFileExtensions` (bool, default: `true`): 다중 확장자(`.test.ts` 등) 처리 방식
 
@@ -446,11 +446,11 @@ import "./routes"
 
 `null` 사용을 금지하고 `undefined`로 통일하도록 강제한다.
 
-**베스트 프랙티스.** React `return null`은 "렌더링 안 함"의 표준 관용구라 컴포넌트 코드 전반에서 등장하고, JSON/DOM/웹 표준 API의 응답 명세가 `null`을 포함하므로 외부 경계가 `null`을 강제하는 한 내부만 `undefined`로 통일하려 해도 변환 코드만 늘어난다.
+**베스트 프랙티스.** React `return null`은 "렌더링 안 함"의 표준 관용구라 컴포넌트 코드 전반에서 등장하고, JSON, DOM, 웹 표준 API의 응답 명세가 `null`을 포함하므로 외부 경계가 `null`을 강제하는 한 내부만 `undefined`로 통일하려 해도 변환 코드만 늘어난다.
 
 **Configuration**
 
-- `checkStrictEquality` (bool, default: `false`): `===` / `!==` null 비교도 검사
+- `checkStrictEquality` (bool, default: `false`): `null`과의 `===`, `!==` 비교도 검사
 
 **🆗 rule: incorrect (허용)**
 
@@ -488,7 +488,7 @@ function Empty() {
 **Configuration**
 
 - `onlyIfContainsSeparator` (bool, default: `false`): 이미 구분자가 있는 숫자만 검사
-- `number` / `binary` / `hexadecimal` / `octal` (object, default: 없음): 각 진수별 `groupLength`, `minimumDigits` 개별 설정
+- `number`, `binary`, `hexadecimal`, `octal` (object, default: 없음): 각 진수별 `groupLength`, `minimumDigits` 개별 설정
 
 **🆗 rule: incorrect (허용)**
 
@@ -522,13 +522,13 @@ const name = globalThis.prompt("Name?")
 
 ## [unicorn/prefer-ternary](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-ternary)
 
-같은 분기 결과를 변수에 할당하거나 반환하는 단순 `if/else`를 3항 연산자로 바꾸도록 강제한다.
+같은 분기 결과를 변수에 할당하거나 반환하는 단순 `if/else`를 삼항 연산자로 바꾸도록 강제한다.
 
-**취향.** 분기 표현은 `if/else` 형태가 더 읽기 좋은 경우가 많고 3항 변환은 자동 수정이 잘못된 위치까지 들어가 의도된 흐름을 뭉개는 경우가 있어, 단순한 매핑은 개발자가 자율적으로 3항을 선택하면 충분하다.
+**취향.** 분기 표현은 `if/else` 형태가 더 읽기 좋은 경우가 많고 삼항 연산자 변환은 자동 수정이 잘못된 위치까지 적용되어 의도한 분기 구조를 바꾸는 경우가 있어, 단순한 매핑은 개발자가 자율적으로 삼항 연산자를 선택하면 충분하다.
 
 **Configuration**
 
-- `mode` (`"always" | "only-single-line"`, default: `"always"`): `only-single-line`이면 한 줄 분기만 3항 강제
+- `mode` (`"always" | "only-single-line"`, default: `"always"`): `only-single-line`이면 한 줄 분기만 삼항 연산자 강제
 
 **🆗 rule: incorrect (허용)**
 
@@ -545,7 +545,7 @@ if (isReady) {
 
 `switch`의 각 case 절을 항상 중괄호로 감싸 블록 스코프를 명시하도록 강제한다. 기본 옵션 `"always"`는 모든 case에 중괄호를 요구하고, `"avoid"`는 필요할 때만 중괄호를 허용하는 반대 정책으로 동작한다.
 
-**취향.** 단순 case는 중괄호 없는 한 줄 표기가 더 짧고 읽기 쉽고, 중괄호가 실제로 필요한 자리(`let`/`const`로 lexical scope를 새로 여는 패턴)는 `eslint/no-case-declarations`가 이미 차단하므로 이 규칙까지 켜면 의미 없는 중괄호만 늘어난다.
+**취향.** 단순 case는 중괄호 없는 한 줄 표기가 더 짧고 읽기 쉽고, 중괄호가 실제로 필요한 자리(`let`/`const`로 렉시컬 스코프를 새로 만드는 패턴)는 `eslint/no-case-declarations`가 이미 차단하므로 이 규칙까지 켜면 의미 없는 중괄호만 늘어난다.
 
 **Configuration**
 
@@ -605,7 +605,7 @@ describe(parseDate, () => {
 
 `describe`, `it`, `expect` 같은 Vitest 전역 API를 항상 명시적으로 import하도록 강제한다.
 
-**베스트 프랙티스.** 이 저장소는 `test.globals`를 켜고 `vite-plus/test/globals` 타입으로 globals를 import 없이 사용한다. 규칙은 import를 강제하며 vite-plus의 재노출을 인식하지 못해 무조건 `from "vitest"` import 추가를 시도하므로, 자동 수정이 잘못된 라인을 반복 삽입한다.
+**베스트 프랙티스.** 이 저장소는 `test.globals`를 켜고 `vite-plus/test/globals` 타입으로 전역 API를 import 없이 사용한다. 규칙은 import를 강제하며 vite-plus의 re-export를 인식하지 못해 무조건 `from "vitest"` import 추가를 시도하므로, 자동 수정이 잘못된 줄을 반복 삽입한다.
 
 **🆗 rule: incorrect (허용)**
 
@@ -627,7 +627,7 @@ describe("parse", () => {
 
 ## [vitest/prefer-lowercase-title](https://oxc.rs/docs/guide/usage/linter/rules/vitest/prefer-lowercase-title)
 
-`describe`/`it`/`test` 제목 첫 글자를 항상 소문자로 강제한다.
+`describe`, `it`, `test` 제목 첫 글자를 항상 소문자로 강제한다.
 
 **취향.** 테스트 제목은 한국어 혼용, 고유명사 대문자(`API`, `HTTP`, `GET`), 문장형 표현이 자주 등장해 일률 소문자 강제가 부자연스러우므로 명시적으로 끈다.
 
@@ -649,7 +649,7 @@ describe("GET /users", () => {})
 
 `expect(x).toBe(true)`/`toBe(false)`를 `toBeTruthy()`/`toBeFalsy()`로 바꾸도록 강제하는 동치 규칙 쌍.
 
-**베스트 프랙티스.** `vitest/prefer-strict-boolean-matchers`가 정반대 방향을 강제하므로 두 규칙을 동시에 켜면 자동 수정이 무한 루프에 빠지고, 엄격한 boolean 비교 쪽을 채택했으므로 함께 끈다.
+**베스트 프랙티스.** `vitest/prefer-strict-boolean-matchers`가 정반대 방향을 강제하므로 두 규칙을 동시에 켜면 자동 수정이 무한 반복되고, 엄격한 불리언 비교 쪽을 채택했으므로 함께 끈다.
 
 **🆗 rule: incorrect (허용)**
 

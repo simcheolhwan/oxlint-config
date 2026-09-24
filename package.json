@@ -16,12 +16,8 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "lint": "vp lint",
-    "lint:fix": "vp lint --fix",
-    "check": "vp check",
-    "test": "vp test",
-    "setup": "vp config",
-    "prepare": "vp pack"
+    "prepare": "vp config --no-agent",
+    "prepack": "vp pack"
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "latest",
@@ -36,6 +32,6 @@
     "zod": "latest"
   },
   "peerDependencies": {
-    "vite-plus": ">=0.3.0"
+    "vite-plus": ">=1.0.0"
   }
 }

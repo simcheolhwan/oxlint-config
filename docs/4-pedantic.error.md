@@ -4,9 +4,9 @@ title: "Pedantic 채택 규칙"
 
 ## [eslint/array-callback-return](https://oxc.rs/docs/guide/usage/linter/rules/eslint/array-callback-return)
 
-`Array.prototype.map`/`filter`/`reduce` 같은 콜백에서 `return`을 빠뜨리면 결과가 `undefined`로 채워져 의도와 다른 배열이 만들어진다. 반환값이 필요하면 명시적 `return`을 두고, 부수 효과만 필요하면 `forEach`로 분리한다.
+`Array.prototype.map`, `filter`, `reduce` 같은 메서드의 콜백에서 `return`을 빠뜨리면 결과가 `undefined`로 채워져 의도와 다른 배열이 만들어진다. 반환값이 필요하면 명시적 `return`을 두고, 부수 효과만 필요하면 `forEach`로 분리한다.
 
-**베스트 프랙티스.** `undefined`로 채워진 배열은 다음 단계에서야 드러나는 까다로운 버그라 정적 검사 가치가 크고, `forEach` 분리를 자연스럽게 유도하는 부수 효과도 있다.
+**베스트 프랙티스.** `undefined`로 채워진 배열은 다음 단계에서야 드러나는 까다로운 버그라 정적 검사 가치가 크고, `forEach` 분리를 자연스럽게 유도하는 효과도 있다.
 
 **Configuration**
 
@@ -39,7 +39,7 @@ const labels = items.map((item) => {
 
 **Configuration**
 
-- 1번 옵션 (`"always" | "smart"`, default: `"always"`): `"smart"`는 `typeof`/리터럴/nullish 비교에만 `==` 허용
+- 1번 옵션 (`"always" | "smart"`, default: `"always"`): `"smart"`는 `typeof`, 리터럴, nullish 비교에만 `==` 허용
 - 2번 옵션 `{ null: "always" | "never" | "ignore" }` (default: `"always"`): `null` 비교 시 `===` 강제 여부
 
 **❌ incorrect**
@@ -97,7 +97,7 @@ if (value === "1") {
 
 함수가 길어질수록 책임이 모호해지고 테스트하기 어려워진다. 줄 수 상한을 넘으면 더 작은 함수로 분리한다.
 
-**취향.** 기본값을 `max: 80`으로 완화하고 `**/*.tsx`는 props/hooks/핸들러/JSX 트리 누적을 반영해 `max: 160`으로 더 완화하며, 빈 줄과 코멘트는 계산에서 제외하고 `**/*.test.{ts,tsx}`는 시나리오 누적으로 끈다.
+**취향.** 기본값을 `max: 80`으로 완화하고 `**/*.tsx`는 props, 훅, 핸들러, JSX 트리가 누적되는 점을 반영해 `max: 160`으로 더 완화하며, 빈 줄과 코멘트는 계산에서 제외하고 `**/*.test.{ts,tsx}`는 시나리오 누적으로 끈다.
 
 **Configuration**
 
@@ -155,7 +155,7 @@ function renderData() {
 
 ## [eslint/require-await](https://oxc.rs/docs/guide/usage/linter/rules/eslint/require-await) + [typescript/require-await](https://oxc.rs/docs/guide/usage/linter/rules/typescript/require-await)
 
-`async` 함수 안에 `await`이 없으면 비동기 표시가 의미를 잃고 호출자에 불필요한 Promise를 반환한다. typescript 버전은 타입 정보를 사용해 thenable이 아닌 값에 대한 `await`까지 더 정확히 검사한다.
+`async` 함수 안에 `await`이 없으면 비동기 표시가 의미를 잃고 호출자에 불필요한 Promise를 반환한다. `typescript/require-await`는 타입 정보를 사용해 thenable이 아닌 값에 대한 `await`까지 더 정확히 검사한다.
 
 **베스트 프랙티스.** Oxlint 내장 검사와 TypeScript 플러그인의 타입 인식 검사가 검출하는 경우가 조금 달라 양쪽을 함께 켜 함수 시그니처와 구현을 일치시킨다.
 
@@ -179,12 +179,12 @@ function load() {
 
 한 모듈이 너무 많은 의존성을 가져오면 응집도가 낮고 변경 영향이 커진다. 의존성 수 상한을 둬 책임 분리나 import 통합을 유도한다.
 
-**취향.** 기본값을 `max: 12`로 조금 완화해 일반 모듈에 적용하고 `**/*.tsx`는 hooks/아이콘/UI primitives/자식 컴포넌트 누적을 반영해 `max: 16`으로 더 완화하며, type import는 빌드 후 사라져 응집도 신호가 아니므로 `ignoreTypeImports: true`로 제외하고 테스트 파일과 TanStack Router의 `__root.tsx`는 끈다.
+**취향.** 기본값을 `max: 12`로 조금 완화해 일반 모듈에 적용하고 `**/*.tsx`는 훅, 아이콘, UI 기본 요소, 자식 컴포넌트 import가 누적되는 점을 반영해 `max: 16`으로 더 완화하며, 타입 import는 빌드 후 제거되어 응집도 신호가 아니므로 `ignoreTypeImports: true`로 제외하고 테스트 파일과 TanStack Router의 `__root.tsx`는 끈다.
 
 **Configuration**
 
 - `max` (int, default: `10`): 파일 최대 import 수
-- `ignoreTypeImports` (bool, default: `false`): type import 계산에서 제외
+- `ignoreTypeImports` (bool, default: `false`): 타입 import를 계산에서 제외
 
 **⚙️ 설정**
 
@@ -231,7 +231,7 @@ import { ui } from "./ui"
 **Configuration**
 
 - `ignoreArrowShorthand` (bool, default: `false`): `() => voidFn()` 형태의 화살표 단축 허용
-- `ignoreVoidOperator` (bool, default: `false`): `void` 연산자를 두른 표현식 허용
+- `ignoreVoidOperator` (bool, default: `false`): `void` 연산자를 적용한 표현식 허용
 - `ignoreVoidReturningFunctions` (bool, default: `false`): void 반환으로 선언된 함수 호출은 허용
 
 **⚙️ 설정**
@@ -283,9 +283,9 @@ function Form({ onSubmit }: { onSubmit: (event: FormEvent) => void }) {
 
 ## [typescript/no-deprecated](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-deprecated)
 
-JSDoc `@deprecated`가 붙은 API 참조를 정적으로 검출한다. 에디터의 시각적 표시(취소선)는 무시하기 쉬우므로 규칙으로 강제한다.
+JSDoc `@deprecated`가 붙은 API 참조를 정적으로 검출한다. 편집기의 시각적 표시(취소선)는 무시하기 쉬우므로 규칙으로 강제한다.
 
-**베스트 프랙티스.** 의존성 업그레이드 시 곧 사라질 API를 빠르게 발견해 마이그레이션 누락을 막고, 외부 라이브러리와 자체 코드에서 deprecated로 표시한 API에 동일하게 작용한다.
+**베스트 프랙티스.** 의존성 업그레이드 시 곧 사라질 API를 빠르게 발견해 마이그레이션 누락을 막고, 외부 라이브러리와 자체 코드에서 deprecated로 표시한 API에 동일하게 적용된다.
 
 **Configuration**
 
@@ -306,15 +306,15 @@ const parsed = new URL("/foo", "http://example.com")
 
 ## [typescript/no-misused-promises](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-misused-promises)
 
-조건문, spread, `void` 반환 컨텍스트(인자, 객체 프로퍼티, 반환, 변수 할당, 상속 메서드 재정의)에 Promise 반환 함수를 넘기는 패턴을 금지한다. JSX 속성 위치는 옵션으로 검사를 끄고 나머지 위치만 검출한다.
+조건문, spread, `void` 반환 문맥(인자, 객체 프로퍼티, 반환, 변수 할당, 상속 메서드 재정의)에 Promise 반환 함수를 넘기는 패턴을 금지한다. JSX 속성 위치는 옵션으로 검사를 끄고 나머지 위치만 검출한다.
 
-**베스트 프랙티스.** `typescript/no-floating-promises`는 직접 호출만 검출하는 반면 이 규칙은 void 컨텍스트의 Promise 전달을 검출해 서로 보완하고, `checksVoidReturn.attributes: false`로 `<form onSubmit={submit}>` 같은 JSX 속성 오탐만 제외하며 나머지 위치(setTimeout 인자, void 변수 할당, 조건문, spread)는 그대로 검출한다.
+**베스트 프랙티스.** `typescript/no-floating-promises`는 직접 호출만 검출하는 반면 이 규칙은 void 반환 문맥의 Promise 전달을 검출해 서로 보완하고, `checksVoidReturn.attributes: false`로 `<form onSubmit={submit}>` 같은 JSX 속성 오탐만 제외하며 나머지 위치(`setTimeout` 인자, void 변수 할당, 조건문, spread)는 그대로 검출한다.
 
 **Configuration**
 
 - `checksConditionals` (bool, default: `true`): 조건문에서 Promise 사용 검사
 - `checksSpreads` (bool, default: `true`): spread 구문에서 Promise 사용 검사
-- `checksVoidReturn` (bool | object, default: `true`): void 반환 컨텍스트 검사
+- `checksVoidReturn` (bool | object, default: `true`): void 반환 문맥 검사
 - `checksVoidReturn.arguments` (bool, default: `true`): 인자로 전달되는 Promise 반환 함수
 - `checksVoidReturn.attributes` (bool, default: `true`): JSX 속성의 Promise 반환 함수
 - `checksVoidReturn.inheritedMethods` (bool, default: `true`): void 반환 상속 메서드 재정의
@@ -380,9 +380,9 @@ takeNumber(value)
 
 ## [typescript/no-unsafe-assignment](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-assignment)
 
-`any` 값을 다른 변수에 할당하면 타입 안전성이 전파되며 사라진다. `unknown`으로 받아 좁히거나 정확한 타입을 사용한다.
+`any` 값을 다른 변수에 할당하면 `any`가 전파되어 타입 안전성이 사라진다. `unknown`으로 받아 좁히거나 정확한 타입을 사용한다.
 
-**베스트 프랙티스.** `any` 전파의 또 다른 경로를 차단해 `no-explicit-any`/`no-unsafe-argument`/`no-unsafe-member-access`/`no-unsafe-return`과 함께 타입 안전성 검사 체계를 구성한다.
+**베스트 프랙티스.** `any` 전파의 또 다른 경로를 차단해 `no-explicit-any`, `no-unsafe-argument`, `no-unsafe-member-access`, `no-unsafe-return`과 함께 타입 안전성 검사 체계를 구성한다.
 
 **❌ incorrect**
 
@@ -402,7 +402,7 @@ const count: number = typeof value === "number" ? value : 0
 
 `any` 타입 값을 함수에서 반환하면 호출자가 타입 검증 없이 그 결과를 사용하게 된다. 정확한 타입으로 좁힌 뒤 반환하거나 `unknown`으로 명시한다.
 
-**베스트 프랙티스.** `any` 전파를 반환 경계에서도 차단해 `no-unsafe-argument`/`no-unsafe-assignment`/`no-unsafe-member-access`와 한 묶음으로 작동한다.
+**베스트 프랙티스.** `any` 전파를 반환 경계에서도 차단해 `no-unsafe-argument`, `no-unsafe-assignment`, `no-unsafe-member-access`와 한 묶음으로 작동한다.
 
 **❌ incorrect**
 
@@ -431,10 +431,10 @@ function read(): number {
 **Configuration**
 
 - `ignoreBooleanCoercion` (bool, default: `false`): `Boolean()` 인자 안의 `||` 허용
-- `ignoreConditionalTests` (bool, default: `true`): 조건 테스트 위치의 `||` 허용
+- `ignoreConditionalTests` (bool, default: `true`): 조건식 위치의 `||` 허용
 - `ignoreIfStatements` (bool, default: `false`): `??`로 단순화 가능한 `if` 문 허용
 - `ignoreMixedLogicalExpressions` (bool, default: `false`): `&&`와 섞인 `||` 표현식 허용
-- `ignorePrimitives` (object | bool, default: `false`): nullable과 결합한 특정 원시 타입 검사 제외 (`bigint`/`boolean`/`number`/`string`)
+- `ignorePrimitives` (object | bool, default: `false`): nullable과 결합한 특정 원시 타입 검사 제외 (`bigint`, `boolean`, `number`, `string`)
 - `ignoreTernaryTests` (bool, default: `false`): `??`로 단순화 가능한 삼항식 허용
 
 **❌ incorrect**
@@ -451,16 +451,16 @@ const display = value ?? "default"
 
 ## [typescript/switch-exhaustiveness-check](https://oxc.rs/docs/guide/usage/linter/rules/typescript/switch-exhaustiveness-check)
 
-union/enum을 분기하는 `switch`에서 일부 멤버를 빠뜨리면 누락된 값을 처리하지 않은 채 런타임까지 검출하지 못한다. 모든 멤버에 대한 `case`를 두거나 `default`에 `const _exhaustive: never = value` 패턴을 둬 컴파일 타임에 누락을 검출한다.
+유니언이나 열거형을 분기하는 `switch`에서 일부 멤버를 빠뜨리면 누락된 값을 처리하지 않은 채 런타임까지 검출하지 못한다. 모든 멤버에 대한 `case`를 두거나 `default`에 `const _exhaustive: never = value` 패턴을 둬 컴파일 타임에 누락을 검출한다.
 
-**베스트 프랙티스.** TypeScript는 union/enum 멤버가 추가될 때 기존 `switch`가 갱신됐는지 자체 검사하지 않는데, 이 규칙이 해당 검사를 보완해 멤버 확장 시 누락된 분기를 빌드 단계에서 검출한다.
+**베스트 프랙티스.** TypeScript는 유니언이나 열거형 멤버가 추가될 때 기존 `switch`가 갱신됐는지 자체 검사하지 않는데, 이 규칙이 해당 검사를 보완해 멤버 확장 시 누락된 분기를 빌드 단계에서 검출한다.
 
 **Configuration**
 
 - `allowDefaultCaseForExhaustiveSwitch` (bool, default: `true`): 모든 멤버를 다룬 exhaustive `switch`에 `default`를 두는 것 허용
-- `considerDefaultExhaustiveForUnions` (bool, default: `false`): union에서 `default` 케이스를 exhaustiveness 충족으로 간주
-- `defaultCaseCommentPattern` (string, default: 없음): `default` 블록의 코멘트와 매치되면 검사 생략
-- `requireDefaultForNonUnion` (bool, default: `false`): union이 아닌 `switch`에도 `default` 필수화
+- `considerDefaultExhaustiveForUnions` (bool, default: `false`): 유니언에서 `default` 케이스를 exhaustiveness 충족으로 간주
+- `defaultCaseCommentPattern` (string, default: 없음): `default` 블록의 코멘트가 패턴과 일치하면 검사 생략
+- `requireDefaultForNonUnion` (bool, default: `false`): 유니언이 아닌 `switch`에도 `default`를 필수로 요구
 
 **❌ incorrect**
 
@@ -494,9 +494,9 @@ function label(status: Status) {
 
 ## [unicorn/escape-case](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/escape-case)
 
-문자열의 hex(`\xa9`)와 unicode(`\ud834`) 이스케이프 시퀀스에서 hex 자릿수가 소문자면 식별자와 시각적으로 섞여 읽기 어렵다. hex 자릿수를 모두 대문자로 통일한다.
+문자열의 16진수(`\xa9`)와 유니코드(`\ud834`) 이스케이프 시퀀스에서 16진수 자릿수가 소문자면 식별자와 시각적으로 섞여 읽기 어렵다. 16진수 자릿수를 모두 대문자로 통일한다.
 
-**취향.** 이스케이프 값이 주변 식별자/문자열과 분명히 구분되어 가독성이 올라가고 자동 수정으로 해결되는 가벼운 규칙이라 노이즈 부담이 거의 없다.
+**취향.** 이스케이프 값이 주변 식별자나 문자열과 분명히 구분되어 가독성이 올라가고 자동 수정으로 해결되는 가벼운 규칙이라 노이즈 부담이 거의 없다.
 
 **❌ incorrect**
 
@@ -514,7 +514,7 @@ const registered = "\xAE"
 
 ## [unicorn/new-for-builtins](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/new-for-builtins)
 
-`Date`/`Map`/`Set` 같은 내장 생성자는 `new` 없이 호출하면 의도와 다른 값(예: `Date()`는 현재 시각 문자열)을 반환하고, 반대로 `String`/`Number`/`Boolean`에 `new`를 붙이면 원시 값이 아닌 래퍼 객체가 만들어져 `typeof`나 동등 비교 결과가 달라진다.
+`Date`, `Map`, `Set` 같은 내장 생성자는 `new` 없이 호출하면 의도와 다른 값(예: `Date()`는 현재 시각 문자열)을 반환하고, 반대로 `String`, `Number`, `Boolean`에 `new`를 붙이면 원시 값이 아닌 래퍼 객체가 만들어져 `typeof`나 동등 비교 결과가 달라진다.
 
 **베스트 프랙티스.** 호출 형태만 다른데 동작이 완전히 달라지는 패턴은 거의 의도된 사용이 없는 명백한 버그라 오탐 부담이 적어 pedantic 기본값인 `warn`에서 `error`로 승격한다.
 
@@ -536,7 +536,7 @@ const text = String(value)
 
 `arr.map(fn)`처럼 콜백을 직접 참조하면 함수의 추가 인자(`index`, `array`)까지 전달되어 버그를 만들 수 있다. `arr.map(value => fn(value))`로 호출 시점을 분리한다.
 
-**베스트 프랙티스.** 추가 인자가 전달되는 문제를 막지만 정상 사용에서도 람다를 강제해 코드가 조금 길어진다.
+**베스트 프랙티스.** 추가 인자가 전달되는 문제를 막지만 정상 사용에서도 화살표 함수 래퍼를 강제해 코드가 조금 길어진다.
 
 **❌ incorrect**
 
@@ -575,9 +575,9 @@ return
 
 ## [unicorn/prefer-number-coercion](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-number-coercion)
 
-`parseFloat()`와 기수 10의 `parseInt()`는 숫자 접두어만 파싱하고 뒤따르는 텍스트를 조용히 무시한다. 입력 전체를 파싱하는 `Number()`로 강제 변환 의도를 정확히 표현한다.
+`parseFloat()`와 기수 10의 `parseInt()`는 숫자 접두사만 파싱하고 뒤따르는 텍스트를 조용히 무시한다. 입력 전체를 파싱하는 `Number()`로 강제 변환 의도를 정확히 표현한다.
 
-**베스트 프랙티스.** `Number.parseInt("12px", 10)`은 `12`를 반환해 비정상 입력을 조용히 통과시키지만 `Number("12px")`는 `NaN`으로 실패해 문제를 드러낸다. 접두어 파싱이 의도인 기수 10 이외의 `parseInt`는 검출하지 않는다.
+**베스트 프랙티스.** `Number.parseInt("12px", 10)`은 `12`를 반환해 비정상 입력을 조용히 통과시키지만 `Number("12px")`는 `NaN`으로 실패해 문제를 드러낸다. 접두사 파싱이 의도인 기수 10 이외의 `parseInt`는 검출하지 않는다.
 
 **❌ incorrect**
 
@@ -595,9 +595,9 @@ const count = Math.trunc(Number(input))
 
 ## [unicorn/prefer-query-selector](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-query-selector)
 
-`getElementById`, `getElementsByClassName`은 단편적이다. 통일된 셀렉터 표현인 `querySelector`/`querySelectorAll`을 사용한다.
+`getElementById`, `getElementsByClassName`은 단편적이다. 통일된 선택자 표현인 `querySelector`/`querySelectorAll`을 사용한다.
 
-**취향.** 셀렉터 표현이 일관되어 인지 비용이 줄어든다.
+**취향.** 선택자 표현이 일관되어 인지 비용이 줄어든다.
 
 **❌ incorrect**
 
@@ -631,7 +631,7 @@ const cleaned = input.replaceAll("-", "_")
 
 ## [unicorn/prefer-top-level-await](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/prefer-top-level-await)
 
-모듈 최상위에서 즉시 실행 async IIFE나 `promise.catch()` 체인으로 비동기를 시작하는 패턴은 의도를 감추고 오류 처리를 우회한다. ES2022 top-level await으로 직접 실행하고 일반 `try/catch`로 오류를 다룬다.
+모듈 최상위에서 async IIFE나 `promise.catch()` 체인으로 비동기를 시작하는 패턴은 의도를 감추고 오류 처리를 우회한다. ES2022 top-level await으로 직접 실행하고 일반 `try/catch`로 오류를 다룬다.
 
 **베스트 프랙티스.** Vite는 ESM 환경을 보장해 top-level await을 그대로 쓸 수 있고, IIFE 래퍼와 then/catch 체인이 사라져 모듈 초기화 코드의 흐름이 동기 코드처럼 읽힌다.
 

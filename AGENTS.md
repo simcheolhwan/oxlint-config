@@ -6,21 +6,11 @@
 - `src/index.ts`: 위 카테고리 모음을 합성한 `lintConfig: OxlintConfig` 단일 내보내기. `options`, `env`, `plugins`, `categories`, `rules`, `overrides`를 모두 담는 source of truth.
 - `docs/`: 카테고리별 규칙 결정 근거. 채택과 제외를 같은 깊이로 기록한다.
 
-빌드, 린트, 포매팅은 [Vite+](https://viteplus.dev/guide/)의 `vp` CLI로 통합되어 있다. 로컬 문서는 `node_modules/vite-plus/docs`에 있고, `vp help` 또는 `vp <command> --help`로 명령과 옵션을 조회한다.
-
-## 검증 명령
-
-- `pnpm install`: 원격 변경을 받은 뒤 가장 먼저 실행해 의존성을 동기화한다.
-- `pnpm check`: 포매팅, 린트, 타입 검사.
-- `pnpm lint`: 린트만 실행. `pnpm lint:fix`는 자동 수정을 적용한다.
-- `pnpm test`: `fixtures/`의 고의 오류가 예상한 규칙과 심각도로 검출되는지 확인.
-- `pnpm exec vp pack`: `dist/` 빌드. 배포 직전 dts 포함 산출물이 정상인지 확인.
-
 ## 린트 규칙 검증
 
 `fixtures/`는 `lintConfig`가 규칙을 실제로 검출하는지 확인하는 검증 자산이다. 패키지 산출물이 아니다 (`dist`에 포함되지 않음).
 
-- 고의로 린트 오류를 담는다. **수정하거나 오류를 고치지 마라.** 일반 `pnpm check`에서는 제외하고 `pnpm test`가 규칙 검출 결과를 검증한다.
+- 고의로 린트 오류를 담는다. **수정하거나 오류를 고치지 마라.** 일반 `vp check`에서는 제외하고 `vp test`가 규칙 검출 결과를 검증한다.
 - 각 오류 옆 인라인 코멘트가 `<plugin>/<rule> (<category>)`를 명시한다.
 - `vite.config.ts`의 `staged`는 `fixtures/`를 제외하므로 커밋 시 자동 수정되지 않는다.
 - 루트 `vite.config.ts`의 `lint.ignorePatterns`는 일반 린트에서 `fixtures/`를 제외하고, `fixtures/vite.config.ts`는 검증 파일 검사 시 이 디렉터리를 별도 Vite+ 프로젝트로 실행한다.
@@ -33,14 +23,14 @@
 `docs/`는 두 종류의 파일을 둔다.
 
 - **카테고리별 결정**: `<우선순위>-<카테고리>.<결정>.md` 패턴.
-  - `1-correctness.error.md` ~ `6-restriction.error.md`: 카테고리 우선순위 + 채택 규칙 모음.
+  - `1-correctness.error.md` ~ `6-restriction.error.md`: 카테고리 우선순위와 채택 규칙 모음.
   - 같은 카테고리의 등급 변형은 별도 파일로 분리 (`2-suspicious.off.md`, `3-perf.off.md` 등).
   - `.off.md`는 의도적으로 끈 규칙의 근거. 채택만큼 중요하므로 빠짐없이 기록한다.
 - **메타 결정**: `0-overview.md` 등 카테고리 우선순위와 운영 정책의 결정 근거.
 
 파일 안의 규칙 항목과 `src/rules/<카테고리>.ts`의 같은 코멘트 그룹(예: `// error`) 안의 규칙은 `<plugin>/<rule>` 전체 경로 기준 알파벳순으로 정렬한다. 추가와 승격 시에도 정렬을 유지한다.
 
-`src/rules/<카테고리>.ts`의 `// error` / `// off` 그룹은 `.error.md` / `.off.md` 분류와 1:1 매칭이 기본이다. **예외**: `src/index.ts`의 `overrides`에서 `error`로 켜는 규칙은 메인 그룹이 `// off`여도 `.error.md`에 둔다. 규칙을 실제로 사용하는지가 분류 기준이고, 메인 off + 재정의 error 패턴은 항목 본문에서 설명한다. 예: `import/no-named-export`, `import/prefer-default-export` (`**/*.tsx` 재정의), `vitest/require-hook` (`**/*.test.{ts,tsx}` 재정의).
+`src/rules/<카테고리>.ts`의 `// error` / `// off` 그룹은 `.error.md` / `.off.md` 분류와 1:1 대응이 기본이다. **예외**: `src/index.ts`의 `overrides`에서 `error`로 켜는 규칙은 메인 그룹이 `// off`여도 `.error.md`에 둔다. 규칙을 실제로 사용하는지가 분류 기준이고, 메인 off와 재정의 error를 조합하는 패턴은 항목 본문에서 설명한다. 예: `import/no-named-export`, `import/prefer-default-export` (`**/*.tsx` 재정의), `vitest/require-hook` (`**/*.test.{ts,tsx}` 재정의).
 
 ## 규칙 항목 작성 형식
 
@@ -62,7 +52,7 @@
 - error 규칙: `**❌ incorrect**` / `**✅ correct**`. 규칙이 차단할 패턴과 우리가 권장할 패턴을 대비시킨다.
 - off 규칙: `**🆗 rule: incorrect (허용)**` / `**⚠️ rule: correct (노이즈)**`. 규칙이 오탐으로 보고하는 의도 코드와, 규칙이 통과시키지만 우리가 막고 싶은 비의도 코드를 레이블에 직접 명시한다.
 - off 규칙의 코드 블록 순서는 🆗 → ⚠️ 순으로 둔다. 항목에 따라 한쪽만 의미 있으면 그 블록만 둔다.
-- 부가설명은 레이블 다음 줄에 한 문장으로 두며, **한 `##` 안에서 같은 레이블(이모지+텍스트)이 2회 이상 등장할 때만** 그 레이블 그룹의 모든 블록에 단다. 단독 레이블에는 두지 않는다. 옵션 적용이나 재정의 같은 규칙 자체의 맥락은 근거/설정 블록에 적는다.
+- 부가 설명은 레이블 다음 줄에 한 문장으로 두며, **한 `##` 안에서 같은 레이블(이모지와 텍스트)이 2회 이상 등장할 때만** 그 레이블 그룹의 모든 블록에 단다. 단독 레이블에는 두지 않는다. 옵션 적용이나 재정의 같은 규칙 자체의 맥락은 근거나 설정 블록에 적는다.
 
 ### 묶음 항목
 
@@ -76,11 +66,11 @@
 
 코드(`src/`)와 문서(`docs/`)는 항상 같은 작업에서 동기화한다.
 
-- `src/rules/<카테고리>.ts` 또는 `src/index.ts`의 `rules`/`overrides`/`categories`를 바꾸면 해당 카테고리의 `docs/N-*.md`를 같은 작업에서 업데이트한다.
+- `src/rules/<카테고리>.ts` 또는 `src/index.ts`의 `rules`, `overrides`, `categories`를 바꾸면 해당 카테고리의 `docs/N-*.md`를 같은 작업에서 업데이트한다.
 - 새 Oxlint 내장 플러그인을 활성화할 때는 `src/index.ts`의 `plugins` 배열에 등록하고, 채택 규칙을 `src/rules/<카테고리>.ts`에, 결정 근거를 `docs/N-*.md`에 같은 작업에서 추가한다.
 - `categories`를 새로 켤 때는 내장 기능이 자동 활성화하는 규칙 중 끄고 싶은 항목을 `src/rules/*.ts`의 `// off` 그룹에 명시적으로 등록한다 (예: `react/react-in-jsx-scope`).
 - `categories`가 자동 활성화하는 규칙도 채택하면 `src/rules/<카테고리>.ts`의 `// error` 그룹과 `docs/N-*.error.md`에 개별 항목을 둔다. 카테고리 활성화만으로 문서화를 생략하지 않는다.
-- 변경 후 `pnpm check`로 오탐을 확인하고, 새 오탐이 나오면 `.off.md`에 근거를 남긴 뒤 끈다.
+- 변경 후 `vp check`로 오탐을 확인하고, 새 오탐이 나오면 `.off.md`에 근거를 남긴 뒤 끈다.
 
 ## 작성 언어
 

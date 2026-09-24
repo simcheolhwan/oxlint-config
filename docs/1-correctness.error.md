@@ -4,7 +4,7 @@ title: "Correctness 채택 규칙"
 
 ## [eslint/no-dupe-keys](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-dupe-keys)
 
-같은 객체 키가 중복되어 앞 값이 뒤 값으로 덮인다. 키를 하나만 남기거나 서로 다른 이름을 사용한다.
+같은 객체 키가 중복되어 앞 값을 뒤 값이 덮어쓴다. 키를 하나만 남기거나 서로 다른 이름을 사용한다.
 
 **베스트 프랙티스.** 키 중복은 의도된 사용이 거의 없는 명백한 버그라 오탐 없이 검출할 수 있다.
 
@@ -39,9 +39,9 @@ const settings = {
 - `argsIgnorePattern` (regex string, default: `"^_"`): 무시할 인자 이름 패턴
 - `caughtErrors` (`"all" | "none"`, default: 없음): catch 블록 오류 변수 검사 여부
 - `caughtErrorsIgnorePattern` (regex string, default: 없음): 무시할 catch 변수 패턴
-- `destructuredArrayIgnorePattern` (regex string, default: 없음): 무시할 배열 구조분해 패턴
-- `ignoreRestSiblings` (bool, default: `false`): rest로 빠지는 형제 프로퍼티 무시
-- `ignoreClassWithStaticInitBlock` (bool, default: `false`): static 초기화 블록 있는 클래스 무시
+- `destructuredArrayIgnorePattern` (regex string, default: 없음): 무시할 배열 구조 분해 패턴
+- `ignoreRestSiblings` (bool, default: `false`): rest 프로퍼티의 형제 프로퍼티 무시
+- `ignoreClassWithStaticInitBlock` (bool, default: `false`): static 초기화 블록이 있는 클래스 무시
 - `ignoreUsingDeclarations` (bool, default: `false`): `using`/`await using` 선언 무시
 - `reportUsedIgnorePattern` (bool, default: `false`): 무시 패턴에 매칭되지만 실제 사용된 변수 보고
 - `reportVarsOnlyUsedAsTypes` (bool, default: `false`): 타입으로만 사용된 변수 보고
@@ -63,7 +63,7 @@ const unusedMessage = "intentionally unused local value"
 
 **✅ correct**
 
-export로 다른 모듈이 소비하는 값.
+export해 다른 모듈에서 사용하는 값.
 
 ```ts
 export const message = "consumed by another module"
@@ -71,7 +71,7 @@ export const message = "consumed by another module"
 
 **✅ correct**
 
-`ignoreRestSiblings`로 rest로 빠지는 형제는 허용된다.
+`ignoreRestSiblings`로 rest 프로퍼티의 형제 프로퍼티는 허용된다.
 
 ```ts
 const { password, ...safeUser } = user
@@ -82,7 +82,7 @@ return safeUser
 
 이미지에 `alt`가 없어 보조 기술이 내용을 알 수 없다. 의미 있는 `alt`를 쓰거나 장식 이미지에는 `alt=""`를 사용한다.
 
-**베스트 프랙티스.** 접근성 기본 요건이고, 이미지가 의미인지 장식(`alt=""`)인지 의도 표명을 강제한다.
+**베스트 프랙티스.** 접근성 기본 요건이고, 이미지가 의미를 전달하는지 장식(`alt=""`)인지 의도를 명시하도록 강제한다.
 
 **Configuration**
 
@@ -105,9 +105,9 @@ return safeUser
 
 ## [jsx-a11y/anchor-is-valid](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/anchor-is-valid)
 
-`href` 없는 anchor는 키보드와 보조 기술에서 링크 의미가 깨진다. 이동이면 `href`를 넣고, 동작이면 `button`을 사용한다.
+`href`가 없는 `<a>` 요소는 키보드로 포커스할 수 없고 보조 기술이 링크로 인식하지 못한다. 이동이면 `href`를 넣고, 동작이면 `button`을 사용한다.
 
-**베스트 프랙티스.** anchor와 button 혼용은 키보드, 스크린리더 사용자에게 즉시 영향을 주는 흔한 실수다.
+**베스트 프랙티스.** `<a>`와 `<button>`의 혼용은 키보드, 스크린리더 사용자에게 즉시 영향을 주는 흔한 실수다.
 
 **Configuration**
 
@@ -129,7 +129,7 @@ return safeUser
 
 ## [jsx-a11y/click-events-have-key-events](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/click-events-have-key-events)
 
-클릭 가능한 비대화형 요소에 키보드 이벤트가 없어 키보드 조작이 막힌다. `button`을 사용하거나 `role`, `tabIndex`, key handler를 함께 제공한다.
+클릭 가능한 비대화형 요소에 키보드 이벤트가 없어 키보드 조작이 막힌다. `button`을 사용하거나 `role`, `tabIndex`, 키보드 이벤트 핸들러를 함께 제공한다.
 
 **베스트 프랙티스.** 키보드 사용자 차단은 자주 놓치는 결함이라 정적으로 잡을 가치가 크다.
 
@@ -220,11 +220,11 @@ return safeUser
 
 비대화형 요소가 `tabIndex`로 포커스 대상이 되어 탐색 흐름이 어색해진다. 포커스가 필요한 동작은 `button`, `a` 같은 네이티브 요소로 표현한다.
 
-**베스트 프랙티스.** 잘못된 접근성 시도가 오히려 탐색 흐름을 망가뜨리는 패턴을 차단한다.
+**베스트 프랙티스.** 잘못된 접근성 시도가 오히려 탐색 흐름을 방해하는 패턴을 차단한다.
 
 **Configuration**
 
-- `allowExpressionValues` (bool, default: `true`): `tabIndex` 값이 표현식(변수, 삼항)일 때 허용
+- `allowExpressionValues` (bool, default: `true`): `tabIndex` 값이 표현식(변수, 삼항 연산자)일 때 허용
 - `roles` (string[], default: `["tabpanel"]`): 상호작용 요소로 허용할 ARIA role 목록
 - `tags` (string[], default: `[]`): 상호작용 요소로 허용할 사용자 지정 HTML 요소 목록
 
@@ -248,12 +248,12 @@ return safeUser
 
 `<div>`이나 `<span>` 같은 정적 요소에 클릭, 키 핸들러가 붙으면 보조 기술이 그 요소를 상호작용 요소로 인식하지 못한다. 시맨틱 요소(`<button>`, `<a>`)로 바꾸거나 적절한 `role`을 지정한다.
 
-**베스트 프랙티스.** `click-events-have-key-events`가 키보드 이벤트 누락을 검출하는 반면 이 규칙은 시맨틱(role) 누락을 검출해, 둘이 함께 켜져야 `<div onClick>` 패턴의 양면을 모두 차단한다.
+**베스트 프랙티스.** `click-events-have-key-events`가 키보드 이벤트 누락을 검출하는 반면 이 규칙은 시맨틱(role) 누락을 검출해, 두 규칙을 함께 켜야 `<div onClick>` 패턴의 두 가지 결함을 모두 차단한다.
 
 **Configuration**
 
 - `allowExpressionValues` (bool, default: `false`): `role` 값이 표현식일 때 허용
-- `handlers` (string[], default: `null`): 규칙 발동 대상 핸들러 이름 목록
+- `handlers` (string[], default: `null`): 규칙이 검사할 핸들러 이름 목록
 
 **❌ incorrect**
 
@@ -283,7 +283,7 @@ return safeUser
 
 ## [jsx-a11y/prefer-tag-over-role](https://oxc.rs/docs/guide/usage/linter/rules/jsx_a11y/prefer-tag-over-role)
 
-`role="button"`처럼 제네릭 요소에 ARIA role을 붙이는 대신, 같은 역할을 기본 제공하는 시맨틱 HTML 태그를 사용하도록 강제한다. `<div role="button">`은 `<button>`으로 대체한다.
+`role="button"`처럼 범용 요소에 ARIA role을 붙이는 대신, 같은 역할을 기본 제공하는 시맨틱 HTML 태그를 사용하도록 강제한다. `<div role="button">`은 `<button>`으로 대체한다.
 
 **베스트 프랙티스.** 시맨틱 태그는 role뿐 아니라 키보드 동작, 포커스 관리까지 네이티브로 제공하므로, role로 흉내 내는 것보다 접근성과 가독성이 모두 낫다.
 
@@ -307,7 +307,7 @@ return safeUser
 
 effect 안에서 읽는 값이 의존성 배열에 없어 오래된 값을 참조할 수 있다. 의존성 배열에 effect가 읽는 모든 값을 포함한다.
 
-**베스트 프랙티스.** stale closure는 React에서 가장 흔한 버그 원천이고 자동 수정도 신뢰할 만하다.
+**베스트 프랙티스.** stale closure는 React에서 가장 흔한 버그 원인이고 자동 수정도 신뢰할 만하다.
 
 **Configuration**
 
@@ -333,7 +333,7 @@ useEffect(() => {
 
 props, 상태, 훅 인자, 훅 반환값처럼 Rules of React가 불변으로 정한 값을 직접 변경하는 코드를 검출한다. 새 값을 만들어 setter나 지역 변수로 교체한다.
 
-**베스트 프랙티스.** React는 참조 동일성으로 재렌더링 여부를 판단하므로 불변 값을 직접 변경하면 화면이 갱신되지 않거나 React Compiler의 메모이제이션 결과가 실제 값과 어긋난다.
+**베스트 프랙티스.** React는 참조 동일성으로 리렌더링 여부를 판단하므로 불변 값을 직접 변경하면 화면이 갱신되지 않거나 React Compiler의 메모이제이션 결과가 실제 값과 어긋난다.
 
 **❌ incorrect**
 
@@ -358,7 +358,7 @@ function CartSummary({ items }: { items: CartItem[] }) {
 
 메모이제이션과 호환되지 않는 라이브러리 API(React Hook Form의 `watch`, TanStack Table의 `useReactTable` 등) 사용을 검출한다. 구독 기반 대체 API로 바꾼다.
 
-**베스트 프랙티스.** 이 API들은 매 렌더링마다 값을 다시 읽는 방식에 의존하므로 React Compiler가 결과를 메모이제이션하면 값이 바뀌어도 화면이 갱신되지 않는다. React Hook Form의 `useWatch`는 구독 기반이라 호환된다.
+**베스트 프랙티스.** 이 API들은 렌더링마다 값을 다시 읽는 방식에 의존하므로 React Compiler가 결과를 메모이제이션하면 값이 바뀌어도 화면이 갱신되지 않는다. React Hook Form의 `useWatch`는 구독 기반이라 호환된다.
 
 **❌ incorrect**
 
@@ -466,7 +466,7 @@ const label = `${user.id}:${user.name}`
 **Configuration**
 
 - `ignoreVoid` (bool, default: `true`): `void` 연산자로 처리된 Promise 무시
-- `ignoreIIFE` (bool, default: `false`): Promise를 호출하는 IIFE 무시
+- `ignoreIIFE` (bool, default: `false`): Promise를 반환하는 IIFE 무시
 - `checkThenables` (bool, default: `false`): Promise가 아닌 thenable 객체도 검사
 - `allowForKnownSafePromises` (array, default: `[]`): 무시할 특정 Promise 타입 지정
 - `allowForKnownSafeCalls` (array, default: `[]`): 무시할 특정 함수 호출 지정
@@ -487,7 +487,7 @@ await Promise.resolve("awaited")
 
 `new Array(n)` 생성자는 인자 하나가 길이인지 단일 요소인지 호출 형태만으로 알기 어렵다. 길이 기반 생성은 `Array.from({ length: n })`, 요소 리터럴은 `[value]`처럼 의도가 분명한 표기를 사용한다.
 
-**베스트 프랙티스.** `Array.from({ length: n }, mapFn)` 형태는 빈 슬롯 없이 매핑까지 한 번에 끝낼 수 있어 `new Array(n).fill(...)` + `.map(...)` 체이닝의 가독성, 메모리 비효율도 함께 해결한다 (다만 규칙은 `new` 생성자 호출만 검출하므로 `Array(n).fill(...)`은 잡히지 않는다).
+**베스트 프랙티스.** `Array.from({ length: n }, mapFn)` 형태는 빈 슬롯 없이 매핑까지 한 번에 끝낼 수 있어 `new Array(n).fill(...)`에 `.map(...)`을 잇는 체이닝의 가독성 저하와 메모리 비효율도 함께 해결한다 (다만 규칙은 `new` 생성자 호출만 검출하므로 `Array(n).fill(...)`은 검출되지 않는다).
 
 **❌ incorrect**
 

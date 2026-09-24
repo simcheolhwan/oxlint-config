@@ -27,9 +27,9 @@ const count = 0
 
 ## [eslint/no-negated-condition](https://oxc.rs/docs/guide/usage/linter/rules/eslint/no-negated-condition) + [unicorn/no-negated-condition](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-negated-condition)
 
-`if (!x) A else B`나 `!x ? a : b`처럼 부정 조건을 우선 분기에 두면 부정 조건부터 해석해야 한다는 규칙. Oxlint에서 두 규칙은 `if`와 삼항을 모두 검출하는 동치 규칙이다.
+`if (!x) A else B`나 `!x ? a : b`처럼 부정 조건을 우선 분기에 두면 부정 조건부터 해석해야 한다는 규칙. Oxlint에서 두 규칙은 `if` 문과 삼항 연산자를 모두 검출하는 동치 규칙이다.
 
-**취향.** `if`와 삼항 모두 부정 조건이 자연스러운 경우가 많아 일률 금지는 노이즈가 크므로 양쪽을 모두 끈다.
+**취향.** `if` 문과 삼항 연산자 모두 부정 조건이 자연스러운 경우가 많아 일률 금지는 노이즈가 크므로 양쪽을 모두 끈다.
 
 **🆗 rule: incorrect (허용)**
 
@@ -96,7 +96,7 @@ function loadResults(query: string) {
 
 모든 정규식 리터럴과 `RegExp` 생성자에 `u`(또는 `v`) 플래그를 강제해 UTF-16 surrogate pair를 정확히 다루고 Annex B 관용 파싱에서 오류 없이 허용하던 패턴 오류를 조기에 검출한다.
 
-**취향.** 실제 코드의 정규식 대부분은 URL, 식별자, 토큰 같은 ASCII 패턴이라 surrogate pair 문제가 없고, `u` 플래그는 기존 정규식의 불필요한 이스케이프를 문법 오류로 바꿀 수 있어 일률 강제는 노이즈가 크다. Unicode 처리가 필요한 정규식에만 개발자가 의도적으로 플래그를 붙이는 편이 낫다.
+**취향.** 실제 코드의 정규식 대부분은 URL, 식별자, 토큰 같은 ASCII 패턴이라 surrogate pair 문제가 없고, `u` 플래그는 기존 정규식의 불필요한 이스케이프를 문법 오류로 바꿀 수 있어 일률 강제는 노이즈가 크다. 유니코드 처리가 필요한 정규식에만 개발자가 의도적으로 플래그를 붙이는 편이 낫다.
 
 **Configuration**
 
@@ -112,12 +112,12 @@ const slug = /[a-z0-9-]+/
 
 `throw` 문에 `Error` 인스턴스가 아닌 값(문자열, 객체 리터럴, 함수 호출 결과 등)을 던지는 패턴을 금지해 스택 트레이스가 사라지거나 도구가 인식하지 못하는 위험을 막는다.
 
-**취향.** TanStack Router는 인증과 리디렉션을 `throw redirect({...})`로 처리하도록 권장하는데, `redirect()`는 Error 서브클래스가 아닌 라우터 제어 흐름 객체라 규칙이 모두 오탐으로 보고하므로 이 카테고리에서는 규칙을 끈다.
+**취향.** TanStack Router는 인증과 리디렉션을 `throw redirect({...})`로 처리하도록 권장하는데, `redirect()`는 `Error` 서브클래스가 아닌 라우터 제어 흐름 객체라 규칙이 모두 오탐으로 보고하므로 이 카테고리에서는 규칙을 끈다.
 
 **Configuration**
 
-- `allow` (array, default: `[]`): 허용할 비-Error 타입/값 지정자 목록 (string, file, lib, package 형식)
-- `allowRethrowing` (bool, default: `true`): `catch`가 받은 비-Error 값의 재throw 허용
+- `allow` (array, default: `[]`): 허용할 `Error`가 아닌 타입과 값의 지정자 목록 (string, file, lib, package 형식)
+- `allowRethrowing` (bool, default: `true`): `catch`로 받은 `Error`가 아닌 값을 다시 throw하는 것 허용
 - `allowThrowingAny` (bool, default: `true`): `any` 타입 값 throw 허용
 - `allowThrowingUnknown` (bool, default: `true`): `unknown` 타입 값 throw 허용
 
@@ -168,18 +168,18 @@ function read(options: { readonly count: number }) {
 
 `if (value)`처럼 truthy/falsy에 의존하는 분기는 `0`, `""`, `null` 등에서 의도치 않은 동작을 만든다고 보고 `value !== null` 등 명시적 비교를 요구한다.
 
-**취향.** 안전성은 향상되지만 코드가 매우 장황해져 가독성과 트레이드오프가 크다.
+**취향.** 안전성은 향상되지만 코드가 매우 장황해져 가독성 손실이 크다.
 
 **Configuration**
 
-- `allowAny` (bool, default: `false`): 불리언 컨텍스트에서 `any` 허용
+- `allowAny` (bool, default: `false`): 불리언 문맥에서 `any` 허용
 - `allowNullableBoolean` (bool, default: `false`): `boolean | null | undefined` 허용
-- `allowNullableEnum` (bool, default: `false`): nullable enum 허용
+- `allowNullableEnum` (bool, default: `false`): nullable 열거형 허용
 - `allowNullableNumber` (bool, default: `false`): `number | null | undefined` 허용
-- `allowNullableObject` (bool, default: `true`): nullable object 허용
+- `allowNullableObject` (bool, default: `true`): nullable 객체 허용
 - `allowNullableString` (bool, default: `false`): `string | null | undefined` 허용
-- `allowNumber` (bool, default: `true`): `number`를 불리언 컨텍스트에서 허용
-- `allowString` (bool, default: `true`): `string`을 불리언 컨텍스트에서 허용
+- `allowNumber` (bool, default: `true`): `number`를 불리언 문맥에서 허용
+- `allowString` (bool, default: `true`): `string`을 불리언 문맥에서 허용
 
 **🆗 rule: incorrect (허용)**
 

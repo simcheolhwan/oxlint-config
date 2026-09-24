@@ -15,7 +15,7 @@ export default defineConfig({
     "!fixtures/**": "vp check --fix",
   },
   pack: {
-    dts: { tsgo: true },
+    dts: true,
     exports: true,
   },
   test: {

@@ -41,7 +41,7 @@ function transform() {
 
 밑줄로 시작하거나 끝나는 식별자와 멤버 접근을 제한한다. 클래스의 비공개 상태는 `#privateField`로 표현하고, 외부 데이터가 정의한 밑줄 키는 대괄호 표기로 접근한다.
 
-**취향.** 밑줄 기반 private 관례를 표준 private class field와 구분하고, 시스템이 소유하지 않은 외부 키는 대괄호 표기로 눈에 띄게 만들어 코드 소유권을 명확히 한다.
+**취향.** 밑줄 기반 private 관례를 표준 private 클래스 필드와 구분하고, 시스템이 소유하지 않은 외부 키는 대괄호 표기로 눈에 띄게 만들어 코드 소유권을 명확히 한다.
 
 **Configuration**
 
@@ -124,7 +124,7 @@ try {
 
 같은 모듈에 동일 이름의 named export가 있는데 default import 식별자를 그 이름으로 받는 패턴을 검출한다. default import 이름을 다른 식별자로 바꾸거나 named import로 명시해 분리한다.
 
-**베스트 프랙티스.** `default` + 동명 named export가 공존하는 라이브러리(React, lodash, 일부 UI 킷 등)에서 잘못된 import가 컴파일을 통과한 채 다른 값을 참조하는 결함을 만들어, 추적 비용이 높아 즉시 차단한다.
+**베스트 프랙티스.** `default`와 동명 named export가 공존하는 라이브러리(React, lodash, 일부 UI 키트 등)에서 잘못된 import가 컴파일을 통과한 채 다른 값을 참조하는 결함을 만들어, 추적 비용이 높아 즉시 차단한다.
 
 **❌ incorrect**
 
@@ -145,11 +145,11 @@ import { bar } from "./foo"
 
 바인딩 없이 부수 효과만을 위해 import하는 패턴(`import "x"`)을 금지한다. 부수 효과의 발생 지점을 명시적인 호출로 드러내도록 강제한다.
 
-**베스트 프랙티스.** CSS는 빌드 도구가 자산으로 처리하는 표준 패턴이라 `allow` 옵션으로 허용하고, 차트 라이브러리 등 부수 효과 진입점을 권장하는 경우도 라이브러리 특성에 따라 추가할 수 있다.
+**베스트 프랙티스.** CSS는 빌드 도구가 에셋으로 처리하는 표준 패턴이라 `allow` 옵션으로 허용하고, 차트 라이브러리 등 부수 효과 진입점을 권장하는 경우도 라이브러리 특성에 따라 추가할 수 있다.
 
 **Configuration**
 
-- `allow` (string[], default: `[]`): 미할당 import를 허용할 모듈의 glob 패턴 목록
+- `allow` (string[], default: `[]`): 바인딩 없는 import를 허용할 모듈의 glob 패턴 목록
 
 **⚙️ 설정**
 
@@ -167,7 +167,7 @@ import "./bootstrap"
 
 **✅ correct**
 
-일반 모듈은 명시적 호출로 풀어낸다.
+일반 모듈은 함수를 import해 명시적으로 호출한다.
 
 ```ts
 import { bootstrap } from "./bootstrap"
@@ -241,7 +241,7 @@ useEffect(() => {
 
 `useMemo`와 `useCallback`의 의존성 배열에서 본문이 읽지만 누락된 값과 읽지 않는데 포함된 값을 검출한다. React Compiler가 자동으로 메모이제이션하므로 수동 `useMemo`/`useCallback` 자체를 제거하는 편이 간단하다.
 
-**베스트 프랙티스.** 누락된 의존성은 오래된 메모 값을 돌려주고 불필요한 의존성은 매번 다시 계산하게 하며, React Compiler 환경에서는 수동 메모이제이션이 컴파일러 추론과 어긋날 때만 보고되므로 제거해도 성능이 유지된다.
+**베스트 프랙티스.** 누락된 의존성은 오래된 메모 값을 반환하고 불필요한 의존성은 매번 다시 계산하게 하며, React Compiler 환경에서는 수동 메모이제이션이 컴파일러 추론과 어긋날 때만 보고되므로 제거해도 성능이 유지된다.
 
 **❌ incorrect**
 
@@ -267,12 +267,12 @@ function SearchBox({ onSearch, placeholder }: SearchBoxProps) {
 
 이미 `boolean` 타입인 식별자를 `=== true`/`!== false`로 비교하는 불필요한 코드를 검출한다. 변수를 그대로 사용하고 부정이 필요하면 `!`만 붙인다.
 
-**베스트 프랙티스.** 이름(`isOpen`, `hasError` 등)이 이미 불리언임을 시사하므로 명시 비교는 가독성을 해치고, 자동 수정으로 일괄 정리되어 도입 비용이 거의 없다.
+**베스트 프랙티스.** 이름(`isOpen`, `hasError` 등)이 이미 불리언임을 시사하므로 명시적 비교는 가독성을 해치고, 자동 수정으로 일괄 정리되어 도입 비용이 거의 없다.
 
 **Configuration**
 
-- `allowComparingNullableBooleansToFalse` (bool, default: `true`): nullable boolean과 `false` 비교 허용
-- `allowComparingNullableBooleansToTrue` (bool, default: `true`): nullable boolean과 `true` 비교 허용
+- `allowComparingNullableBooleansToFalse` (bool, default: `true`): nullable 불리언과 `false`의 비교 허용
+- `allowComparingNullableBooleansToTrue` (bool, default: `true`): nullable 불리언과 `true`의 비교 허용
 
 **❌ incorrect**
 
@@ -330,7 +330,7 @@ const users = await fetchJson<User[]>("/api/users")
 
 함수에 선언한 타입 매개변수가 입력, 반환 타입을 실제로 연결하지 못하고 본문에서 단순 타입 단언으로만 사용되면 검출한다. 제네릭을 제거하고 반환 타입을 `unknown`으로 두거나, 입출력을 실제로 묶는 형태로 다시 설계한다.
 
-**베스트 프랙티스.** `parseYAML<T>(...)`처럼 실제 타입 관계가 없는 제네릭은 호출 측에 잘못된 타입 안전성을 암시하지만 런타임 검증은 없어, 잘못된 시그니처가 코드베이스에 정착하기 전에 정적으로 차단한다.
+**베스트 프랙티스.** `parseYAML<T>(...)`처럼 실제 타입 관계가 없는 제네릭은 호출 측에 잘못된 타입 안전성을 암시하지만 런타임 검증은 없어, 잘못된 시그니처를 여러 호출부에서 사용하기 전에 정적으로 차단한다.
 
 **❌ incorrect**
 
@@ -354,9 +354,9 @@ function identity<T>(value: T): T {
 
 ## [unicorn/consistent-function-scoping](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/consistent-function-scoping)
 
-외부 스코프 변수를 참조하지 않는 내부 함수가 보이면 상위(주로 모듈) 스코프로 끌어올리도록 권한다. 호출마다 함수를 재생성하는 비용이 사라지고, 단위 테스트 대상으로도 노출된다.
+외부 스코프 변수를 참조하지 않는 내부 함수가 있으면 상위(주로 모듈) 스코프로 옮기도록 권한다. 호출마다 함수를 다시 생성하는 비용이 사라지고, 단위 테스트에서 직접 검증할 수도 있다.
 
-**베스트 프랙티스.** 클로저 의존이 없는 헬퍼는 모듈 함수가 더 자연스러워 `.ts`에서는 켜되, `.tsx`는 컴포넌트 전용 이벤트 핸들러와 렌더 헬퍼가 클로저 의존이 없어도 컴포넌트에 응집시키는 편이 자연스럽고 곧 props/state를 참조하게 되어 모듈로 옮겼다가 되돌리는 일이 잦아, 오탐이 과하므로 `**/*.tsx` 재정의로 끈다.
+**베스트 프랙티스.** 클로저 의존이 없는 헬퍼는 모듈 함수가 더 자연스러워 `.ts`에서는 켜되, `.tsx`는 컴포넌트 전용 이벤트 핸들러와 렌더링 헬퍼가 클로저 의존이 없어도 컴포넌트 안에 두는 편이 자연스럽고 곧 props나 state를 참조하게 되어 모듈로 옮겼다가 되돌리는 일이 잦아, 오탐이 많으므로 `**/*.tsx` 재정의로 끈다.
 
 **Configuration**
 
@@ -389,7 +389,7 @@ function process(items: Item[]) {
 
 `Array#sort()`는 원본 배열을 제자리에서 변경해 호출자가 예측하기 어렵다. 새 배열을 반환하는 `Array#toSorted()`(ES2023)를 사용한다.
 
-**베스트 프랙티스.** 인-플레이스 변경은 함수형 흐름에서 미묘한 버그를 만들기 쉬워 `toSorted`가 의도를 더 잘 드러낸다.
+**베스트 프랙티스.** 제자리 변경은 함수형 흐름에서 미묘한 버그를 만들기 쉬워 `toSorted`가 의도를 더 잘 드러낸다.
 
 **Configuration**
 
@@ -409,9 +409,9 @@ const sorted = array.toSorted()
 
 ## [unicorn/no-hex-escape](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-hex-escape)
 
-문자열의 16진수 이스케이프(`\xNN`)를 Unicode 이스케이프(`\uNNNN`)로 바꿔 표기를 통일한다.
+문자열의 16진수 이스케이프(`\xNN`)를 유니코드 이스케이프(`\uNNNN`)로 바꿔 표기를 통일한다.
 
-**취향.** 같은 코드 포인트를 두 길이의 이스케이프로 표현하지 않도록 제한해 제어 문자와 Unicode 문자의 표기를 일관되게 유지하며, 자동 수정이 가능해 도입 비용이 낮다.
+**취향.** 같은 코드 포인트를 두 길이의 이스케이프로 표현하지 않도록 제한해 제어 문자와 유니코드 문자의 표기를 일관되게 유지하며, 자동 수정이 가능해 도입 비용이 낮다.
 
 **❌ incorrect**
 

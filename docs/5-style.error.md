@@ -4,9 +4,9 @@ title: "Style 채택 규칙"
 
 ## [eslint/init-declarations](https://oxc.rs/docs/guide/usage/linter/rules/eslint/init-declarations)
 
-`let`/`var` 선언 시 초기값을 함께 부여하도록 강제한다. 선언과 초기화가 분리되면 첫 할당 위치를 따라가야 해 흐름 추적이 늘어난다.
+`let`/`var` 선언 시 초기값을 함께 부여하도록 강제한다. 선언과 초기화가 분리되면 첫 할당 위치를 따라가야 해 추적 비용이 늘어난다.
 
-**베스트 프랙티스.** 기본 모드 `"always"`로 적용해 변수가 어떤 값으로 시작하는지 한눈에 드러나게 하고, 분기마다 다른 값을 할당해야 하는 경우는 삼항이나 `const x = isReady ? a : b` 패턴으로 흡수한다.
+**베스트 프랙티스.** 기본 모드 `"always"`로 적용해 변수가 어떤 값으로 시작하는지 한눈에 드러나게 하고, 분기마다 다른 값을 할당해야 하는 경우는 `const x = isReady ? a : b` 같은 삼항 연산자로 처리한다.
 
 **Configuration**
 
@@ -31,7 +31,7 @@ const name = user ? user.name : "guest"
 
 함수의 매개변수 개수를 제한해 매개변수가 많으면 객체 인자로 묶거나 책임을 분리하도록 유도한다.
 
-**취향.** 기본값 `max: 3`은 강해 정상적인 헬퍼/이벤트 핸들러까지 잡으므로 `max: 4`로 한 칸만 늘려 단순 헬퍼는 통과시키되 인자 5개부터는 객체 인자 도입을 강하게 유도한다.
+**취향.** 기본값 `max: 3`은 엄격해 정상적인 헬퍼와 이벤트 핸들러까지 검출하므로 `max: 4`로 1만 늘려 단순 헬퍼는 통과시키되 인자 5개부터는 객체 인자 도입을 강하게 유도한다.
 
 **Configuration**
 
@@ -107,12 +107,12 @@ function process(input) {
 
 같은 모듈에서 여러 번 import하는 것을 금지한다. 한 번에 모아서 import한다.
 
-**베스트 프랙티스.** `allowSeparateTypeImports: true`로 type/value import 분리를 허용해 `import/consistent-type-specifier-style: prefer-top-level`(inline type specifier 금지, type-only import 강제)과의 충돌을 피한다.
+**베스트 프랙티스.** `allowSeparateTypeImports: true`로 타입 import와 값 import의 분리를 허용해 `import/consistent-type-specifier-style: prefer-top-level`(inline type specifier 금지, type-only import 강제)과의 충돌을 피한다.
 
 **Configuration**
 
-- `allowSeparateTypeImports` (bool, default: `false`): type-only import를 별도 문장으로 분리 허용
-- `includeExports` (bool, default: `false`): re-export 문도 중복 검사 포함
+- `allowSeparateTypeImports` (bool, default: `false`): type-only import를 별도 문으로 분리 허용
+- `includeExports` (bool, default: `false`): re-export 문도 중복 검사에 포함
 
 **⚙️ 설정**
 
@@ -139,7 +139,7 @@ import { a, b } from "lib"
 
 **✅ correct**
 
-같은 모듈의 type/value는 별도 문장으로 분리할 수 있다.
+같은 모듈의 타입과 값은 별도 import 문으로 분리할 수 있다.
 
 ```ts
 import type { Foo } from "lib"
@@ -148,15 +148,15 @@ import { bar } from "lib"
 
 ## [eslint/prefer-destructuring](https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-destructuring)
 
-배열, 객체 접근에 destructuring 사용을 강제한다.
+배열과 객체 접근에 구조 분해 할당 사용을 강제한다.
 
 **베스트 프랙티스.** `const a = obj.a; const b = obj.b` 같은 반복 대신 `const { a, b } = obj`로 묶는다.
 
 **Configuration**
 
-- `VariableDeclarator` (object, default: `{ array: true, object: true }`): 변수 선언에서 배열/객체 비구조화 강제
-- `AssignmentExpression` (object, default: `{ array: true, object: true }`): 할당식에서 배열/객체 비구조화 강제
-- `enforceForRenamedProperties` (bool, default: `false`): 이름 변경 시에도 객체 비구조화 강제. 켜지 않는다. computed 접근(`arr[i]`, `obj[key]`)까지 `const { [i]: item } = arr` 표기를 강제해 오히려 가독성을 해친다. (과거 `["error", { enforceForRenamedProperties: true }]`로 설정했으나 첫 번째 옵션 자리에 두어 무시되고 있었고, Oxlint 1.73의 엄격한 스키마 검증에서 파싱 오류가 드러나 기본값 채택으로 정리)
+- `VariableDeclarator` (object, default: `{ array: true, object: true }`): 변수 선언에서 배열과 객체 구조 분해 강제
+- `AssignmentExpression` (object, default: `{ array: true, object: true }`): 할당식에서 배열과 객체 구조 분해 강제
+- `enforceForRenamedProperties` (bool, default: `false`): 이름 변경 시에도 객체 구조 분해 강제. 켜지 않는다. computed 접근(`arr[i]`, `obj[key]`)까지 `const { [i]: item } = arr` 표기를 강제해 오히려 가독성을 해친다. (과거 `["error", { enforceForRenamedProperties: true }]`로 설정했으나 첫 번째 옵션 자리에 두어 무시되고 있었고, Oxlint 1.73의 엄격한 스키마 검증에서 파싱 오류가 드러나 기본값 채택으로 정리)
 
 **⚙️ 설정**
 
@@ -177,7 +177,7 @@ const email = user.email
 
 **✅ correct**
 
-객체 destructuring으로 묶는 형태.
+객체 구조 분해로 묶는 형태.
 
 ```ts
 const { name, email } = user
@@ -193,9 +193,9 @@ const userName = user.name
 
 ## [eslint/prefer-template](https://oxc.rs/docs/guide/usage/linter/rules/eslint/prefer-template)
 
-문자열 연결(`+`) 대신 template literal 사용을 강제한다.
+문자열 연결(`+`) 대신 템플릿 리터럴 사용을 강제한다.
 
-**베스트 프랙티스.** template literal이 보간과 다중 줄을 더 명확하게 표현한다.
+**베스트 프랙티스.** 템플릿 리터럴이 보간과 여러 줄 문자열을 더 명확하게 표현한다.
 
 **❌ incorrect**
 
@@ -211,7 +211,7 @@ const greeting = `Hello, ${name}!`
 
 ## [eslint/sort-imports](https://oxc.rs/docs/guide/usage/linter/rules/eslint/sort-imports)
 
-named import specifier를 알파벳 순으로 정렬해 가독성을 높인다.
+named import specifier를 알파벳순으로 정렬해 가독성을 높인다.
 
 **취향.** `ignoreDeclarationSort: true`로 import 문 자체의 정렬은 `vp fmt`에 위임하고 이 규칙은 named import specifier 정렬만 담당해, 두 도구를 번갈아 실행해도 수렴하도록 만든다.
 
@@ -245,13 +245,13 @@ import { a, b, z } from "lib"
 
 ## [import/consistent-type-specifier-style](https://oxc.rs/docs/guide/usage/linter/rules/import/consistent-type-specifier-style)
 
-inline type specifier 대신 top-level `import type`을 요구한다. type 식별자와 value 식별자를 같은 모듈에서 가져올 경우 두 개의 별도 import 문으로 분리한다.
+inline type specifier 대신 최상위 `import type`을 요구한다. 타입 식별자와 값 식별자를 같은 모듈에서 가져올 경우 두 개의 별도 import 문으로 분리한다.
 
-**베스트 프랙티스.** `eslint/no-duplicate-imports`의 `allowSeparateTypeImports`와 짝을 이뤄 분리된 type/value import 패턴을 강제하면 인라인 `type` 마커가 사라져 type-only 식별자가 한눈에 드러나고 빌드 도구가 type import를 안전하게 제거할 수 있다.
+**베스트 프랙티스.** `eslint/no-duplicate-imports`의 `allowSeparateTypeImports`와 짝을 이뤄 타입 import와 값 import를 분리하는 패턴을 강제하면 인라인 `type` 마커가 사라져 type-only 식별자가 한눈에 드러나고 빌드 도구가 타입 import를 안전하게 제거할 수 있다.
 
 **Configuration**
 
-- `style` (`"prefer-top-level" | "prefer-inline"`, default: `"prefer-top-level"`): type import 위치 스타일
+- `style` (`"prefer-top-level" | "prefer-inline"`, default: `"prefer-top-level"`): 타입 import 위치 스타일
 
 **⚙️ 설정**
 
@@ -303,7 +303,7 @@ export function increment() {
 
 `prefer-default-export`는 단일 export 모듈에서 default 사용을 권장하고, `no-named-export`는 named export를 전면 금지한다. 두 규칙을 짝지어 컴포넌트 파일에 default export를 강제한다.
 
-**취향.** `.ts`는 named export가 자동 import/트리 셰이킹에 유리하므로 기본 규칙에서 두 규칙을 `"off"`로 명시 선언해 정책을 코드로 드러내고, `**/*.tsx`에서만 켜되 훅(`**/use*.tsx`)/Context 모듈(`**/*Context.tsx`)/TanStack Router 라우트(`**/routes/**/[!-]*.tsx`)는 named export가 관례라 재정의에서 끈다.
+**취향.** `.ts`는 named export가 자동 import와 트리 셰이킹에 유리하므로 기본 규칙에서 두 규칙을 `"off"`로 명시적으로 선언해 정책을 코드로 드러내고, `**/*.tsx`에서만 켜되 훅(`**/use*.tsx`), Context 모듈(`**/*Context.tsx`), TanStack Router 라우트(`**/routes/**/[!-]*.tsx`)는 named export가 관례라 재정의에서 끈다.
 
 **Configuration**
 
@@ -345,7 +345,7 @@ export const Button = () => <button />
 
 **✅ correct**
 
-tsx 컴포넌트는 default export로 작성한다.
+`.tsx` 컴포넌트는 default export로 작성한다.
 
 ```tsx
 const Button = () => <button />
@@ -354,7 +354,7 @@ export default Button
 
 **✅ correct**
 
-ts 파일은 named export를 유지한다.
+`.ts` 파일은 named export를 유지한다.
 
 ```ts
 export const formatDate = (d: Date) => d.toISOString()
@@ -365,7 +365,7 @@ export const parseDate = (s: string) => new Date(s)
 
 `import * as foo from "lib"` 형태의 namespace(와일드카드) import를 금지하고 named import만 허용한다. import 줄에서 실제 사용 식별자가 즉시 드러나고 번들러가 미사용 export를 안전하게 제거(tree-shaking)할 수 있다.
 
-**베스트 프랙티스.** 일부 모놀리식 SDK는 namespace import가 권장 형태라 named로 풀 수 없는데, 현재 정책은 `ignore: []`로 모든 namespace import를 차단하고 우회 불가능한 라이브러리가 등장하면 그때 glob을 ignore에 추가한다.
+**베스트 프랙티스.** 일부 모놀리식 SDK는 namespace import가 권장 형태라 named import로 바꿀 수 없는데, 현재 정책은 `ignore: []`로 모든 namespace import를 차단하고 우회할 수 없는 라이브러리가 생기면 그때 glob을 `ignore`에 추가한다.
 
 **Configuration**
 
@@ -405,7 +405,7 @@ import * as Lib from "legacy-lib"
 
 `fs`, `path`, `crypto` 같은 Node.js 내장 모듈 import를 금지한다. 브라우저 번들에 포함되면 런타임 오류가 발생하거나 번들러가 무거운 폴리필을 추가해 번들 크기가 커지고 환경 일관성이 저하된다.
 
-**베스트 프랙티스.** 기본 앱 코드(`src/**/*.ts`)는 브라우저 타깃이라 Node API가 들어올 자리가 없어 정적으로 차단하고, 서버 함수, 빌드 스크립트, codemod처럼 Node.js에서 동작하는 `**/{server,functions,scripts}/**/*.ts`는 재정의에서 끈다.
+**베스트 프랙티스.** 기본 앱 코드(`src/**/*.ts`)는 브라우저 대상이라 Node API를 사용할 일이 없어 정적으로 차단하고, 서버 함수, 빌드 스크립트, codemod처럼 Node.js에서 동작하는 `**/{server,functions,scripts}/**/*.ts`는 재정의에서 끈다.
 
 **Configuration**
 
@@ -454,9 +454,9 @@ const config = fs.readFileSync("./config.json", "utf8")
 
 ## [promise/prefer-await-to-then](https://oxc.rs/docs/guide/usage/linter/rules/promise/prefer-await-to-then)
 
-`.then()`/`.catch()` 체이닝은 비동기 흐름을 표현하지만 분기, 오류 처리, 반환값을 합치면 들여쓰기가 깊어지고 제어 흐름을 파악하기 어려워진다. `async`/`await`로 동기적 외형의 코드 흐름을 유지한다.
+`.then()`/`.catch()` 체이닝은 비동기 흐름을 표현하지만 분기, 오류 처리, 반환값을 합치면 들여쓰기가 깊어지고 제어 흐름을 파악하기 어려워진다. `async`/`await`로 동기 코드처럼 읽히는 흐름을 유지한다.
 
-**베스트 프랙티스.** `strict: true`로 `await` 이후의 `.then()` 체이닝까지 검출해 `const profile = await fetchUser(id).then((user) => user.profile)` 같은 혼합 표기를 차단하고, `promise` 플러그인은 default-off라 `lint.plugins`에 명시적으로 추가해야 활성화된다.
+**베스트 프랙티스.** `strict: true`로 `await` 이후의 `.then()` 체이닝까지 검출해 `const profile = await fetchUser(id).then((user) => user.profile)` 같은 혼합 표기를 차단하고, `promise` 플러그인은 기본적으로 꺼져 있어 `lint.plugins`에 명시적으로 추가해야 활성화된다.
 
 **Configuration**
 
@@ -501,7 +501,7 @@ async function load() {
 
 JSX 중첩 깊이가 일정 수준을 넘으면 한 컴포넌트가 너무 많은 책임을 진다는 신호다. 상한을 넘으면 자식 컴포넌트로 추출해 트리를 평탄화한다.
 
-**취향.** 기본값 `max: 2`는 일상적인 레이아웃 마크업도 차단해 비현실적이라 `max: 5`로 완화하면 `<App><Layout><Main><Section><Card /></Section></Main></Layout></App>` 같은 표준 패턴은 통과하면서 그 이상 쌓이면 추출 유도 신호로 작동한다.
+**취향.** 기본값 `max: 2`는 일상적인 레이아웃 마크업도 차단해 비현실적이라 `max: 5`로 완화하면 `<App><Layout><Main><Section><Card /></Section></Main></Layout></App>` 같은 표준 패턴은 통과하면서 그 이상 중첩되면 컴포넌트 추출을 유도하는 신호로 작동한다.
 
 **Configuration**
 
@@ -551,7 +551,7 @@ JSX 중첩 깊이가 일정 수준을 넘으면 한 컴포넌트가 너무 많�
 
 배열 타입 표기를 `T[]` 또는 `Array<T>` 중 하나로 통일하도록 강제한다. 기본 옵션 `"array"`로 `string[]` 형태를 표준으로 채택한다.
 
-**취향.** 같은 작업에서 도입한 `typescript/consistent-type-definitions`(`interface` 강제)와 짝을 이뤄 객체 모양과 배열 모양 표기를 한 가지로 고정하고, React/TypeScript 코드베이스에서 `T[]`가 압도적 관용이라 `grep`과 diff 가독성에 이점이 더 크다.
+**취향.** 같은 작업에서 도입한 `typescript/consistent-type-definitions`(`interface` 강제)와 짝을 이뤄 객체 모양과 배열 모양 표기를 한 가지로 고정하고, React/TypeScript 코드베이스에서 `T[]`가 압도적으로 많이 쓰이는 관례라 `grep`과 diff 가독성에 이점이 더 크다.
 
 **Configuration**
 
@@ -643,7 +643,7 @@ try {
 
 `indexOf`, `lastIndexOf`, `findIndex`, `findLastIndex` 반환값으로 존재 여부를 검사할 때 `< 0`/`>= 0` 대신 `=== -1`/`!== -1`을 강제해 "찾지 못함"을 나타내는 sentinel 값(`-1`)을 명시한다.
 
-**취향.** 자동 수정 가능한 가벼운 표기 일관성 규칙이라 도입 비용이 거의 없고, 부수적으로 `Array#includes`로 대체 가능한 자리를 grep으로 찾기 쉬워진다.
+**취향.** 자동 수정 가능한 가벼운 표기 일관성 규칙이라 도입 비용이 거의 없고, 부수적으로 `Array#includes`로 대체 가능한 자리를 `grep`으로 찾기 쉬워진다.
 
 **❌ incorrect**
 
@@ -683,7 +683,7 @@ const cache = new Map(initial)
 
 `new URL("foo", base)`처럼 `new URL` 생성자에 넘기는 상대 경로 표기를 한 가지 형태로 통일한다. 기본 옵션 `"never"`로 `./` 접두사를 붙이지 않는 형태를 강제한다.
 
-**취향.** 두 표기가 동작은 같지만 코드베이스 내에서 섞이면 검색/정렬/diff에서 노이즈가 되고, 자동 수정 가능한 가벼운 일관성 규칙이라 도입 비용이 거의 없다.
+**취향.** 두 표기가 동작은 같지만 코드베이스 내에서 섞이면 검색, 정렬, diff에서 노이즈가 되고, 자동 수정 가능한 가벼운 일관성 규칙이라 도입 비용이 거의 없다.
 
 **Configuration**
 
@@ -729,7 +729,7 @@ const ascii = buffer.toString("ascii")
 
 `expect(x).toBeTruthy()`/`toBeFalsy()`는 `0`, `""`, `null`까지 한 묶음으로 통과하거나 실패시켜 잘못된 값도 검출하지 못한다. `toBe(true)`/`toBe(false)`로 엄격한 불리언 비교를 강제해 의도된 값만 통과시킨다.
 
-**베스트 프랙티스.** `vitest/prefer-to-be-truthy`/`vitest/prefer-to-be-falsy`와 정반대 방향이므로 두 규칙은 off로 두고 이 규칙만 켠다 (둘 다 켜면 자동 수정이 무한 루프).
+**베스트 프랙티스.** `vitest/prefer-to-be-truthy`/`vitest/prefer-to-be-falsy`와 정반대 방향이므로 두 규칙은 off로 두고 이 규칙만 켠다 (둘 다 켜면 자동 수정이 무한 반복된다).
 
 **❌ incorrect**
 
@@ -747,7 +747,7 @@ expect(error).toBe(false)
 
 ## [vitest/require-hook](https://oxc.rs/docs/guide/usage/linter/rules/vitest/require-hook)
 
-테스트 파일 최상위나 `describe` 본문 직접 위치에 표현식 실행 코드를 두면 파일을 불러올 때 부수 효과가 발생해 테스트 격리와 실행 순서 의존성이 깨진다. 설정 코드를 `beforeAll`, `beforeEach` 같은 훅 안으로 옮기게 강제한다.
+테스트 파일 최상위나 `describe` 본문 바로 아래에 표현식 실행 코드를 두면 파일을 불러올 때 부수 효과가 발생해 테스트가 서로 격리되지 않고 실행 순서에 의존하게 된다. 설정 코드를 `beforeAll`, `beforeEach` 같은 훅 안으로 옮기게 강제한다.
 
 **베스트 프랙티스.** 테스트 파일이 아닌 일반 코드까지 검사하면 오탐이 급증하므로 기본 규칙에는 `"off"`로 두고 `**/*.test.{ts,tsx}` 재정의에서만 `"error"`로 켠다.
 

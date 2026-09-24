@@ -59,9 +59,9 @@ function findLabel(value: string): string | undefined {
 
 ## [typescript/no-unsafe-type-assertion](https://oxc.rs/docs/guide/usage/linter/rules/typescript/no-unsafe-type-assertion)
 
-`any`/`unknown` 등 더 넓은 타입에서 좁은 타입으로의 `as` 단언을 안전하지 않다고 보고 차단한다. 좁히려면 타입 가드를 거쳐야 한다.
+`any`/`unknown` 등 더 넓은 타입에서 좁은 타입으로의 `as` 타입 단언을 안전하지 않다고 보고 차단한다. 타입을 좁히려면 타입 가드를 사용해야 한다.
 
-**베스트 프랙티스.** 런타임 스키마 검증(zod 등)을 별도 도입하지 않은 프로젝트에서는 단언 차단만으로 안전성이 회복되지 않아 가드 강제 비용 대비 실효가 적고, 안전성이 중요한 경계에서는 규칙이 아닌 스키마 검증으로 처리한다.
+**베스트 프랙티스.** 런타임 스키마 검증(Zod 등)을 별도 도입하지 않은 프로젝트에서는 단언 차단만으로 안전성이 회복되지 않아 가드 강제 비용 대비 실효가 적고, 안전성이 중요한 경계에서는 규칙이 아닌 스키마 검증으로 처리한다.
 
 **🆗 rule: incorrect (허용)**
 

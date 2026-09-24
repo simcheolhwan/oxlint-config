@@ -8,7 +8,7 @@ title: "카테고리와 플러그인 활성화 정책"
 - **라이브러리**: TypeScript + Node.js + Vitest
 - **제외**: Next.js, Vue, Jest
 
-Oxlint는 correctness 중심의 신뢰도 높은 규칙을 기본 활성화한다. 우선순위는 버그 예방성, 타입 안정성, 오탐 위험, 도입 비용을 기준으로 정한다.
+Oxlint는 correctness 중심의 신뢰도 높은 규칙을 기본 활성화한다. 우선순위는 버그 예방성, 타입 안전성, 오탐 위험, 도입 비용을 기준으로 정한다.
 
 ## 카테고리
 
@@ -37,7 +37,7 @@ Oxlint는 correctness 중심의 신뢰도 높은 규칙을 기본 활성화한�
 | `jsx-a11y`              | 🟡 권장 | 🟡 React 라이브러리만 |
 | `react-perf`            | 🔵 선택 | 🟡 React 라이브러리만 |
 | `jsdoc`                 | 🔵 선택 | 🟡 권장 (공개 API)    |
-| `node`                  | 🔵 선택 | 🔵 Node 타깃이면 채택 |
+| `node`                  | 🔵 선택 | 🔵 Node 대상이면 채택 |
 | `nextjs`, `vue`, `jest` | ⚫ 제외 | ⚫ 제외               |
 
 타입 인식 규칙(처리되지 않은 Promise, 안전하지 않은 할당 등)은 `oxlint-tsgolint` 의존성을 추가하고 `options.typeAware`를 켠다.
