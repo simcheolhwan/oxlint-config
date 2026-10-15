@@ -23,6 +23,7 @@ export const pedantic: DummyRuleMap = {
   "unicorn/escape-case": "error",
   "unicorn/new-for-builtins": "error",
   "unicorn/no-array-callback-reference": "error",
+  "unicorn/no-hex-escape": "error",
   "unicorn/no-useless-undefined": "error",
   "unicorn/prefer-number-coercion": "error",
   "unicorn/prefer-query-selector": "error",

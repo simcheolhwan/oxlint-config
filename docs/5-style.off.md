@@ -335,12 +335,10 @@ JSX 이벤트 핸들러 prop 이름과 함수 이름이 접두사 관례(`on*` p
 
 **Configuration**
 
-- `eventHandlerPrefixes` (string, default: `"handle"`): 핸들러 함수 이름 접두사
-- `eventHandlerPropPrefixes` (string, default: `"on"`): 핸들러 prop 이름 접두사
-- `eventHandlerRegex` (regex string, default: 없음): 핸들러 함수 이름 정규식 (접두사 대신 사용)
-- `eventHandlerPropRegex` (regex string, default: 없음): 핸들러 prop 이름 정규식 (접두사 대신 사용)
+- `eventHandlerPrefix` (string | false, default: `"handle"`): 핸들러 함수 이름 접두사. `false`면 해당 이름 검사를 끈다
+- `eventHandlerPropPrefix` (string | false, default: `"on"`): 핸들러 prop 이름 접두사. `false`면 해당 이름 검사를 끈다
 - `checkLocalVariables` (bool, default: `false`): 지역 변수 핸들러 검사 여부
-- `checkInlineFunctions` (bool, default: `false`): 인라인 함수 검사 여부
+- `checkInlineFunction` (bool, default: `false`): 인라인 함수 검사 여부
 - `ignoreComponentNames` (string[], default: `[]`): 검사 제외 컴포넌트 목록
 
 **🆗 rule: incorrect (허용)**
@@ -412,9 +410,9 @@ type ScoreByUser = { [key: string]: number }
 
 **Configuration**
 
-- `case` (`"kebabCase" | "camelCase" | "snakeCase" | "pascalCase"`, default: `"kebabCase"`): 단일 대소문자 규칙 강제
+- `case` (`"kebabCase" | "camelCase" | "snakeCase" | "pascalCase" | "lowercase" | "screamingSnakeCase"`, default: `"kebabCase"`): 단일 대소문자 규칙 강제
 - `cases` (object, default: 없음): 여러 대소문자 규칙 허용 시 규칙별 불리언 지정 (예: `{ kebabCase: true, pascalCase: true }`)
-- `ignore` (regex string, default: 없음): 제외할 파일명 패턴
+- `ignore` (regex string[], default: 없음): 제외할 파일명 패턴 목록
 - `multipleFileExtensions` (bool, default: `true`): 다중 확장자(`.test.ts` 등) 처리 방식
 
 **🆗 rule: incorrect (허용)**
@@ -450,6 +448,7 @@ import "./routes"
 
 **Configuration**
 
+- `checkArguments` (bool, default: `true`): 함수 호출과 생성자의 인자로 `null`을 직접 넘기는 경우도 검사
 - `checkStrictEquality` (bool, default: `false`): `null`과의 `===`, `!==` 비교도 검사
 
 **🆗 rule: incorrect (허용)**
@@ -488,7 +487,7 @@ function Empty() {
 **Configuration**
 
 - `onlyIfContainsSeparator` (bool, default: `false`): 이미 구분자가 있는 숫자만 검사
-- `number`, `binary`, `hexadecimal`, `octal` (object, default: 없음): 각 진수별 `groupLength`, `minimumDigits` 개별 설정
+- `number`, `binary`, `hexadecimal`, `octal` (object, default: `number` `{ groupLength: 3, minimumDigits: 5 }`, `binary`/`octal` `{ groupLength: 4, minimumDigits: 0 }`, `hexadecimal` `{ groupLength: 2, minimumDigits: 0 }`): 진수별 `groupLength`, `minimumDigits`, `onlyIfContainsSeparator` 개별 설정. `number`는 소수부 `fractionGroupLength`(default: 제한 없음)도 받는다
 
 **🆗 rule: incorrect (허용)**
 

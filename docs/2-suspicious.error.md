@@ -393,6 +393,7 @@ function process(items: Item[]) {
 
 **Configuration**
 
+- `allowAfterSpread` (bool, default: `false`): spread로 새로 만든 배열의 정렬(`[...items].sort()`) 허용
 - `allowExpressionStatement` (bool, default: `true`): 단독 문 위치의 `arr.sort()` 호출은 허용
 
 **❌ incorrect**
@@ -405,22 +406,4 @@ const sorted = [...array].sort()
 
 ```ts
 const sorted = array.toSorted()
-```
-
-## [unicorn/no-hex-escape](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-hex-escape)
-
-문자열의 16진수 이스케이프(`\xNN`)를 유니코드 이스케이프(`\uNNNN`)로 바꿔 표기를 통일한다.
-
-**취향.** 같은 코드 포인트를 두 길이의 이스케이프로 표현하지 않도록 제한해 제어 문자와 유니코드 문자의 표기를 일관되게 유지하며, 자동 수정이 가능해 도입 비용이 낮다.
-
-**❌ incorrect**
-
-```ts
-const escape = "\x1B"
-```
-
-**✅ correct**
-
-```ts
-const escape = "\u001B"
 ```

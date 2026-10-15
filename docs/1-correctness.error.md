@@ -90,6 +90,7 @@ return safeUser
 - `object` (string[], default: `[]`): `object`로 취급할 사용자 지정 컴포넌트 이름
 - `area` (string[], default: `[]`): `area`로 취급할 사용자 지정 컴포넌트 이름
 - `input[type="image"]` (string[], default: `[]`): `input[type="image"]`로 취급할 사용자 지정 컴포넌트 이름
+- `elements` (string[], default: 없음): 검사할 요소를 `img`, `object`, `area`, `input[type="image"]` 중에서 제한. 생략하면 4종 모두 검사
 
 **❌ incorrect**
 
@@ -111,7 +112,9 @@ return safeUser
 
 **Configuration**
 
-- `validHrefs` (string[], default: `[]`): 유효한 href 값으로 추가 허용할 문자열 목록
+- `components` (string[], default: `[]`): `<a>`로 취급할 사용자 지정 컴포넌트 이름
+- `specialLink` (string[], default: `[]`): `href` 외에 링크 대상으로 취급할 prop 이름
+- `aspects` (string[], default: 없음): 실행할 하위 검사를 `"noHref"`, `"invalidHref"`, `"preferButton"` 중에서 제한. 생략하면 3종 모두 실행
 
 **❌ incorrect**
 

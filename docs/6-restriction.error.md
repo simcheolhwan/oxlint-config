@@ -202,8 +202,8 @@ import Button from "../components/Button"
 별칭으로 상위 경로를 대체한다.
 
 ```ts
-import { formatDate } from "@/utils/date"
 import Button from "@/components/Button"
+import { formatDate } from "@/utils/date"
 ```
 
 **✅ correct**
@@ -326,10 +326,11 @@ export function Hello() {
 
 한 모듈이 React 컴포넌트만 export하도록 강제해 Fast Refresh(HMR)가 컴포넌트 상태를 안전하게 보존하도록 한다. 컴포넌트와 비컴포넌트(유틸리티 함수 등)를 같은 파일에서 함께 export하면 편집 시 컴포넌트가 다시 마운트되어 상태를 잃거나 번들러마다 HMR 동작이 달라진다.
 
-**베스트 프랙티스.** Vite와 React 환경의 HMR 안정성을 코드 단계에서 보장하기 위해 `allowConstantExport: true`로 원시 값 상수를 컴포넌트와 함께 export하는 것을 허용하고(Vite 프리셋 기본 동작), 훅(`**/use*.tsx`), Context(`**/*Context.tsx`), TanStack Router 라우트(`**/routes/**/[!-]*.tsx`) 모듈은 훅, Context, `export const Route = createFileRoute(...)`를 컴포넌트와 함께 export하는 것이 정상 패턴이라 named export 허용 재정의와 같은 블록에서 끈다.
+**베스트 프랙티스.** Vite와 React 환경의 HMR 안정성을 코드 단계에서 보장하되 Vite가 처리하는 패턴은 [eslint-plugin-react-refresh의 Vite 프리셋](https://github.com/ArnaudBarre/eslint-plugin-react-refresh#vite-config)처럼 허용해 `allowConstantExport: true`로 원시 값 상수를 컴포넌트와 함께 export하는 것과 `allowCompoundComponents: true`로 컴포넌트만 담은 객체(compound component, [`@vitejs/plugin-react` 4.7.0부터 HMR 지원](https://github.com/vitejs/vite-plugin-react/pull/518))를 export하는 것을 허용하고, 훅(`**/use*.tsx`), Context(`**/*Context.tsx`), TanStack Router 라우트(`**/routes/**/[!-]*.tsx`) 모듈은 훅, Context, `export const Route = createFileRoute(...)`를 컴포넌트와 함께 export하는 것이 정상 패턴이라 named export 허용 재정의와 같은 블록에서 끈다.
 
 **Configuration**
 
+- `allowCompoundComponents` (bool, default: `false`): 모든 프로퍼티가 React 컴포넌트인 객체(compound component)를 export하는 것 허용. Vite 프리셋에서 기본 활성화. Oxlint 1.86.0(Vite+ 1.1.0)부터 지원하므로 `peerDependencies`의 `vite-plus`를 `>=1.1.0`으로 둔다
 - `allowConstantExport` (bool, default: `false`): 원시 값 상수(string, number, boolean, 템플릿 리터럴)를 컴포넌트와 함께 export하는 것 허용. Vite 프리셋에서 기본 활성화
 - `allowExportNames` (string[], default: `[]`): HMR에 안전하다고 간주할 named export 목록 (예: TanStack Router의 `Route`, Remix의 `loader`)
 - `checkJS` (bool, default: `false`): JSX 포함 `.js` 파일 검사
@@ -340,7 +341,10 @@ export function Hello() {
 ```json
 {
   "rules": {
-    "react/only-export-components": ["error", { "allowConstantExport": true }]
+    "react/only-export-components": [
+      "error",
+      { "allowCompoundComponents": true, "allowConstantExport": true }
+    ]
   },
   "overrides": [
     {
@@ -371,6 +375,21 @@ export const VERSION = "3"
 export function Header() {
   return <h1>v{VERSION}</h1>
 }
+```
+
+**✅ correct**
+
+`allowCompoundComponents`로 허용된 컴포넌트만 담은 객체 export(훅이나 상수가 섞이면 계속 검출).
+
+```tsx
+function Root({ children }: { children: ReactNode }) {
+  return <ul>{children}</ul>
+}
+function Item({ children }: { children: ReactNode }) {
+  return <li>{children}</li>
+}
+const List = { Root, Item }
+export default List
 ```
 
 **✅ correct**

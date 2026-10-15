@@ -156,6 +156,7 @@ import { bar } from "lib"
 
 - `VariableDeclarator` (object, default: `{ array: true, object: true }`): 변수 선언에서 배열과 객체 구조 분해 강제
 - `AssignmentExpression` (object, default: `{ array: true, object: true }`): 할당식에서 배열과 객체 구조 분해 강제
+- `enforceForDeclarationWithTypeAnnotation` (bool, default: `false`): 타입 표기가 있는 변수 선언(`const x: T = obj.x`)에도 구조 분해 강제
 - `enforceForRenamedProperties` (bool, default: `false`): 이름 변경 시에도 객체 구조 분해 강제. 켜지 않는다. computed 접근(`arr[i]`, `obj[key]`)까지 `const { [i]: item } = arr` 표기를 강제해 오히려 가독성을 해친다. (과거 `["error", { enforceForRenamedProperties: true }]`로 설정했으나 첫 번째 옵션 자리에 두어 무시되고 있었고, Oxlint 1.73의 엄격한 스키마 검증에서 파싱 오류가 드러나 기본값 채택으로 정리)
 
 **⚙️ 설정**
@@ -251,7 +252,7 @@ inline type specifier 대신 최상위 `import type`을 요구한다. 타입 식
 
 **Configuration**
 
-- `style` (`"prefer-top-level" | "prefer-inline"`, default: `"prefer-top-level"`): 타입 import 위치 스타일
+- `style` (`"prefer-top-level" | "prefer-inline" | "prefer-top-level-if-only-type-imports"`, default: `"prefer-top-level"`): 타입 import 위치 스타일. `prefer-top-level-if-only-type-imports`는 named import가 모두 타입일 때만 `import type`을 요구하고 값 import와 섞이면 `import { type Foo, bar }` 형태를 허용
 
 **⚙️ 설정**
 

@@ -40,4 +40,4 @@ Oxlint는 correctness 중심의 신뢰도 높은 규칙을 기본 활성화한�
 | `node`                  | 🔵 선택 | 🔵 Node 대상이면 채택 |
 | `nextjs`, `vue`, `jest` | ⚫ 제외 | ⚫ 제외               |
 
-타입 인식 규칙(처리되지 않은 Promise, 안전하지 않은 할당 등)은 `oxlint-tsgolint` 의존성을 추가하고 `options.typeAware`를 켠다.
+타입 인식 규칙(처리되지 않은 Promise, 안전하지 않은 할당 등)은 `options.typeAware`로, TypeScript 컴파일러 진단은 `options.typeCheck`로 켠다.

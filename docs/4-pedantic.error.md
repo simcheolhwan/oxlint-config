@@ -550,6 +550,24 @@ const sanitized = inputs.map(sanitize)
 const sanitized = inputs.map((value) => sanitize(value))
 ```
 
+## [unicorn/no-hex-escape](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-hex-escape)
+
+문자열의 16진수 이스케이프(`\xNN`)를 유니코드 이스케이프(`\uNNNN`)로 바꿔 표기를 통일한다.
+
+**취향.** 같은 코드 포인트를 두 길이의 이스케이프로 표현하지 않도록 제한해 제어 문자와 유니코드 문자의 표기를 일관되게 유지하며, 자동 수정이 가능해 도입 비용이 낮다.
+
+**❌ incorrect**
+
+```ts
+const escape = "\x1B"
+```
+
+**✅ correct**
+
+```ts
+const escape = "\u001B"
+```
+
 ## [unicorn/no-useless-undefined](https://oxc.rs/docs/guide/usage/linter/rules/unicorn/no-useless-undefined)
 
 함수 호출이나 `return`에서 명시적 `undefined`는 대부분 불필요하다. 인자나 반환값을 생략한다.
@@ -598,6 +616,10 @@ const count = Math.trunc(Number(input))
 `getElementById`, `getElementsByClassName`은 단편적이다. 통일된 선택자 표현인 `querySelector`/`querySelectorAll`을 사용한다.
 
 **취향.** 선택자 표현이 일관되어 인지 비용이 줄어든다.
+
+**Configuration**
+
+- `allowWithVariables` (bool, default: `false`): 변수나 표현식을 인자로 넘긴 `getElementById`, `getElementsByClassName` 호출 허용
 
 **❌ incorrect**
 

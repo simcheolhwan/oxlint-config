@@ -15,7 +15,6 @@ export const suspicious: DummyRuleMap = {
   "typescript/no-unnecessary-type-parameters": "error",
   "unicorn/consistent-function-scoping": "error",
   "unicorn/no-array-sort": "error",
-  "unicorn/no-hex-escape": "error",
 
   // off
   "react/react-in-jsx-scope": "off",
